@@ -31,13 +31,13 @@ Technical English for executive prose.
 - `/bluf:triage` — extract the real state of the world from documents you
   *receive*: decisions, owners, dates, numbers, and what's evasively missing.
   Asks nothing of the sender.
+- `/bluf:draft` — templates as interviews: the skill asks what the standard
+  requires — state, owners, dates, numbers — then assembles the compliant
+  document. Status update, board memo, postmortem, risk register.
 - `/bluf:selftest` — diagnostic. Verifies an installed copy can read its own
   data files.
 
 ### Planned
-
-- `/bluf:draft` — templates as interviews: the skill asks what the standard
-  requires, then assembles the compliant document.
 - `/bluf:explain` — for any rule or flagged sentence: the rule, its STE
   lineage, and example rewrites.
 
