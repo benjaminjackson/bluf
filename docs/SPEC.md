@@ -157,6 +157,12 @@ decisions (with decider and date), owners, dates, numbers, risks. Then lists
 what is evasive or missing ("no date appears in this update"). Requires no
 behavior change from the sender. Zero adoption cost.
 
+Output contract: `bluf/docs/TRIAGE.md`. Extraction first, gaps second, no
+rule numbers anywhere; provenance (stated/inferred) with banned inferences
+named; relative dates resolve only against an in-document anchor; fixed
+output budget. Graded on recall against hand-written gold files, with any
+fabricated fact — or false gap — as a hard fail.
+
 ### 4. `/bluf:draft`
 
 Templates as interviews: status update, board memo, postmortem, risk register.
