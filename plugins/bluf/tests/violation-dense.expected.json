@@ -49,8 +49,8 @@
       "scope": "span",
       "line": 5,
       "col": 30,
-      "quote": "enterprise customer churn mitigation workstream kickoff soon.",
-      "message": "possible noun cluster of 7 words",
+      "quote": "enterprise customer churn mitigation workstream kickoff",
+      "message": "possible noun cluster of 6 words",
       "candidate": true
     },
     {

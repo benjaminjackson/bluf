@@ -17,6 +17,7 @@ PLUGIN_ROOT = Path(__file__).resolve().parent.parent
 DICTIONARY = PLUGIN_ROOT / "data" / "dictionary.json"
 
 MAX_SENTENCE_WORDS = 25
+MAX_ASK_WORDS = 20
 MAX_PARAGRAPH_SENTENCES = 6
 
 # Severity is fixed per rule (FINDINGS.md); never chosen at emit time.
@@ -38,6 +39,7 @@ did than then there who whom whose which when where while after before over
 under between into per each every all any some more most less least very also
 only if because therefore however up down out about across against along
 around during without within since past ago still already first next last new
+soon later often always never usually together well too
 one two three four five six seven eight nine ten
 monday tuesday wednesday thursday friday saturday sunday
 jan feb mar apr may jun jul aug sep sept oct nov dec
@@ -62,13 +64,13 @@ WORD_RE = re.compile(r"\S+")
 
 SKIP_PATTERNS = [
     re.compile(r"\A---\n.*?\n---(?:\n|\Z)", re.DOTALL),        # frontmatter
-    re.compile(r"^ {0,3}(?:```|~~~).*?(?:^ {0,3}(?:```|~~~)[^\n]*$|\Z)",
+    re.compile(r"^[ \t]*(?:```|~~~).*?(?:^[ \t]*(?:```|~~~)[^\n]*$|\Z)",
                re.DOTALL | re.MULTILINE),                       # fenced code
     re.compile(r"`[^`\n]+`"),                                   # inline code
     re.compile(r"^[ \t]*>.*$", re.MULTILINE),                   # blockquotes
     re.compile(r"\S+://\S+"),                                   # URLs
     re.compile(r"(?<!\S)(?:/|\./|~/)[\w./-]+"),                 # abs/rel paths
-    re.compile(r"(?<!\S)[\w-]+\.(?:md|py|json|js|ts|yml|yaml|txt)\b"),
+    re.compile(r"(?<!\S)[\w./~-]+\.(?:md|py|json|js|ts|yml|yaml|txt)\b"),
 ]
 
 
@@ -154,20 +156,25 @@ def semicolon_findings(text, mask, starts):
     return found
 
 
-HEADING = re.compile(r"^ {0,3}#")
+HEADING = re.compile(r"^ {0,3}(#+)\s*(.*)")
 TABLE_ROW = re.compile(r"^ {0,3}\|")
-LIST_ITEM = re.compile(r"^ {0,3}(?:[-*+]|\d{1,2}[.)])\s+")
+LIST_ITEM = re.compile(r"^[ \t]*(?:[-*+]|\d{1,2}[.)])\s+")
+ASKS_HEADING = re.compile(r"\b(?:action items?|asks?|requests?)\b",
+                          re.IGNORECASE)
 
 
 def blocks(text, mask, starts):
-    """Yield (abs_offset, block_text, is_list_item) prose blocks."""
+    """Yield (abs_offset, block_text, is_list_item, in_asks) prose blocks."""
     offset = 0
-    current = None  # [start, end]
+    current = None  # [start, end, is_item, in_asks]
+    in_asks = False
     result = []
     for raw in text.splitlines(keepends=True):
         line = raw.rstrip("\n")
-        skip = (not line.strip() or HEADING.match(line)
-                or TABLE_ROW.match(line)
+        heading = HEADING.match(line)
+        if heading and not (offset < len(mask) and mask[offset]):
+            in_asks = bool(ASKS_HEADING.search(heading.group(2)))
+        skip = (not line.strip() or heading or TABLE_ROW.match(line)
                 or (mask[offset] if offset < len(mask) else False))
         item = LIST_ITEM.match(line)
         if skip:
@@ -177,19 +184,19 @@ def blocks(text, mask, starts):
         elif item:
             if current:
                 result.append(current)
-            current = [offset + item.end(), offset + len(line), True]
+            current = [offset + item.end(), offset + len(line), True, in_asks]
         else:
             if current:
                 current[1] = offset + len(line)
             else:
-                current = [offset, offset + len(line), False]
+                current = [offset, offset + len(line), False, in_asks]
         offset += len(raw)
     if current:
         result.append(current)
-    return [(s, text[s:e], is_item) for s, e, is_item in result]
+    return [(s, text[s:e], is_item, asks) for s, e, is_item, asks in result]
 
 
-BOUNDARY = re.compile(r"[.!?][\"')\]]*(?:\s+|\Z)")
+BOUNDARY = re.compile(r"[.!?][\"'’”»)\]]*(?:\s+|\Z)")
 
 
 def sentences(block_text, block_start):
@@ -201,11 +208,8 @@ def sentences(block_text, block_start):
         last_word = prior.split()[-1] if prior.split() else ""
         if last_word in ABBREVIATIONS:
             continue
-        if re.search(r"\d\.\Z", prior) and re.match(
-                r"[.!?]*\s*\d", block_text[m.start():]):
-            continue  # decimal or rule number like 4.1
         nxt = block_text[m.end():m.end() + 1]
-        if nxt and not (nxt.isupper() or nxt.isdigit() or nxt in "\"'(["):
+        if nxt and not (nxt.isupper() or nxt.isdigit() or nxt in "\"'([“‘«"):
             continue
         sent = block_text[pos:m.end()].strip()
         if sent:
@@ -229,13 +233,19 @@ def count_words(sentence):
 
 def structure_findings(text, mask, starts):
     found = []
-    for block_start, block_text, is_item in blocks(text, mask, starts):
+    for block_start, block_text, is_item, in_asks in blocks(text, mask, starts):
         sents = sentences(block_text, block_start)
         for abs_off, sent in sents:
             words = count_words(sent)
             line, col = to_line_col(starts, abs_off)
             span = (abs_off, abs_off + len(sent))
-            if words > MAX_SENTENCE_WORDS:
+            if is_item and in_asks:
+                if words > MAX_ASK_WORDS:
+                    found.append((span, finding(
+                        "5.2", "deterministic", line, col, sent,
+                        f"ask has {words} words (max {MAX_ASK_WORDS} in a "
+                        "marked asks list)")))
+            elif words > MAX_SENTENCE_WORDS:
                 found.append((span, finding(
                     "4.1", "deterministic", line, col, sent,
                     f"sentence has {words} words (max {MAX_SENTENCE_WORDS})")))
@@ -268,7 +278,8 @@ def structure_findings(text, mask, starts):
                 if (not clause_break and token
                         and token.replace("-", "").isalpha()
                         and token.lower() not in CLUSTER_BREAKERS):
-                    run.append((m.start(), m.end(), token))
+                    start = m.start() + raw.index(token)
+                    run.append((start, start + len(token), token))
                 else:
                     run = flush_cluster(run, found, sent, abs_off, starts)
             flush_cluster(run, found, sent, abs_off, starts)

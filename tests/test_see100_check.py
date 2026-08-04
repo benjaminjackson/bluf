@@ -92,7 +92,12 @@ class TestSkipRegions(unittest.TestCase):
                          [])
 
     def test_file_path(self):
-        self.assertEqual(rules("Open scripts/sync_check.py to see it."), [])
+        self.assertEqual(rules("Open docs/leverage-synergy.md to see it."), [])
+
+    def test_indented_fence_in_list(self):
+        text = ("- The rollback command:\n\n"
+                "    ```\n    leverage synergies; circle back\n    ```\n")
+        self.assertEqual(rules(text), [])
 
 
 class TestSentences(unittest.TestCase):
@@ -126,6 +131,37 @@ class TestSentences(unittest.TestCase):
         text = ("See [the report](https://example.com/a/very/long/path/that/"
                 "would/blow/the/word/count/if/counted) for details.")
         self.assertEqual(findings_for(text, "4.1"), [])
+
+    def test_nested_list_items_split(self):
+        text = ("- Ship the config\n"
+                "  - Flip the flag\n"
+                "  - Watch the dashboards for one hour\n"
+                "  - Page Marco on regressions\n")
+        self.assertEqual(findings_for(text, "4.1"), [])
+
+    def test_digit_after_period_splits(self):
+        text = ("Headcount is 42. 12 engineers rotate on call across four "
+                "squads with two leads each and one shared manager for now.")
+        self.assertEqual(findings_for(text, "4.1"), [])
+
+    def test_curly_quote_boundary(self):
+        text = ("Priya said the plan holds and every vendor signed “the date "
+                "will hold.” Then she confirmed the full schedule in writing "
+                "for the board.")
+        self.assertEqual(findings_for(text, "4.1"), [])
+
+    def test_asks_list_20_word_limit(self):
+        long_item = "- Dana: " + "word " * 20 + "\n"
+        text = "## Asks\n\n" + long_item
+        f = findings_for(text, "5.2")
+        self.assertEqual(len(f), 1)
+        self.assertEqual(f[0]["layer"], "deterministic")
+        self.assertEqual(findings_for(text, "4.1"), [])
+
+    def test_asks_limit_only_in_asks_section(self):
+        long_item = "- Dana: " + "word " * 20 + "\n"
+        text = "## Notes\n\n" + long_item
+        self.assertEqual(findings_for(text, "5.2"), [])
 
     def test_paragraph_over_six_sentences(self):
         para = "This is one. " * 7

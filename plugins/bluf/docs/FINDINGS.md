@@ -40,9 +40,10 @@ Field rules:
 - `scope` — `span` or `document`. Document-scope rules (5.1, 5.5, 6.1, 6.2,
   1.5, 1.7, 7.3, 9.3, 9.4) describe the whole document and carry no
   `line`/`col`/`quote`; the `message` carries the explanation.
-- `line`/`col` — 1-indexed, on the original unmodified document. Deterministic
-  span findings only. Judgment findings never carry line numbers — models
-  miscount lines. They carry `quote` instead.
+- `line`/`col` — 1-indexed, on the original unmodified document. Only the
+  script emits them: deterministic findings and script-emitted candidates
+  carry line/col. Model-added judgment findings never carry line numbers —
+  models miscount lines. They locate by `quote` instead.
 - `quote` — the exact span from the document. Required for every span
   finding. For judgment findings it is the location mechanism: it must appear
   verbatim in the document.
@@ -166,7 +167,7 @@ deterministically; novel instances are judgment.
 | 7.2 | risk missing trigger/consequence/cost/owner | jdg | error | span |
 | 7.3 | risks after the plan or in an appendix | jdg | warning | document |
 | 8.1 | size/speed/change claim with no number or label | jdg | error | span |
-| 8.2 | quarter/EOQ/EOY reference with no day in the sentence | det | error | span |
+| 8.2 | quarter/EOQ/EOY deadline (after by/in/until/before) with no day in the sentence | det | error | span |
 | 8.2 | vague date word ("soon", "next sprint") | hyb | error | span |
 | 8.3 | false precision / range without confidence | jdg | warning | span |
 | 8.4 | missing denominator | jdg | error | span |
@@ -180,8 +181,9 @@ deterministically; novel instances are judgment.
 
 Notes:
 
-- The checker emits over-25-word sentences as rule 4.1. The skill re-cites it
-  as 6.3 only when the document is a status report; the two rules share one
+- The checker emits over-25-word sentences as rule 4.1. In its rendered prose
+  a skill may mention 6.3 alongside 4.1 for status reports, but the finding —
+  and the JSON — always keeps rule 4.1 verbatim; the two rules share one
   check, run once.
 - 6.4's sentence-count half (countable) is deterministic; its one-topic half
   is judgment. Two rows, one rule.

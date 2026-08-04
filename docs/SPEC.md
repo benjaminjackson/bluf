@@ -108,10 +108,13 @@ Field notes:
 Every skill separates its checks into two layers and reports which layer
 produced each finding.
 
-- **Deterministic** — findings a script could produce: banned words, sentence
-  length over 25 words (20 in asks), semicolons, noun clusters over three
-  words, vague dates ("soon", "Q3" without a day), percentages with no
-  baseline. Cited by rule number. No judgment, no false modesty.
+- **Deterministic** — findings the checker script produces: banned words,
+  sentence length over 25 words (20 inside explicitly marked asks lists),
+  semicolons, quarter deadlines with no day. Some checks emit *candidates*
+  the model must confirm (noun clusters, vague date words, percentages with
+  no baseline, conditioned banned terms) — confirmed candidates are judgment
+  findings. The full layer contract lives in `plugins/bluf/docs/FINDINGS.md`.
+  Cited by rule number. No judgment, no false modesty.
 - **Judgment** — findings that need a model: is the recommendation first
   (5.1)? Does each action item name one owner and one date (5.4)? Are claims
   tagged fact / estimate / opinion (9.2)? Is a locked word used inside its
