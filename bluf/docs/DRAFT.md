@@ -1,0 +1,120 @@
+# Draft Interview Protocol
+
+This document is the contract for `/bluf:draft`: the interview mechanics
+every template shares, the answer-sheet format, the degradation path, and
+the JSON the grading harness consumes. Template definitions (which fields,
+which order, which skeleton) live beside the skill and build on this.
+
+The premise: the skill asks the questions the standard requires answered —
+state? owner? date? denominator? — then assembles the compliant document.
+The interview is the product; the document is its receipt.
+
+## Question mechanics
+
+- **Facts are free text.** Owners, dates, numbers, recommendations arrive
+  as typed answers to plain questions. The skill never proposes candidate
+  owners, dates, or numbers — a menu of invented owners the user picks from
+  is fabrication with extra steps.
+- **AskUserQuestion only for genuinely closed sets**: template choice,
+  document state (on track / at risk / off track), RISK vs BLOCKER, and the
+  fact / estimate / opinion tag. Nothing else.
+- **Question order is not document order.** Facts come first; the
+  one-sentence recommendation is asked **last** and placed **first** — a
+  writer usually cannot state the BLUF until walked through the facts.
+- **Tags are asked, not assumed.** Every interpretive claim gets its
+  fact / estimate / opinion tag from the user.
+- **One re-ask, then Gaps.** A hostile or refusing answer — "the team",
+  "soon", "significant improvement", "skip" — gets at most one clarifying
+  re-ask ("A named person, or should I list the owner in Gaps?"). After
+  that the answer is recorded verbatim in the sheet and the field goes to
+  Gaps. Refusal never becomes fabricated compliance.
+
+## Field tiers
+
+Each template defines two tiers:
+
+- **Required** — the floor. Below it no document is assembled; assemble-now
+  produces the answer sheet and the open questions instead.
+- **Optional** — skippable straight to Gaps at any time.
+
+## The answer sheet
+
+Answers persist to `bluf-draft-<template>.json` in the working directory,
+written after **every** answer — a twelve-question flow must survive
+compaction, `/clear`, and a meeting at question eight.
+
+```json
+{
+  "version": 1,
+  "template": "status-update",
+  "answers": {
+    "state": {"answer": "at risk", "tag": null},
+    "owner_main": {"answer": "the team", "refused": true},
+    "recommendation": {"answer": null}
+  }
+}
+```
+
+- A field the user refused keeps the verbatim refusal and `"refused": true`.
+- An unasked field is absent; an asked-but-unanswered field is `null`.
+- On re-invocation the skill loads the sheet, shows a one-line summary of
+  what it already has, and resumes at the first open required field.
+
+## Assemble-now
+
+"Assemble now with what I have" is offered at every turn. When the
+required floor is met, assembly runs immediately: answered fields fill the
+skeleton, every open or refused field becomes a Gaps entry. Below the
+floor, the skill says which required fields are open and writes no
+document.
+
+## Assembly rules
+
+- Every named person, date, and number in the document comes from an
+  answer. Nothing else is a source. This is the fabrication trace the
+  harness checks.
+- When a named owner is not the document's author, the assembled item
+  carries a confirm flag: "(confirm with Priya before sending)".
+- Open fields render as Gaps entries in the document's Gaps section, per
+  the marked-unknown convention in FINDINGS.md — the assembled document is
+  graded by gaps-aware lint, so the honest document passes.
+
+## Non-interactive mode
+
+`claude -p` and agent callers cannot answer AskUserQuestion. When the
+invocation itself supplies answers — inline after the command, or as a
+file path — the skill runs single-shot:
+
+1. Parse the supplied answers into the sheet (same refusal rules).
+2. Emit the questions it would have asked for every open field, as a
+   numbered list — the interview made visible.
+3. Assemble if the required floor is met; otherwise say what is missing.
+4. Gaps as always.
+
+The grading harness drives this path.
+
+## Draft JSON
+
+On request ("emit draft JSON") the skill appends one fenced json block,
+last in the response:
+
+```json
+{
+  "version": 1,
+  "template": "status-update",
+  "questions": [
+    {"field": "denominator_churn", "prompt": "Out of how many accounts?"}
+  ],
+  "answers_used": {"state": "at risk", "owner_main": "Priya"},
+  "document": "…the assembled markdown, or null below the floor…",
+  "gaps": [
+    {"field": "owner_rollback", "reason": "refused: 'the team'"}
+  ],
+  "confirm_flags": ["Priya"]
+}
+```
+
+`questions` lists open fields only. `answers_used` holds exactly the
+answers that reached the document — the harness traces every name, date,
+and number in `document` back to this object, and anything untraceable is
+fabrication, a hard fail.

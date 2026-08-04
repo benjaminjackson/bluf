@@ -170,6 +170,12 @@ The skill asks the questions the standard requires answered — state? owner?
 date? denominator? — then assembles the compliant document. Compliance becomes
 the path of least resistance instead of a revision tax.
 
+Interview protocol: `bluf/docs/DRAFT.md`. Free-text facts (no invented-owner
+menus), a persisted answer sheet with assemble-now at every turn, the
+recommendation asked last and placed first, refusals become Gaps, and a
+single-shot non-interactive mode the harness drives. Assembled documents are
+graded by gaps-aware lint plus a fabrication trace back to the answer sheet.
+
 ### 5. `/bluf:explain`
 
 Given a flagged sentence or a rule number: the rule, its STE lineage, and three
