@@ -29,6 +29,7 @@ import json
 import re
 import subprocess
 import sys
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
@@ -67,7 +68,7 @@ def grade_script(only=None):
     return errors
 
 
-def run_skill(command, timeout=600):
+def run_skill(command, dump_name, timeout=600):
     result = subprocess.run(
         ["claude", "-p", "--plugin-dir", str(PLUGIN), command],
         capture_output=True, text=True, timeout=timeout, cwd=str(REPO))
@@ -84,11 +85,43 @@ def run_skill(command, timeout=600):
     end = body.rfind("```")
     payload = json.loads(body[:end if end >= 0 else None])
     DUMP_DIR.mkdir(exist_ok=True)
-    slug = re.sub(r"\W+", "-", command)[:80]
-    existing = len(list(DUMP_DIR.glob(f"{slug}*")))
-    (DUMP_DIR / f"{slug}-{existing}.json").write_text(
+    # Deterministic name from (phase, fixture, run index) — no glob counting,
+    # which raced under concurrent workers.
+    (DUMP_DIR / f"{dump_name}.json").write_text(
         json.dumps(payload, indent=2, ensure_ascii=False))
     return payload
+
+
+def run_one(phase, md, i):
+    if phase == "lint":
+        command = f"/bluf:lint {md} — emit findings JSON"
+    else:
+        command = f"/bluf:rewrite {md} — emit rewrite JSON"
+    return run_skill(command, f"{phase}-{md.stem}-{i}")
+
+
+def collect(jobs, workers):
+    """Run every (phase, fixture, run-index) job on a bounded pool.
+
+    Returns {(phase, stem, i): payload-or-exception}. A failed run becomes
+    its exception so the grader counts it without killing sibling jobs.
+    """
+    results = {}
+    if not jobs:
+        return results
+    total = len(jobs)
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        futs = {pool.submit(run_one, phase, md, i): (phase, md, i)
+                for phase, md, i in jobs}
+        for n, fut in enumerate(as_completed(futs), 1):
+            phase, md, i = futs[fut]
+            try:
+                results[(phase, md.stem, i)] = fut.result()
+            except (RuntimeError, subprocess.TimeoutExpired,
+                    json.JSONDecodeError) as e:
+                results[(phase, md.stem, i)] = e
+            print(f"  done {phase} {md.name} run {i + 1} [{n}/{total}]")
+    return results
 
 
 def spans_overlap(doc, quote_a, quote_b):
@@ -139,23 +172,22 @@ def grade_lint_run(md, expected, payload, errors):
     return verdict
 
 
-def grade_lint(runs, only=None):
+def grade_lint(runs, only, results):
     errors = []
     for md, expected in fixtures(only):
+        before = len(errors)
         verdicts = []
         for i in range(runs):
-            print(f"  run  {md.name} [{i + 1}/{runs}]")
-            try:
-                payload = run_skill(
-                    f"/bluf:lint {md} — emit findings JSON")
-            except (RuntimeError, subprocess.TimeoutExpired,
-                    json.JSONDecodeError) as e:
-                fail(errors, f"{md.name} run {i + 1}: {e}")
+            payload = results[("lint", md.stem, i)]
+            if isinstance(payload, Exception):
+                fail(errors, f"{md.name} run {i + 1}: {payload}")
                 continue
             verdicts.append(grade_lint_run(md, expected, payload, errors))
         if len({json.dumps(v) for v in verdicts}) > 1:
             fail(errors, f"{md.name}: runs disagree on "
                          "must_find/must_not_find — variance is a failure")
+        if len(errors) == before:
+            print(f"  ok   {md.name}: {runs} run(s) agree")
     return errors
 
 
@@ -190,19 +222,16 @@ def new_facts(input_text, output_text):
     return sorted(found)
 
 
-def grade_rewrite(runs, only=None):
+def grade_rewrite(runs, only, results):
     errors = []
     for md, expected in fixtures(only):
         if "rewrite" not in expected:
             continue
+        before = len(errors)
         for i in range(runs):
-            print(f"  run  {md.name} rewrite [{i + 1}/{runs}]")
-            try:
-                payload = run_skill(
-                    f"/bluf:rewrite {md} — emit rewrite JSON")
-            except (RuntimeError, subprocess.TimeoutExpired,
-                    json.JSONDecodeError) as e:
-                fail(errors, f"{md.name} run {i + 1}: {e}")
+            payload = results[("rewrite", md.stem, i)]
+            if isinstance(payload, Exception):
+                fail(errors, f"{md.name} run {i + 1}: {payload}")
                 continue
             rewrite = payload.get("rewrite", "")
             residual = [f for f in see100_check.check(rewrite)["findings"]
@@ -218,6 +247,8 @@ def grade_rewrite(runs, only=None):
             for token in invented:
                 fail(errors, f"{md.name}: invented fact {token!r} "
                              "(closed-world violation)")
+        if len(errors) == before:
+            print(f"  ok   {md.name}: {runs} rewrite run(s) clean")
     return errors
 
 
@@ -226,16 +257,31 @@ def main():
     parser.add_argument("--skill", choices=["lint", "rewrite", "all"])
     parser.add_argument("--runs", type=int, default=3)
     parser.add_argument("--only", nargs="*", help="fixture stems to grade")
+    parser.add_argument("--workers", type=int, default=4,
+                        help="parallel claude sessions (1 = sequential)")
     args = parser.parse_args()
 
     print("script layer:")
     errors = grade_script(args.only)
+
+    jobs = []
+    if args.skill in ("lint", "all"):
+        jobs += [("lint", md, i)
+                 for md, _ in fixtures(args.only) for i in range(args.runs)]
+    if args.skill in ("rewrite", "all"):
+        jobs += [("rewrite", md, i)
+                 for md, expected in fixtures(args.only)
+                 if "rewrite" in expected for i in range(args.runs)]
+    if jobs:
+        print(f"running {len(jobs)} live job(s) on {args.workers} worker(s):")
+    results = collect(jobs, args.workers)
+
     if args.skill in ("lint", "all"):
         print("lint judgment layer:")
-        errors += grade_lint(args.runs, args.only)
+        errors += grade_lint(args.runs, args.only, results)
     if args.skill in ("rewrite", "all"):
         print("rewrite:")
-        errors += grade_rewrite(args.runs, args.only)
+        errors += grade_rewrite(args.runs, args.only, results)
 
     print(f"\n{'FAIL' if errors else 'PASS'}: {len(errors)} failure(s)")
     return 1 if errors else 0
