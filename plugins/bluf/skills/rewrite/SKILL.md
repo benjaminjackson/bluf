@@ -35,6 +35,9 @@ SEE-100, without inventing a single fact.
 - **Keep facts in their original written form.** Reuse the document's exact
   spellings of numbers, dates, names, and amounts ("Aug 7" stays "Aug 7",
   never "August 7"). Reformatting a fact reads as fabricating one.
+- **Placeholders are ALL CAPS.** Where the writer must supply a missing
+  fact, write OWNER, DATE, or N — the standard's own convention — never a
+  title-case stand-in like "Name" or an invented plausible value.
 - Rule 9.1: when a banned word has no one-word substitute, restate the
   actual thing — never thesaurus-swap.
 

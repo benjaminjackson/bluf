@@ -6,6 +6,12 @@ the grading harness. The script emits JSON. The skills render prose from that
 JSON and add judgment findings to it. The harness grades JSON and never parses
 prose.
 
+Machine data never round-trips through the model. When a skill is asked for
+findings JSON it emits only its judgment-layer findings; any consumer that
+needs the deterministic layer runs the checker itself and combines the two.
+A model asked to copy JSON through its own output will eventually retype it
+wrong — the grading harness proved this, so the contract forbids it.
+
 ## Findings JSON
 
 The checker writes one JSON object to stdout:

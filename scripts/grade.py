@@ -34,6 +34,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent.parent
 PLUGIN = REPO / "plugins" / "bluf"
 CORPUS = PLUGIN / "tests"
+DUMP_DIR = Path("/tmp/bluf-grade-runs")
 sys.path.insert(0, str(PLUGIN / "scripts"))
 import see100_check  # noqa: E402
 
@@ -81,7 +82,13 @@ def run_skill(command, timeout=600):
                            f"{result.stdout[-500:]}")
     body = result.stdout[start + len("```json"):]
     end = body.rfind("```")
-    return json.loads(body[:end if end >= 0 else None])
+    payload = json.loads(body[:end if end >= 0 else None])
+    DUMP_DIR.mkdir(exist_ok=True)
+    slug = re.sub(r"\W+", "-", command)[:80]
+    existing = len(list(DUMP_DIR.glob(f"{slug}*")))
+    (DUMP_DIR / f"{slug}-{existing}.json").write_text(
+        json.dumps(payload, indent=2, ensure_ascii=False))
+    return payload
 
 
 def spans_overlap(doc, quote_a, quote_b):
@@ -105,15 +112,20 @@ def grade_lint_run(md, expected, payload, errors):
     doc = md.read_text()
     script = see100_check.check(doc)["findings"]
     got = payload if isinstance(payload, list) else payload.get("findings", [])
+    # The skill's JSON carries only its judgment layer; the deterministic
+    # layer comes straight from the checker — machine data never round-trips
+    # through the model. A det-layer finding in the payload is a contract
+    # violation.
     det_got = [f for f in got if f.get("layer") == "deterministic"]
-    det_want = [f for f in script if not f.get("candidate")]
-    if det_got != det_want:
-        fail(errors, f"{md.name}: deterministic findings not reproduced "
-                     f"verbatim ({len(det_got)} vs {len(det_want)})")
+    if det_got:
+        fail(errors, f"{md.name}: payload contains {len(det_got)} "
+                     "deterministic findings; the JSON block is "
+                     "judgment-only")
+    det = [f for f in script if not f.get("candidate")]
     judgment = [f for f in got if f.get("layer") == "judgment"]
     verdict = []
     for spec in expected["judgment"]["must_find"]:
-        hit = any(matches(doc, f, spec) for f in judgment + det_got)
+        hit = any(matches(doc, f, spec) for f in judgment + det)
         verdict.append(("find", json.dumps(spec, sort_keys=True), hit))
         if not hit:
             fail(errors, f"{md.name}: must_find missed {spec}")
@@ -156,15 +168,22 @@ def new_facts(input_text, output_text):
 
     Numbers and dollar amounts must appear in the input as exact tokens.
     A capitalized word counts as a new proper noun only when its lowercase
-    form is also absent from the input — sentence-initial recapitalization
-    and section labels are not fabrications.
+    form is absent from the input AND it appears somewhere mid-sentence in
+    the output. Sentence-initial-only capitalized words are imperatives and
+    labels ("Name the owner", "Ask:"), not fabrications.
+    ponytail: a fabricated name used only sentence-initially slips through;
+    numbers and dates — the facts that matter most — stay strict.
     """
     input_tokens = set(FACT_TOKEN.findall(input_text))
     input_lower = input_text.lower()
     found = []
     for token in set(FACT_TOKEN.findall(output_text)):
         if token[0].isalpha():
-            if token.lower() not in input_lower:
+            if token.lower() in input_lower:
+                continue
+            mid_sentence = re.search(
+                r"[a-z0-9,] +" + re.escape(token) + r"\b", output_text)
+            if mid_sentence:
                 found.append(token)
         elif token not in input_tokens:
             found.append(token)

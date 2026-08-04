@@ -31,7 +31,13 @@ report findings. Lint never edits — it reports.
    document-scope rules, a message only. First decide the document type
    (status update, memo, postmortem, email, other); document-scope rules like
    6.2 fire only for the types they apply to.
-5. Assemble severities from FINDINGS.md. Severity is fixed per rule — never
+5. Walk the document-scope rules as an explicit checklist — 1.5, 1.7, 5.1,
+   5.5, 6.1, 6.2, 7.3, 9.3, 9.4 — and decide fire / no-fire for each. For a
+   status update whose conclusion is buried, cite 6.1; cite 5.1 only when a
+   concrete recommendation or ask exists and sits below the evidence. Do not
+   skip this walk: a missed document-scope rule is the most common lint
+   failure.
+6. Assemble severities from FINDINGS.md. Severity is fixed per rule — never
    choose it yourself.
 
 ## Output, in order
@@ -43,9 +49,12 @@ report findings. Lint never edits — it reports.
 3. **Judgment findings**, labeled `[judgment]` — for each: rule number,
    quote (or "whole document"), message, suggested fix.
 
-If the request contains "emit findings JSON", append one fenced `json` block:
-the complete findings array (deterministic + confirmed judgment findings) in
-the FINDINGS.md schema. No prose inside the block.
+If the request contains "emit findings JSON", append one fenced `json` block
+containing **only your judgment-layer findings** (confirmed candidates plus
+model-added findings) in the FINDINGS.md schema. Do not include the checker's
+deterministic findings — machine data never round-trips through you; whoever
+asked for the JSON runs the checker directly and combines the two layers. No
+prose inside the block.
 
 ## Failure behavior
 

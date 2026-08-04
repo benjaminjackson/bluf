@@ -6,7 +6,10 @@ Each `<name>.md` fixture has a `<name>.expected.json` file:
   the fixture, including `candidate: true` entries. Graded by set equality on
   every field. Regenerate only when the checker intentionally changes, and
   eyeball the diff: this file is the checker's contract.
-- `judgment` — grading for `/bluf:lint`'s judgment layer:
+- `judgment` — grading for `/bluf:lint`'s judgment layer. The skill's JSON
+  block carries only judgment findings; the harness runs the checker itself
+  for the deterministic layer and grades the two together (a deterministic
+  finding inside the skill's JSON fails the run):
   - `must_find` — each entry names a `rule` and optionally a `quote`; a skill
     finding matches by rule plus span overlap with the quote, never by
     wording. All must be present in every run.
