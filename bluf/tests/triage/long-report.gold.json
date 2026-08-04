@@ -1,0 +1,92 @@
+{
+  "is_thread": false,
+  "facts": [
+    {
+      "type": "commitment",
+      "owner": "Sam",
+      "date": "Nov 14",
+      "quote_contains": "Sam moves both by Nov 14",
+      "provenance": "stated"
+    },
+    {
+      "type": "commitment",
+      "owner": "Dana",
+      "date": "Oct 9",
+      "quote_contains": "Dana owns the revised hiring plan and presents it on Oct 9",
+      "provenance": "stated"
+    },
+    {
+      "type": "commitment",
+      "owner": "Alex",
+      "date": "Oct 17",
+      "quote_contains": "Alex writes the postmortem for those escalations by Oct 17",
+      "provenance": "stated"
+    },
+    {
+      "type": "decision",
+      "decider": "Priya",
+      "date": "Sep 8",
+      "quote_contains": "Priya decided on Sep 8 to freeze schema changes",
+      "provenance": "stated"
+    },
+    {
+      "type": "risk",
+      "owner": "Priya",
+      "quote_contains": "the contract auto-renews for twelve months at $240,000",
+      "provenance": "stated"
+    },
+    {
+      "type": "number",
+      "value": "184,000",
+      "baseline": "161,000",
+      "quote_contains": "Compute spend was $184,000 for the quarter, up from $161,000",
+      "provenance": "stated"
+    }
+  ],
+  "allowed_facts": [
+    {"type": "*", "quote_contains": "*", "why": "Everything else in this report is true but not consequential enough to require. The 12-fact budget must drop most of it."},
+    {"type": "number", "value": "26", "baseline": "11", "quote_contains": "Deploy frequency rose from 11 per week to 26 per week"},
+    {"type": "number", "value": "38", "baseline": "71", "quote_contains": "Mean time to restore fell from 71 minutes to 38 minutes"},
+    {"type": "number", "value": "4%", "quote_contains": "The change failure rate held at 4%"},
+    {"type": "number", "value": "295", "baseline": "340", "quote_contains": "Support tickets fell from 340 per month to 295 per month"},
+    {"type": "number", "value": "41", "baseline": "30", "quote_contains": "Time to offer averaged 41 days against a 30-day target"},
+    {"type": "claimed_state", "quote_contains": "The service migration finished on Sep 22"},
+    {"type": "claimed_state", "quote_contains": "We planned six hires and made three"},
+    {"type": "claimed_state", "quote_contains": "The contract with the log vendor renews on Dec 1"},
+    {"type": "number", "value": "214", "baseline": "231", "quote_contains": "On-call pages: 214 this quarter, 231 the quarter before"},
+    {"type": "number", "value": "6.2", "baseline": "7.1", "quote_contains": "Average pull request review time: 6.2 hours, down from 7.1 hours"},
+    {"type": "number", "value": "18", "baseline": "14", "quote_contains": "Test suite runtime: 18 minutes, up from 14 minutes"},
+    {"type": "number", "value": "0.3%", "quote_contains": "Third-party API error rate: 0.3%, unchanged"}
+  ],
+  "must_not_extract": [
+    {
+      "type": "decision",
+      "quote_contains": "switching to in-house storage",
+      "why": "TRAP. The report says the group discussed it and did not settle it. A decision fact here is fabrication, and it is the mirror image of the gap the run is supposed to raise."
+    }
+  ],
+  "contradictions_must_include": [],
+  "unresolved_must_include": [],
+  "gaps_must_include": [
+    {
+      "missing": "decid",
+      "about_contains": ["log vendor", "in-house storage"],
+      "why": "Rank 1 by consequence: undecided, deadline Nov 1, $240,000 exposure. The alternatives list is here because a run may name this gap after the vendor or after the alternative being considered; either naming is correct."
+    }
+  ],
+  "gaps_must_not_include": [
+    {
+      "missing": "date",
+      "about_contains": "postmortem",
+      "why": "FALSE-GAP TRAP. Oct 17 is stated."
+    },
+    {
+      "missing": "owner",
+      "about_contains": "hiring plan",
+      "why": "FALSE-GAP TRAP. Dana is named."
+    }
+  ],
+  "gaps_must_be_empty": false,
+  "skipped_must_be_nonempty": true,
+  "notes": "629 words, ten sections, two appendices. The document holds well over twelve legitimate facts, so the 12-fact budget must drop things and name what it dropped in skipped. The six required facts are the consequential ones: three dated commitments with owners, one dated decision with a decider, the money risk, and the quarter's compute spend. Everything else - throughput metrics, hiring metrics, all of Appendix A, all of Appendix B - is allowed but must not be required, and a run that fills its twelve slots with appendix trivia while dropping Priya's $240,000 risk has failed the ranking even though its recall looks fine. Traps planted: (1) the in-house storage decision that was discussed and explicitly not settled; (2) two false-gap traps on the postmortem date and the hiring plan owner; (3) Appendix A exists to bait the budget with five small, correct, worthless numbers; (4) 'Customer satisfaction is trending in the right direction' is a direction with no measure - a gap about it is expected and correct, but it is not required, because reasonable runs may rank other gaps above it in the top five."
+}

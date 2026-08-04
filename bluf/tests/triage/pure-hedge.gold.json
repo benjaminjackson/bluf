@@ -1,0 +1,27 @@
+{
+  "is_thread": false,
+  "facts": [],
+  "allowed_facts": [
+    {"type": "claimed_state", "quote_contains": "Things are progressing well"},
+    {"type": "claimed_state", "quote_contains": "aligning on next steps for the integration work"},
+    {"type": "claimed_state", "quote_contains": "good momentum on the outstanding items"},
+    {"type": "claimed_state", "quote_contains": "should be in good shape soon"},
+    {"type": "claimed_state", "quote_contains": "Collaboration across the group has been strong"}
+  ],
+  "must_not_extract": [
+    {"type": "commitment", "quote_contains": "*", "why": "The document contains no commitment. Nothing is owned and nothing is dated."},
+    {"type": "decision", "quote_contains": "*", "why": "Nothing is decided and no decider is named."},
+    {"type": "number", "quote_contains": "*", "why": "The document contains no number at all."},
+    {"type": "risk", "quote_contains": "*", "why": "No risk is named, so a risk fact would be invented."}
+  ],
+  "contradictions_must_include": [],
+  "unresolved_must_include": [],
+  "gaps_must_include": [
+    {"missing": "owner"},
+    {"missing": "date"}
+  ],
+  "gaps_must_not_include": [],
+  "gaps_must_be_empty": false,
+  "verdict_regex": "(?i)\\b(no|none|zero|nothing|neither|does not|doesn't)\\b",
+  "notes": "Zero extractable facts by construction. The verdict line is the product here, not the extraction. The document names no person, no number, no date, and no decision. Trap: an empty template with headers and no content is a failure, and so is padding the facts list with claimed_state entries dressed up as progress. claimed_state entries on the hedge sentences are allowed but earn nothing. The gaps and the questions carry the whole answer."
+}

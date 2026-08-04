@@ -268,68 +268,122 @@ def grade_rewrite(runs, only, results):
     return errors
 
 
+# Matching semantics are specified in bluf/tests/triage/README.md; this is
+# their implementation. Change them there first.
 GOLD_SCALARS = ("owner", "date", "decider", "value", "baseline",
-                "provenance")
+                "provenance", "speaker", "message_date")
+GROUNDED_FIELDS = ("owner", "date", "decider", "value", "baseline")
+CALENDAR_DATE = re.compile(
+    r"(?i)\b(jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec)[a-z]*\.?"
+    r"\s*\d|\d{4}-\d{2}-\d{2}|\b\d{1,2}/\d{1,2}\b")
+RULE_NUMBER = re.compile(r"(?i)\bsee-100\b|\brule\s*\d")
 
 
 def gold_fact_matches(skill_fact, gold_fact):
-    if skill_fact.get("type") != gold_fact.get("type"):
+    if gold_fact.get("type") not in ("*", skill_fact.get("type")):
         return False
     for key in GOLD_SCALARS:
         if key in gold_fact and (str(gold_fact[key]).lower()
                                  not in str(skill_fact.get(key, "")).lower()):
             return False
-    if "quote_contains" in gold_fact and (
-            gold_fact["quote_contains"].lower()
-            not in skill_fact.get("quote", "").lower()):
+    want = gold_fact.get("quote_contains", "*")
+    if want != "*" and want.lower() not in skill_fact.get(
+            "quote", "").lower():
         return False
+    for key in gold_fact.get("must_not_have", []):
+        if key in skill_fact:
+            return False
     return True
+
+
+def containing_line(doc, quote):
+    """The full line(s) around a quote — the sentence approximation the
+    corpus README specifies for grounding checks. Fixture quotes sit inside
+    a single line by construction."""
+    at = doc.find(quote)
+    if at < 0:
+        return ""
+    start = doc.rfind("\n", 0, at) + 1
+    end = doc.find("\n", at + len(quote))
+    return doc[start:end if end >= 0 else None]
+
+
+def gap_matches(gap, spec):
+    if spec.get("missing", "") not in str(gap.get("missing", "")).lower():
+        return False
+    about = (str(gap.get("about", "")) + " "
+             + str(gap.get("quote", ""))).lower()
+    wanted = spec.get("about_contains", "")
+    if isinstance(wanted, str):
+        wanted = [wanted] if wanted else []
+    return not wanted or any(w.lower() in about for w in wanted)
 
 
 def grade_triage_run(md, gold, payload, errors):
     doc = md.read_text()
     facts = payload.get("facts", [])
+    gaps = payload.get("gaps", [])
+    questions = payload.get("questions", [])
     verdict = []
 
     def check(kind, spec, ok):
-        verdict.append((kind, json.dumps(spec, sort_keys=True), ok))
+        verdict.append((kind, json.dumps(spec, sort_keys=True), bool(ok)))
         return ok
 
-    if not check("budget", "facts<=12", len(facts) <= 12):
+    # Budget invariants, every run (corpus README).
+    if not check("budget-facts", "facts<=12", len(facts) <= 12):
         fail(errors, f"{md.name}: {len(facts)} facts — budget is 12")
+    if not check("budget-gaps", "gaps<=5,ranks unique from 1",
+                 len(gaps) <= 5 and sorted(g.get("rank") for g in gaps)
+                 == list(range(1, len(gaps) + 1))):
+        fail(errors, f"{md.name}: gaps break the budget (max 5, unique "
+                     "ranks starting at 1)")
+    if not check("budget-questions", "questions<=5", len(questions) <= 5):
+        fail(errors, f"{md.name}: {len(questions)} questions — budget is 5")
+    if not check("no-rule-numbers", "output carries no rule number",
+                 not RULE_NUMBER.search(json.dumps(payload))):
+        fail(errors, f"{md.name}: SEE-100 rule number in triage output")
+    for f in facts:
+        thread_ok = (all(k in f for k in ("speaker", "message_date"))
+                     if gold.get("is_thread")
+                     else not any(k in f for k in ("speaker",
+                                                   "message_date")))
+        if not check("thread-attribution", f.get("quote", ""), thread_ok):
+            fail(errors, f"{md.name}: speaker/message_date wrong for "
+                         f"is_thread={gold.get('is_thread')} on "
+                         f"{f.get('quote', '')!r}")
 
-    # Fabrication, the hard fail: every asserted fact must be grounded.
+    # Fabrication, hard fail: unmatched facts must be grounded in the
+    # sentence holding their quote.
+    matchable = gold.get("facts", []) + gold.get("allowed_facts", [])
     for f in facts:
         quote = f.get("quote", "")
         if not check("grounded-quote", quote, bool(quote) and quote in doc):
             fail(errors, f"{md.name}: fabricated/mangled quote {quote!r}")
             continue
-        for key in ("owner", "date", "decider", "value", "baseline"):
-            if key in f and str(f[key]).lower() not in doc.lower():
+        if any(gold_fact_matches(f, spec) for spec in matchable):
+            continue
+        sentence = containing_line(doc, quote).lower()
+        for key in GROUNDED_FIELDS:
+            if key in f and str(f[key]).lower() not in sentence:
                 check("grounded-field", f"{key}={f[key]}", False)
-                fail(errors, f"{md.name}: fact asserts {key}={f[key]!r} "
-                             "not present anywhere in the document")
+                fail(errors, f"{md.name}: unmatched fact asserts "
+                             f"{key}={f[key]!r} unsupported by its own "
+                             "sentence")
+
+    # A fact whose type is invented over a real quote.
+    for spec in gold.get("must_not_extract", []):
+        bad = [f for f in facts if gold_fact_matches(f, spec)]
+        if not check("must-not-extract", spec, not bad):
+            fail(errors, f"{md.name}: extracted what must not exist: "
+                         f"{spec.get('type')} over "
+                         f"{spec.get('quote_contains')!r}")
 
     # Recall against the hand-written gold facts.
     for spec in gold.get("facts", []):
-        hits = [f for f in facts if gold_fact_matches(f, spec)]
-        if not check("recall", spec, bool(hits)):
+        if not check("recall", spec,
+                     any(gold_fact_matches(f, spec) for f in facts)):
             fail(errors, f"{md.name}: gold fact missed {spec}")
-        # Banned-inference traps: a matching fact may not carry these values.
-        for key, banned in spec.get("must_not_have", {}).items():
-            bad = [f for f in hits
-                   if str(banned).lower() in str(f.get(key, "")).lower()]
-            if not check("banned-inference", f"{key}!={banned}", not bad):
-                fail(errors, f"{md.name}: banned inference — {key}="
-                             f"{banned!r} credited from context")
-
-    gaps = payload.get("gaps", [])
-
-    def gap_matches(gap, spec):
-        return (spec.get("missing", "") == gap.get("missing", "")
-                and spec.get("about_contains", "").lower()
-                in (str(gap.get("about", "")) + " "
-                    + str(gap.get("quote", ""))).lower())
 
     if gold.get("gaps_must_be_empty"):
         if not check("no-gaps", "gaps==[]", not gaps):
@@ -339,30 +393,49 @@ def grade_triage_run(md, gold, payload, errors):
         if not check("gap-recall", spec,
                      any(gap_matches(g, spec) for g in gaps)):
             fail(errors, f"{md.name}: gold gap missed {spec}")
-    # A false gap — claiming absent what the document states — is fabrication.
-    for spec in gold.get("false_gap_traps", []):
-        trapped = [g for g in gaps if gap_matches(g, spec)]
-        if not check("false-gap", spec, not trapped):
+    # A false gap — claiming absent what the document states — is
+    # fabrication in the other direction.
+    for spec in gold.get("gaps_must_not_include", []):
+        if not check("false-gap", spec,
+                     not any(gap_matches(g, spec) for g in gaps)):
             fail(errors, f"{md.name}: false gap — claims missing "
                          f"{spec.get('missing')!r} which the document states")
 
     contradictions = payload.get("contradictions", [])
     for spec in gold.get("contradictions_must_include", []):
         def contra_hit(c):
-            text = json.dumps(c).lower()
-            return (spec.get("about_contains", "").lower()
-                    in str(c.get("about", "")).lower()
-                    and all(q.lower() in text
+            blob = (str(c.get("about", "")) + " "
+                    + " ".join(map(str, c.get("quotes", [])))).lower()
+            return (spec.get("about_contains", "").lower() in blob
+                    and all(q.lower() in blob
                             for q in spec.get("quotes_contain", [])))
-        if not check("contradiction", spec, any(map(contra_hit,
-                                                    contradictions))):
+        if not check("contradiction", spec,
+                     any(map(contra_hit, contradictions))):
             fail(errors, f"{md.name}: contradiction missed {spec}")
 
     unresolved = " ".join(str(u.get("quote", ""))
                           for u in payload.get("unresolved_dates", []))
     for token in gold.get("unresolved_must_include", []):
-        if not check("unresolved", token, token.lower() in unresolved.lower()):
+        if not check("unresolved", token,
+                     token.lower() in unresolved.lower()):
             fail(errors, f"{md.name}: unresolved date {token!r} not surfaced")
+    if gold.get("no_resolved_dates"):
+        hit = CALENDAR_DATE.search(json.dumps(payload))
+        if not check("no-resolved-dates", "no calendar date", not hit):
+            fail(errors, f"{md.name}: calendar date {hit.group()!r} in "
+                         "output — the document has no anchor")
+
+    if gold.get("skipped_must_be_nonempty"):
+        if not check("skipped", "skipped nonempty",
+                     bool(payload.get("skipped"))):
+            fail(errors, f"{md.name}: budget must name what it dropped in "
+                         "'skipped'")
+    if gold.get("verdict_regex"):
+        if not check("verdict", gold["verdict_regex"],
+                     re.search(gold["verdict_regex"],
+                               str(payload.get("verdict", "")))):
+            fail(errors, f"{md.name}: verdict fails "
+                         f"{gold['verdict_regex']!r}")
     return verdict
 
 

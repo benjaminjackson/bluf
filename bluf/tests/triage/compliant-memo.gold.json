@@ -1,0 +1,56 @@
+{
+  "is_thread": false,
+  "facts": [
+    {
+      "type": "decision",
+      "decider": "Priya",
+      "date": "Aug 14",
+      "quote_contains": "Priya approved moving payment processing to Acme on Aug 14",
+      "provenance": "stated"
+    },
+    {
+      "type": "number",
+      "value": "2.1",
+      "baseline": "2.9",
+      "quote_contains": "fees fall from 2.9% to 2.1% of volume",
+      "provenance": "stated"
+    },
+    {
+      "type": "number",
+      "value": "19,000",
+      "baseline": "2.4M",
+      "quote_contains": "On last year's volume of $2.4M that saves $19,000 a year",
+      "provenance": "stated"
+    },
+    {
+      "type": "commitment",
+      "owner": "Marco",
+      "date": "Sep 30",
+      "quote_contains": "Marco completes the integration and cutover by Sep 30",
+      "provenance": "stated"
+    },
+    {
+      "type": "commitment",
+      "owner": "Dana",
+      "date": "Aug 29",
+      "quote_contains": "Dana runs the certification dry run by Aug 29",
+      "provenance": "stated"
+    },
+    {
+      "type": "risk",
+      "owner": "Dana",
+      "quote_contains": "if certification slips past Sep 15, we pay both processors for October",
+      "provenance": "stated"
+    }
+  ],
+  "allowed_facts": [
+    {"type": "*", "quote_contains": "*", "why": "Every sentence in this memo is a stated fact. Any well-formed extraction is acceptable."}
+  ],
+  "must_not_extract": [],
+  "contradictions_must_include": [],
+  "unresolved_must_include": [],
+  "gaps_must_include": [],
+  "gaps_must_not_include": [],
+  "gaps_must_be_empty": true,
+  "notes": "The control fixture. Everything needed is stated: the decision carries a decider and a date, both commitments carry an owner and a date, both numbers carry a baseline, and the risk carries a trigger, a consequence, and an owner. There is no relative date, so nothing needs an anchor. INVENTING A GAP HERE IS A HARD FAIL, symmetric with fabricating a fact - see the degenerate-cases section of TRIAGE.md. 'Everything needed is stated' is the complete and correct answer. This fixture is the only defence against a skill that pads every run with plausible-sounding gaps, so gaps_must_be_empty is graded strictly: any entry in the gaps array fails the run."
+}

@@ -1,0 +1,61 @@
+{
+  "is_thread": false,
+  "facts": [
+    {
+      "type": "commitment",
+      "owner": "Maria",
+      "date": "Sep 12",
+      "quote_contains": "Maria sends the revised renewal terms to the mid-tier accounts on Sep 12",
+      "provenance": "stated"
+    },
+    {
+      "type": "number",
+      "value": "14",
+      "quote_contains": "We closed 14 renewals this month",
+      "provenance": "stated"
+    },
+    {
+      "type": "risk",
+      "quote_contains": "risk around the data migration for the two largest accounts",
+      "provenance": "stated",
+      "must_not_have": ["owner"],
+      "why": "The risk names no owner. Maria is the only person in the document, so crediting her is fabrication."
+    }
+  ],
+  "allowed_facts": [
+    {"type": "claimed_state", "quote_contains": "the pipeline is healthy"},
+    {"type": "claimed_state", "quote_contains": "Both sides were well argued and we will keep talking"},
+    {"type": "claimed_state", "quote_contains": "we spent most of Tuesday's call on whether to move the mid-tier"},
+    {"type": "claimed_state", "quote_contains": "Usage is up meaningfully since the pricing change"},
+    {"type": "claimed_state", "quote_contains": "support tickets are down"},
+    {"type": "claimed_state", "quote_contains": "Renewal conversations are going better than they were last quarter"}
+  ],
+  "must_not_extract": [
+    {
+      "type": "decision",
+      "quote_contains": "monthly billing",
+      "why": "TRAP. The billing change was discussed at length and explicitly left open ('we will keep talking'). A decision fact here is fabrication."
+    }
+  ],
+  "contradictions_must_include": [],
+  "unresolved_must_include": [],
+  "gaps_must_include": [
+    {"missing": "baseline", "about_contains": "renewals"},
+    {"missing": "owner", "about_contains": "migration"},
+    {"missing": "decid", "about_contains": "billing"}
+  ],
+  "gaps_must_not_include": [
+    {
+      "missing": "date",
+      "about_contains": "renewal terms",
+      "why": "FALSE-GAP TRAP. Sep 12 is stated outright."
+    },
+    {
+      "missing": "owner",
+      "about_contains": "renewal terms",
+      "why": "FALSE-GAP TRAP. Maria is named."
+    }
+  ],
+  "gaps_must_be_empty": false,
+  "notes": "Evasion is the content. Traps planted: (1) '14 renewals' and 'better than they were last quarter' give a number with a comparison but no baseline number; (2) 'Usage is up meaningfully' and 'support tickets are down' are directions with no number at all; (3) the mid-tier billing question is a decision-shaped discussion that was never decided; (4) the data migration risk has no owner, no trigger, and no consequence; (5) FALSE-GAP TRAP - Maria and Sep 12 are both stated plainly, so any gap claiming the renewal terms lack an owner or a date is fabrication. The one clean commitment exists so that extraction is not empty and the grader can tell an evasive document from a hedge-only one."
+}

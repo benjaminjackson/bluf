@@ -1,0 +1,118 @@
+{
+  "is_thread": true,
+  "facts": [
+    {
+      "type": "commitment",
+      "owner": "Marco",
+      "date": "Jul 31",
+      "speaker": "Marco",
+      "message_date": "Jul 18",
+      "quote_contains": "corrected churn breakdown to this group by Jul 31",
+      "provenance": "stated"
+    },
+    {
+      "type": "commitment",
+      "speaker": "Dana",
+      "message_date": "Jul 20",
+      "quote_contains": "rollback plan will be written before the cutover",
+      "provenance": "stated",
+      "must_not_have": ["owner"],
+      "why": "BANNED-INFERENCE TRAP. The sentence names no owner. Dana sent the message and Dana signs it, and Sam is the only other named actor in the thread. Any owner on this fact is fabrication."
+    },
+    {
+      "type": "number",
+      "value": "25",
+      "speaker": "Marco",
+      "message_date": "Jul 18",
+      "quote_contains": "Enterprise churn last quarter was 25%, not 40%",
+      "provenance": "stated",
+      "why": "Newest statement wins. Marco (Jul 18) supersedes Priya (Jul 9), and Dana concedes it on Jul 20."
+    }
+  ],
+  "allowed_facts": [
+    {
+      "type": "commitment",
+      "speaker": "Dana",
+      "message_date": "Jul 20",
+      "quote_contains": "the last two services land in early September",
+      "why": "Type is genuinely ambiguous here (hedged with 'realistically'). commitment or claimed_state both acceptable."
+    },
+    {
+      "type": "claimed_state",
+      "speaker": "Dana",
+      "message_date": "Jul 20",
+      "quote_contains": "the last two services land in early September"
+    },
+    {
+      "type": "commitment",
+      "speaker": "Dana",
+      "message_date": "Jul 2",
+      "quote_contains": "The cutover will be done by Aug 15",
+      "why": "True quote, superseded by Jul 20. Allowed as a fact only if the contradiction is also reported."
+    },
+    {
+      "type": "number",
+      "value": "40",
+      "speaker": "Priya",
+      "message_date": "Jul 9",
+      "quote_contains": "enterprise churn last quarter was 40%, against 22% the quarter before"
+    },
+    {
+      "type": "number",
+      "value": "40",
+      "speaker": "Marco",
+      "message_date": "Jul 18",
+      "quote_contains": "The 40% figure is the small-business tier"
+    },
+    {
+      "type": "claimed_state",
+      "speaker": "Dana",
+      "message_date": "Jul 2",
+      "quote_contains": "Sam has the runbook and the staging rehearsal is booked"
+    },
+    {
+      "type": "claimed_state",
+      "speaker": "Priya",
+      "message_date": "Jul 9",
+      "quote_contains": "Nobody landed on an answer"
+    }
+  ],
+  "must_not_extract": [
+    {
+      "type": "decision",
+      "quote_contains": "pause the migration",
+      "why": "TRAP. A discussion of a decision is not a decision. The thread says outright that nobody landed on an answer."
+    },
+    {
+      "type": "decision",
+      "quote_contains": "Nobody landed on an answer",
+      "why": "Same trap, other half of the sentence."
+    }
+  ],
+  "contradictions_must_include": [
+    {
+      "about_contains": "cutover",
+      "quotes_contain": ["Aug 15", "early September"],
+      "why": "Same person, Dana, changing the date between Jul 2 and Jul 20."
+    },
+    {
+      "about_contains": "churn",
+      "quotes_contain": ["40%", "25%"],
+      "why": "Two people, Priya and Marco, disagreeing on the same number."
+    }
+  ],
+  "unresolved_must_include": [],
+  "gaps_must_include": [
+    {"missing": "owner", "about_contains": "rollback"},
+    {"missing": "decid", "about_contains": "pause"}
+  ],
+  "gaps_must_not_include": [
+    {
+      "missing": "date",
+      "about_contains": "churn breakdown",
+      "why": "FALSE-GAP TRAP. Jul 31 is stated on Marco's commitment."
+    }
+  ],
+  "gaps_must_be_empty": false,
+  "notes": "Traps planted: (1) banned-inference trap on the ownerless rollback commitment, sent and signed by Dana; (2) a decision-shaped discussion that was explicitly never decided; (3) a false-gap trap on Marco's Jul 31 date; (4) stale bottom-quoted history (Thursday sync time, room change, parking) that carries no consequential fact and should be dropped or named in skipped. Newest-wins ordering: Jul 20 beats Jul 2 on the cutover date, Jul 18 beats Jul 9 on churn. Note that first-person commitments ('I'll send the corrected churn breakdown') DO take the speaker as owner — see the README section on first person versus the From: line."
+}

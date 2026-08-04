@@ -49,7 +49,11 @@ Absent facts are not facts — they are gaps.
 
 **Banned inferences**, by name. Each of these is fabrication, not inference:
 
-- An owner from the `From:` line or signature. The sender is not the owner.
+- An owner from the `From:` line or signature of an **ownerless** statement.
+  "A rollback plan will be written", sent by Dana, has no owner — crediting
+  Dana is fabrication. Resolving an explicit first person ("I'll send X",
+  written by Marco) to the speaker is not inference; the document names its
+  owner and the fact stays `stated`.
 - A date from surrounding context ("the thread is about Q3, so ~September").
 - A decision from a discussion of a decision. Talking about deciding is a
   claimed state at most.
@@ -64,6 +68,11 @@ in the document itself — a send date, a dateline, a dated message header.
 No anchor: the date surfaces unresolved, with the reason: "'Friday' — the
 document carries no send date, so this cannot be resolved." Today's date is
 never an anchor; the document may be months old.
+
+A fact whose only date is an unresolved relative phrase keeps that phrase
+verbatim in its `date` field ("Friday") — the document does state it — and
+the phrase also appears in `unresolved_dates`. What the fact may never carry
+is a calendar date the document does not support.
 
 ## Tone
 
@@ -144,6 +153,12 @@ Field rules:
   as a gap, not as `null`.
 - `speaker` / `message_date` — required when the input is a thread; omitted
   for single documents.
+- `verdict` — the lead line, as one string. The rendered lead line and this
+  field say the same thing.
+- `gaps[].missing` — the absent slot, named with one of: `owner`, `date`,
+  `decider`, `decision`, `value`, `baseline`, `denominator`.
+- `gaps[].about` — a short noun phrase naming the thing the slot is missing
+  from ("the rollback plan"), plus a `quote` when a span exists.
 - `gaps[].rank` — 1 is most consequential; ranks are unique.
 - Grading (see the corpus README): recall is scored against a hand-written
   gold fact list; any asserted fact absent from the gold list is fabrication

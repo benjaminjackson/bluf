@@ -1,0 +1,57 @@
+{
+  "is_thread": false,
+  "facts": [
+    {
+      "type": "commitment",
+      "owner": "Priya",
+      "quote_contains": "Priya finishes the merchant onboarding screens by Friday",
+      "provenance": "stated"
+    },
+    {
+      "type": "commitment",
+      "owner": "Marco",
+      "quote_contains": "Marco starts load testing the week after next",
+      "provenance": "stated"
+    },
+    {
+      "type": "commitment",
+      "owner": "Sam",
+      "quote_contains": "will circulate it end of next week",
+      "provenance": "stated"
+    }
+  ],
+  "allowed_facts": [
+    {"type": "claimed_state", "quote_contains": "Sandbox work is finished"},
+    {"type": "number", "value": "four", "quote_contains": "Support headcount stays at four through the pilot"},
+    {"type": "claimed_state", "quote_contains": "Support headcount stays at four through the pilot"},
+    {"type": "number", "value": "ten", "quote_contains": "the first ten merchants early next month"},
+    {"type": "commitment", "quote_contains": "we open the pilot to the first ten merchants early next month"},
+    {"type": "claimed_state", "quote_contains": "Nothing here is blocked"}
+  ],
+  "must_not_extract": [],
+  "contradictions_must_include": [],
+  "unresolved_must_include": [
+    "Friday",
+    "week after next",
+    "end of next week",
+    "early next month"
+  ],
+  "no_resolved_dates": true,
+  "gaps_must_include": [
+    {"missing": "owner", "about_contains": "pilot"}
+  ],
+  "gaps_must_not_include": [
+    {
+      "missing": "owner",
+      "about_contains": "onboarding screens",
+      "why": "FALSE-GAP TRAP. Priya is named on that commitment."
+    },
+    {
+      "missing": "owner",
+      "about_contains": "load testing",
+      "why": "FALSE-GAP TRAP. Marco is named on that commitment."
+    }
+  ],
+  "gaps_must_be_empty": false,
+  "notes": "The whole fixture is one trap: four relative date phrases and no anchor anywhere. There is no send date, no dateline, no message header, no month name, and no year in the document. Any calendar date in the output is fabrication, which is what no_resolved_dates checks. Today's date is never an anchor. The commitments themselves are real and must still be extracted with their owners; only the dates are unresolvable. Secondary trap: the pilot opening ('we open the pilot') has no owner, while the three commitments around it do."
+}
