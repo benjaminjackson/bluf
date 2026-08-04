@@ -83,7 +83,8 @@ Degenerate cases:
   inventing facts.
 
 If the request contains "emit triage JSON", append one fenced `json` block
-in the TRIAGE.md schema. No prose inside the block.
+in the TRIAGE.md schema. No prose inside the block, and nothing after it —
+the block is always the last thing in the response.
 
 ## Failure behavior
 
