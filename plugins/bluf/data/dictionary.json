@@ -1,0 +1,526 @@
+{
+  "see100": "1.0",
+  "banned": [
+    {
+      "term": "leverage",
+      "row": "leverage (v)",
+      "rule": "1.1",
+      "pos": "verb",
+      "instead": "use",
+      "patterns": ["leverage", "leverages", "leveraged", "leveraging"],
+      "exceptions": ["leverage ratio", "leveraged buyout"]
+    },
+    {
+      "term": "utilize",
+      "row": "utilize",
+      "rule": "1.1",
+      "instead": "use",
+      "patterns": ["utilize", "utilizes", "utilized", "utilizing", "utilization"]
+    },
+    {
+      "term": "synergy",
+      "row": "synergy / synergies",
+      "rule": "1.1",
+      "instead": "(delete; state the specific combined benefit)",
+      "delete": true,
+      "note": "state the specific combined benefit",
+      "patterns": ["synergy", "synergies", "synergistic"]
+    },
+    {
+      "term": "alignment",
+      "row": "alignment / aligned",
+      "rule": "1.1",
+      "instead": "agreement / agreed — name who agreed to what",
+      "note": "name who agreed to what",
+      "patterns": ["alignment", "aligned", "align", "aligns", "aligning"]
+    },
+    {
+      "term": "learnings",
+      "row": "learnings",
+      "rule": "1.2",
+      "pos": "noun",
+      "instead": "lessons",
+      "patterns": ["learnings"]
+    },
+    {
+      "term": "ask",
+      "row": "the ask (n)",
+      "rule": "1.2",
+      "pos": "noun",
+      "instead": "the request",
+      "patterns": ["the ask", "an ask", "the asks", "our ask", "big ask"]
+    },
+    {
+      "term": "spend",
+      "row": "the spend (n)",
+      "rule": "1.2",
+      "pos": "noun",
+      "instead": "the cost",
+      "patterns": ["the spend", "our spend", "total spend", "ad spend"]
+    },
+    {
+      "term": "solve",
+      "row": "the solve (n)",
+      "rule": "1.2",
+      "pos": "noun",
+      "instead": "the solution",
+      "patterns": ["the solve", "a solve", "the solves"]
+    },
+    {
+      "term": "bandwidth",
+      "row": "bandwidth (of people)",
+      "rule": "1.1",
+      "scope": "of people",
+      "instead": "time",
+      "patterns": ["bandwidth"],
+      "exceptions": ["network bandwidth", "memory bandwidth"]
+    },
+    {
+      "term": "headwinds",
+      "row": "headwinds / tailwinds",
+      "rule": "1.1",
+      "instead": "X fell/rose by N",
+      "patterns": ["headwind", "headwinds"]
+    },
+    {
+      "term": "tailwinds",
+      "row": "headwinds / tailwinds",
+      "rule": "1.1",
+      "instead": "X fell/rose by N",
+      "patterns": ["tailwind", "tailwinds"]
+    },
+    {
+      "term": "circle back",
+      "row": "circle back",
+      "rule": "3.5",
+      "instead": "discuss on DATE",
+      "patterns": ["circle back", "circles back", "circling back", "circled back"]
+    },
+    {
+      "term": "reach out",
+      "row": "reach out",
+      "rule": "3.5",
+      "instead": "call, email",
+      "patterns": ["reach out", "reaches out", "reaching out", "reached out"]
+    },
+    {
+      "term": "touch base",
+      "row": "touch base",
+      "rule": "3.5",
+      "instead": "meet",
+      "patterns": ["touch base", "touches base", "touching base", "touched base"]
+    },
+    {
+      "term": "double-click",
+      "row": "double-click (on a topic)",
+      "rule": "1.1",
+      "scope": "on a topic",
+      "instead": "examine",
+      "patterns": ["double-click", "double click", "double-clicks", "double-clicking", "double clicking", "double-clicked"]
+    },
+    {
+      "term": "socialize",
+      "row": "socialize (a document)",
+      "rule": "1.1",
+      "scope": "a document",
+      "instead": "send to, discuss with",
+      "patterns": ["socialize", "socializes", "socializing", "socialized"]
+    },
+    {
+      "term": "operationalize",
+      "row": "operationalize",
+      "rule": "1.1",
+      "instead": "put into use; state the mechanism",
+      "patterns": ["operationalize", "operationalizes", "operationalizing", "operationalized"]
+    },
+    {
+      "term": "ideate",
+      "row": "ideate",
+      "rule": "1.1",
+      "instead": "think, propose",
+      "patterns": ["ideate", "ideates", "ideating", "ideated", "ideation"]
+    },
+    {
+      "term": "action",
+      "row": "action (v)",
+      "rule": "1.6",
+      "pos": "verb",
+      "instead": "do, complete",
+      "patterns": ["action", "actions", "actioning", "actioned"],
+      "exceptions": ["action item", "action items"]
+    },
+    {
+      "term": "dialogue",
+      "row": "dialogue (v)",
+      "rule": "1.6",
+      "pos": "verb",
+      "instead": "talk",
+      "patterns": ["dialogue", "dialogues", "dialoguing", "dialogued"]
+    },
+    {
+      "term": "whiteboard",
+      "row": "whiteboard (v)",
+      "rule": "1.6",
+      "pos": "verb",
+      "instead": "plan, sketch",
+      "patterns": ["whiteboard", "whiteboards", "whiteboarding", "whiteboarded"]
+    },
+    {
+      "term": "going forward",
+      "row": "going forward",
+      "rule": "1.1",
+      "instead": "from now / from DATE",
+      "patterns": ["going forward"]
+    },
+    {
+      "term": "at the end of the day",
+      "row": "at the end of the day",
+      "rule": "1.1",
+      "instead": "(delete)",
+      "delete": true,
+      "patterns": ["at the end of the day"]
+    },
+    {
+      "term": "move the needle",
+      "row": "move the needle",
+      "rule": "1.1",
+      "instead": "change X by N",
+      "patterns": ["move the needle", "moves the needle", "moving the needle", "moved the needle"]
+    },
+    {
+      "term": "boil the ocean",
+      "row": "boil the ocean",
+      "rule": "1.1",
+      "instead": "(delete; state the smaller scope)",
+      "delete": true,
+      "note": "state the smaller scope",
+      "patterns": ["boil the ocean", "boiling the ocean", "boils the ocean"]
+    },
+    {
+      "term": "low-hanging fruit",
+      "row": "low-hanging fruit",
+      "rule": "1.1",
+      "instead": "the easiest item: NAME IT",
+      "patterns": ["low-hanging fruit", "low hanging fruit"]
+    },
+    {
+      "term": "best-in-class",
+      "row": "best-in-class / world-class",
+      "rule": "1.1",
+      "instead": "(delete, or cite the comparison)",
+      "delete": true,
+      "note": "or cite the comparison",
+      "patterns": ["best-in-class", "best in class"]
+    },
+    {
+      "term": "world-class",
+      "row": "best-in-class / world-class",
+      "rule": "1.1",
+      "instead": "(delete, or cite the comparison)",
+      "delete": true,
+      "note": "or cite the comparison",
+      "patterns": ["world-class", "world class"]
+    },
+    {
+      "term": "robust",
+      "row": "robust / seamless / scalable (as praise)",
+      "rule": "1.1",
+      "condition": "as praise",
+      "instead": "(delete, or state the measured property)",
+      "delete": true,
+      "note": "or state the measured property",
+      "patterns": ["robust"]
+    },
+    {
+      "term": "seamless",
+      "row": "robust / seamless / scalable (as praise)",
+      "rule": "1.1",
+      "condition": "as praise",
+      "instead": "(delete, or state the measured property)",
+      "delete": true,
+      "note": "or state the measured property",
+      "patterns": ["seamless", "seamlessly"]
+    },
+    {
+      "term": "scalable",
+      "row": "robust / seamless / scalable (as praise)",
+      "rule": "1.1",
+      "condition": "as praise",
+      "instead": "(delete, or state the measured property)",
+      "delete": true,
+      "note": "or state the measured property",
+      "patterns": ["scalable", "scalability"]
+    },
+    {
+      "term": "pressure-test",
+      "row": "pressure-test",
+      "rule": "1.1",
+      "instead": "check, verify",
+      "patterns": ["pressure-test", "pressure test", "pressure-testing", "pressure testing", "pressure-tested", "pressure tested"]
+    },
+    {
+      "term": "granular",
+      "row": "granular",
+      "rule": "1.1",
+      "instead": "detailed",
+      "patterns": ["granular", "granularity"]
+    },
+    {
+      "term": "holistic",
+      "row": "holistic",
+      "rule": "1.1",
+      "instead": "complete",
+      "patterns": ["holistic", "holistically"]
+    },
+    {
+      "term": "cadence",
+      "row": "cadence",
+      "rule": "1.1",
+      "instead": "schedule",
+      "patterns": ["cadence", "cadences"]
+    },
+    {
+      "term": "north star",
+      "row": "north star",
+      "rule": "1.1",
+      "instead": "goal",
+      "patterns": ["north star", "north-star"]
+    },
+    {
+      "term": "tiger team",
+      "row": "tiger team",
+      "rule": "1.1",
+      "instead": "team — name the members",
+      "note": "name the members",
+      "patterns": ["tiger team", "tiger teams"]
+    },
+    {
+      "term": "stakeholders",
+      "row": "stakeholders",
+      "rule": "1.1",
+      "instead": "the people affected: NAME THEM",
+      "patterns": ["stakeholder", "stakeholders"]
+    },
+    {
+      "term": "value-add",
+      "row": "value-add",
+      "rule": "1.1",
+      "instead": "benefit: state it",
+      "patterns": ["value-add", "value add", "value-adds"]
+    },
+    {
+      "term": "core competency",
+      "row": "core competency",
+      "rule": "1.1",
+      "instead": "strength",
+      "patterns": ["core competency", "core competencies"]
+    },
+    {
+      "term": "paradigm shift",
+      "row": "paradigm shift",
+      "rule": "1.1",
+      "instead": "(delete; state what changed)",
+      "delete": true,
+      "note": "state what changed",
+      "patterns": ["paradigm shift", "paradigm shifts", "paradigm-shift"]
+    },
+    {
+      "term": "deep dive",
+      "row": "deep dive",
+      "rule": "1.1",
+      "instead": "detailed review",
+      "patterns": ["deep dive", "deep dives", "deep-dive", "deep diving"]
+    },
+    {
+      "term": "pivot",
+      "row": "pivot",
+      "rule": "1.1",
+      "instead": "change of plan: state old → new",
+      "patterns": ["pivot", "pivots", "pivoting", "pivoted"],
+      "exceptions": ["pivot table", "pivot tables"]
+    },
+    {
+      "term": "streamline",
+      "row": "streamline",
+      "rule": "1.1",
+      "instead": "simplify; state what gets removed",
+      "patterns": ["streamline", "streamlines", "streamlining", "streamlined"]
+    }
+  ],
+  "locks": [
+    {
+      "term": "on track",
+      "rule": "1.3",
+      "meaning": "The committed date and scope will hold. Nothing else."
+    },
+    {
+      "term": "at risk",
+      "rule": "1.3",
+      "meaning": "A named trigger could break the date or scope; the risk statement exists (Rule 7.2)."
+    },
+    {
+      "term": "off track",
+      "rule": "1.3",
+      "meaning": "The committed date or scope will not hold. A new date or scope is proposed in the same document."
+    },
+    {
+      "term": "blocked",
+      "rule": "1.3",
+      "meaning": "Work cannot proceed without a named external action. Waiting on yourself is not blocked."
+    },
+    {
+      "term": "decision",
+      "rule": "1.3",
+      "meaning": "A choice was made by a named person on a date. \"We need a decision\" names the decider."
+    },
+    {
+      "term": "done",
+      "rule": "1.3",
+      "meaning": "Shipped, delivered, or signed — verifiable by a third party. Not \"done pending review.\""
+    },
+    {
+      "term": "owner",
+      "rule": "1.3",
+      "meaning": "The one person answerable for the outcome. An owner is never a team, a committee, or \"us.\""
+    },
+    {
+      "term": "deadline",
+      "rule": "1.3",
+      "meaning": "A date with a stated consequence for missing it. A date without a consequence is a target."
+    },
+    {
+      "term": "target",
+      "rule": "1.3",
+      "meaning": "A date or number we aim at, with no external consequence if missed."
+    },
+    {
+      "term": "estimate",
+      "rule": "1.3",
+      "meaning": "A number the writer derived and stands behind, with stated confidence."
+    },
+    {
+      "term": "opinion",
+      "rule": "1.3",
+      "meaning": "A judgment the writer holds; no number claimed."
+    },
+    {
+      "term": "critical path",
+      "rule": "1.3",
+      "meaning": "The sequence of dependent tasks that sets minimum completion time. Not \"important things.\""
+    },
+    {
+      "term": "material",
+      "rule": "1.3",
+      "meaning": "Accounting sense only: large enough to change a decision.",
+      "exceptions": ["material weakness"]
+    },
+    {
+      "term": "priority",
+      "rule": "1.3",
+      "meaning": "An item that displaces other items. More than three concurrent priorities means none exist."
+    }
+  ],
+  "prose_bans": [
+    {
+      "term": "significant",
+      "rule": "8.5",
+      "condition": "on a quantity",
+      "instead": "state the number, or label the claim an estimate or opinion",
+      "patterns": ["significant", "significantly"]
+    },
+    {
+      "term": "substantial",
+      "rule": "8.5",
+      "condition": "on a quantity",
+      "instead": "state the number, or label the claim an estimate or opinion",
+      "patterns": ["substantial", "substantially"]
+    },
+    {
+      "term": "massive",
+      "rule": "8.5",
+      "condition": "on a quantity",
+      "instead": "state the number, or label the claim an estimate or opinion",
+      "patterns": ["massive", "massively"]
+    },
+    {
+      "term": "meaningful",
+      "rule": "8.5",
+      "condition": "on a quantity",
+      "instead": "state the number, or label the claim an estimate or opinion",
+      "patterns": ["meaningful", "meaningfully"]
+    },
+    {
+      "term": "material",
+      "rule": "8.5",
+      "condition": "on a quantity; the accounting sense is meaning-locked",
+      "instead": "state the number, or label the claim an estimate or opinion",
+      "patterns": ["material", "materially"],
+      "exceptions": ["material weakness"]
+    },
+    {
+      "term": "soon",
+      "rule": "8.2",
+      "condition": "as a date",
+      "instead": "a calendar date",
+      "patterns": ["soon"]
+    },
+    {
+      "term": "shortly",
+      "rule": "8.2",
+      "condition": "as a date",
+      "instead": "a calendar date",
+      "patterns": ["shortly"]
+    },
+    {
+      "term": "in the coming weeks",
+      "rule": "8.2",
+      "condition": "as a date",
+      "instead": "a calendar date",
+      "patterns": ["in the coming weeks", "in coming weeks", "in the coming months"]
+    },
+    {
+      "term": "next sprint",
+      "rule": "8.2",
+      "condition": "as a date",
+      "instead": "a calendar date",
+      "patterns": ["next sprint"]
+    },
+    {
+      "term": "by EOQ",
+      "rule": "8.2",
+      "condition": "without a day",
+      "instead": "a calendar date",
+      "patterns": ["by EOQ", "by end of quarter", "by the end of the quarter"]
+    },
+    {
+      "term": "make a decision",
+      "rule": "3.4",
+      "instead": "decide",
+      "patterns": ["make a decision", "makes a decision", "making a decision", "made a decision"]
+    },
+    {
+      "term": "conduct an analysis",
+      "rule": "3.4",
+      "instead": "analyze",
+      "patterns": ["conduct an analysis", "conducts an analysis", "conducting an analysis", "conducted an analysis"]
+    },
+    {
+      "term": "provide a recommendation",
+      "rule": "3.4",
+      "instead": "recommend",
+      "patterns": ["provide a recommendation", "provides a recommendation", "providing a recommendation", "provided a recommendation"]
+    },
+    {
+      "term": "achieve alignment",
+      "rule": "3.4",
+      "instead": "agree",
+      "patterns": ["achieve alignment", "achieves alignment", "achieving alignment", "achieved alignment"]
+    },
+    {
+      "term": "we should",
+      "rule": "5.4",
+      "instead": "name an owner and a date",
+      "patterns": ["we should"]
+    }
+  ]
+}

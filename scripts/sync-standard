@@ -1,0 +1,9 @@
+#!/bin/sh
+# Regenerate the plugin copy of the standard from the canonical root copy.
+# The plugin ships a real file, not a symlink: local-path installs skip
+# symlinks that resolve outside the plugin directory.
+set -e
+cd "$(dirname "$0")/.."
+mkdir -p plugins/bluf/docs
+cp -f docs/SEE-100.md plugins/bluf/docs/SEE-100.md
+echo "plugins/bluf/docs/SEE-100.md regenerated from docs/SEE-100.md"

@@ -53,19 +53,51 @@ The two must never drift. Rules:
 - A sync check (script that parses the markdown tables and diffs them against
   the JSON) runs before any release. Drift fails the release.
 
-`dictionary.json` shape:
+`dictionary.json` shape (the minimal `term`/`pos`/`instead`/`rule` sketch could
+not express what the checker needs, so the schema grew):
 
 ```json
 {
   "see100": "1.0",
   "banned": [
-    { "term": "leverage", "pos": "verb", "instead": "use", "rule": "A" }
+    {
+      "term": "leverage",
+      "row": "leverage (v)",
+      "rule": "1.1",
+      "pos": "verb",
+      "instead": "use",
+      "patterns": ["leverage", "leverages", "leveraged", "leveraging"],
+      "exceptions": ["leverage ratio", "leveraged buyout"]
+    }
   ],
   "locks": [
-    { "term": "on track", "meaning": "The committed date and scope will hold. Nothing else.", "rule": "B" }
+    { "term": "on track", "rule": "1.3", "meaning": "The committed date and scope will hold. Nothing else." }
+  ],
+  "prose_bans": [
+    { "term": "soon", "rule": "8.2", "condition": "as a date", "instead": "a calendar date", "patterns": ["soon"] }
   ]
 }
 ```
+
+Field notes:
+
+- `row` is the verbatim banned-column cell from the Section A table; the sync
+  check joins on it. Slash rows that are inflections of one term ("synergy /
+  synergies") stay one entry with pattern variants; slash rows of distinct
+  terms ("headwinds / tailwinds") become one entry per term sharing a `row`.
+- `rule` is a citable Part 1 rule number, not a table letter: 1.1 plain bans,
+  1.2 part-of-speech bans, 1.3 locks, 1.6 noun-verbing, 3.5 phrasal idioms,
+  and for `prose_bans` 8.5 / 8.2 / 3.4 / 5.4.
+- Parentheticals in the tables map to fields: part of speech → `pos`, scope
+  qualifier ("of people") → `scope`, usage condition ("as praise") →
+  `condition`, delete-instructions in the substitution column → `delete: true`
+  plus `note`.
+- `exceptions` suppress a match ("pivot table", "action items").
+- `prose_bans` holds terms Part 1 bans in prose that the tables omit
+  (intensifiers, non-dates, nominalizations, "we should").
+- Vague quarter references without a day ("Q3", "EOY") are deliberately not
+  dictionary entries: they are a pattern class for the deterministic checker's
+  date regex, not a word list.
 
 ## Architecture: Two Layers
 
