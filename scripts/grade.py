@@ -35,6 +35,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent.parent
 PLUGIN = REPO / "bluf"
 CORPUS = PLUGIN / "tests"
+TRIAGE_CORPUS = CORPUS / "triage"
 DUMP_DIR = Path("/tmp/bluf-grade-runs")
 sys.path.insert(0, str(PLUGIN / "scripts"))
 import see100_check  # noqa: E402
@@ -92,11 +93,26 @@ def run_skill(command, dump_name, timeout=600):
     return payload
 
 
+def triage_fixtures(only=None):
+    if not TRIAGE_CORPUS.is_dir():
+        return
+    for md in sorted(TRIAGE_CORPUS.glob("*.md")):
+        if md.name == "README.md":
+            continue
+        if only and md.stem not in only:
+            continue
+        yield md, json.loads(md.with_suffix(".gold.json").read_text())
+
+
+COMMANDS = {
+    "lint": "/bluf:lint {md} — emit findings JSON",
+    "rewrite": "/bluf:rewrite {md} — emit rewrite JSON",
+    "triage": "/bluf:triage {md} — emit triage JSON",
+}
+
+
 def run_one(phase, md, i):
-    if phase == "lint":
-        command = f"/bluf:lint {md} — emit findings JSON"
-    else:
-        command = f"/bluf:rewrite {md} — emit rewrite JSON"
+    command = COMMANDS[phase].format(md=md)
     return run_skill(command, f"{phase}-{md.stem}-{i}")
 
 
@@ -252,9 +268,126 @@ def grade_rewrite(runs, only, results):
     return errors
 
 
+GOLD_SCALARS = ("owner", "date", "decider", "value", "baseline",
+                "provenance")
+
+
+def gold_fact_matches(skill_fact, gold_fact):
+    if skill_fact.get("type") != gold_fact.get("type"):
+        return False
+    for key in GOLD_SCALARS:
+        if key in gold_fact and (str(gold_fact[key]).lower()
+                                 not in str(skill_fact.get(key, "")).lower()):
+            return False
+    if "quote_contains" in gold_fact and (
+            gold_fact["quote_contains"].lower()
+            not in skill_fact.get("quote", "").lower()):
+        return False
+    return True
+
+
+def grade_triage_run(md, gold, payload, errors):
+    doc = md.read_text()
+    facts = payload.get("facts", [])
+    verdict = []
+
+    def check(kind, spec, ok):
+        verdict.append((kind, json.dumps(spec, sort_keys=True), ok))
+        return ok
+
+    if not check("budget", "facts<=12", len(facts) <= 12):
+        fail(errors, f"{md.name}: {len(facts)} facts — budget is 12")
+
+    # Fabrication, the hard fail: every asserted fact must be grounded.
+    for f in facts:
+        quote = f.get("quote", "")
+        if not check("grounded-quote", quote, bool(quote) and quote in doc):
+            fail(errors, f"{md.name}: fabricated/mangled quote {quote!r}")
+            continue
+        for key in ("owner", "date", "decider", "value", "baseline"):
+            if key in f and str(f[key]).lower() not in doc.lower():
+                check("grounded-field", f"{key}={f[key]}", False)
+                fail(errors, f"{md.name}: fact asserts {key}={f[key]!r} "
+                             "not present anywhere in the document")
+
+    # Recall against the hand-written gold facts.
+    for spec in gold.get("facts", []):
+        hits = [f for f in facts if gold_fact_matches(f, spec)]
+        if not check("recall", spec, bool(hits)):
+            fail(errors, f"{md.name}: gold fact missed {spec}")
+        # Banned-inference traps: a matching fact may not carry these values.
+        for key, banned in spec.get("must_not_have", {}).items():
+            bad = [f for f in hits
+                   if str(banned).lower() in str(f.get(key, "")).lower()]
+            if not check("banned-inference", f"{key}!={banned}", not bad):
+                fail(errors, f"{md.name}: banned inference — {key}="
+                             f"{banned!r} credited from context")
+
+    gaps = payload.get("gaps", [])
+
+    def gap_matches(gap, spec):
+        return (spec.get("missing", "") == gap.get("missing", "")
+                and spec.get("about_contains", "").lower()
+                in (str(gap.get("about", "")) + " "
+                    + str(gap.get("quote", ""))).lower())
+
+    if gold.get("gaps_must_be_empty"):
+        if not check("no-gaps", "gaps==[]", not gaps):
+            fail(errors, f"{md.name}: invented {len(gaps)} gap(s) on a "
+                         "compliant document")
+    for spec in gold.get("gaps_must_include", []):
+        if not check("gap-recall", spec,
+                     any(gap_matches(g, spec) for g in gaps)):
+            fail(errors, f"{md.name}: gold gap missed {spec}")
+    # A false gap — claiming absent what the document states — is fabrication.
+    for spec in gold.get("false_gap_traps", []):
+        trapped = [g for g in gaps if gap_matches(g, spec)]
+        if not check("false-gap", spec, not trapped):
+            fail(errors, f"{md.name}: false gap — claims missing "
+                         f"{spec.get('missing')!r} which the document states")
+
+    contradictions = payload.get("contradictions", [])
+    for spec in gold.get("contradictions_must_include", []):
+        def contra_hit(c):
+            text = json.dumps(c).lower()
+            return (spec.get("about_contains", "").lower()
+                    in str(c.get("about", "")).lower()
+                    and all(q.lower() in text
+                            for q in spec.get("quotes_contain", [])))
+        if not check("contradiction", spec, any(map(contra_hit,
+                                                    contradictions))):
+            fail(errors, f"{md.name}: contradiction missed {spec}")
+
+    unresolved = " ".join(str(u.get("quote", ""))
+                          for u in payload.get("unresolved_dates", []))
+    for token in gold.get("unresolved_must_include", []):
+        if not check("unresolved", token, token.lower() in unresolved.lower()):
+            fail(errors, f"{md.name}: unresolved date {token!r} not surfaced")
+    return verdict
+
+
+def grade_triage(runs, only, results):
+    errors = []
+    for md, gold in triage_fixtures(only):
+        before = len(errors)
+        verdicts = []
+        for i in range(runs):
+            payload = results[("triage", md.stem, i)]
+            if isinstance(payload, Exception):
+                fail(errors, f"{md.name} run {i + 1}: {payload}")
+                continue
+            verdicts.append(grade_triage_run(md, gold, payload, errors))
+        if len({json.dumps(v) for v in verdicts}) > 1:
+            fail(errors, f"{md.name}: runs disagree — variance is a failure")
+        if len(errors) == before:
+            print(f"  ok   {md.name}: {runs} triage run(s) agree")
+    return errors
+
+
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--skill", choices=["lint", "rewrite", "all"])
+    parser.add_argument("--skill",
+                        choices=["lint", "rewrite", "triage", "all"])
     parser.add_argument("--runs", type=int, default=3)
     parser.add_argument("--only", nargs="*", help="fixture stems to grade")
     parser.add_argument("--workers", type=int, default=4,
@@ -272,6 +405,10 @@ def main():
         jobs += [("rewrite", md, i)
                  for md, expected in fixtures(args.only)
                  if "rewrite" in expected for i in range(args.runs)]
+    if args.skill in ("triage", "all"):
+        jobs += [("triage", md, i)
+                 for md, _ in triage_fixtures(args.only)
+                 for i in range(args.runs)]
     if jobs:
         print(f"running {len(jobs)} live job(s) on {args.workers} worker(s):")
     results = collect(jobs, args.workers)
@@ -282,6 +419,9 @@ def main():
     if args.skill in ("rewrite", "all"):
         print("rewrite:")
         errors += grade_rewrite(args.runs, args.only, results)
+    if args.skill in ("triage", "all"):
+        print("triage:")
+        errors += grade_triage(args.runs, args.only, results)
 
     print(f"\n{'FAIL' if errors else 'PASS'}: {len(errors)} failure(s)")
     return 1 if errors else 0
