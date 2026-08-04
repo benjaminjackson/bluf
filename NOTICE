@@ -1,0 +1,16 @@
+bluf — SEE-100 tooling for executive prose
+Copyright (c) 2026 Benjamin Jackson
+
+This project is not affiliated with, sponsored by, or endorsed by the
+AeroSpace and Defence Industries Association of Europe (ASD).
+
+SEE-100 (docs/SEE-100.md) is an adaptation for executive communication that
+follows the structure and rule numbering of ASD-STE100 Simplified Technical
+English, Issue 8 (April 2021). It does not reproduce the ASD-STE100
+dictionary or its rule text. ASD-STE100 is a registered specification;
+obtain it from https://www.asd-ste100.org/
+
+License map:
+- Code, tests, CI, manifests: MIT (see LICENSE)
+- docs/SEE-100.md and bluf/docs/SEE-100.md: CC BY 4.0 for the original
+  prose, with ASD-STE100-derived structure excluded (see LICENSE-DOCS)

@@ -1,0 +1,21 @@
+# License for the SEE-100 Standard Document
+
+This license covers `docs/SEE-100.md` and its shipped copy
+`bluf/docs/SEE-100.md`.
+
+The original prose of SEE-100 — its rules, examples, dictionary tables, and
+commentary as written — is copyright (c) 2026 Benjamin Jackson and licensed
+under the Creative Commons Attribution 4.0 International license
+(CC BY 4.0): https://creativecommons.org/licenses/by/4.0/
+
+Why CC BY and not MIT: a standard is meant to be read, quoted, taught, and
+adapted, and CC BY is built for documents. Why not NoDerivatives: community
+corrections and translations should be possible without permission.
+
+What this license does NOT cover: the structure, rule numbering scheme, and
+organizational approach of SEE-100 derive from ASD-STE100 Simplified
+Technical English, Issue 8 (April 2021), a registered specification of the
+AeroSpace and Defence Industries Association of Europe (ASD). Those elements
+are ASD's, are not licensed here, and nothing in this repository grants any
+rights to them. SEE-100 does not reproduce the ASD-STE100 dictionary or its
+rule text. Obtain ASD-STE100 itself from https://www.asd-ste100.org/

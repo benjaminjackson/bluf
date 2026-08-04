@@ -1,0 +1,1 @@
+The migration is on track for the Oct 2 cutover. Checkout latency fell 38%, from 210ms to 130ms, after the Aug 12 cache change. Marco moves the two remaining services to the new caching layer by Sep 5.

@@ -1,0 +1,77 @@
+{
+  "script": [
+    {
+      "rule": "8.5",
+      "layer": "judgment",
+      "severity": "error",
+      "scope": "span",
+      "line": 1,
+      "col": 63,
+      "quote": "significant",
+      "message": "banned term 'significant' (rule 8.5, if on a quantity)",
+      "suggestion": "state the number, or label the claim an estimate or opinion",
+      "candidate": true
+    },
+    {
+      "rule": "5.4",
+      "layer": "deterministic",
+      "severity": "error",
+      "scope": "span",
+      "line": 1,
+      "col": 111,
+      "quote": "we should",
+      "message": "banned term 'we should' (rule 5.4)",
+      "suggestion": "name an owner and a date"
+    },
+    {
+      "rule": "1.1",
+      "layer": "judgment",
+      "severity": "error",
+      "scope": "span",
+      "line": 1,
+      "col": 132,
+      "quote": "leverage",
+      "message": "banned term 'leverage' (rule 1.1)",
+      "suggestion": "use",
+      "candidate": true
+    },
+    {
+      "rule": "8.2",
+      "layer": "judgment",
+      "severity": "error",
+      "scope": "span",
+      "line": 1,
+      "col": 185,
+      "quote": "soon",
+      "message": "banned term 'soon' (rule 8.2, if as a date)",
+      "suggestion": "a calendar date",
+      "candidate": true
+    }
+  ],
+  "judgment": {
+    "must_find": [
+      {
+        "rule": "8.5",
+        "quote": "significant"
+      },
+      {
+        "rule": "5.4",
+        "quote": "we should"
+      },
+      {
+        "rule": "1.1",
+        "quote": "leverage"
+      },
+      {
+        "rule": "8.2",
+        "quote": "soon"
+      }
+    ],
+    "must_not_find": [],
+    "allowed": [
+      {
+        "rule": "*"
+      }
+    ]
+  }
+}

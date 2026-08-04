@@ -1,0 +1,12 @@
+{
+  "script": [],
+  "judgment": {
+    "must_find": [],
+    "must_not_find": [
+      {
+        "rule": "*"
+      }
+    ],
+    "allowed": []
+  }
+}

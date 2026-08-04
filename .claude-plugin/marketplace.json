@@ -9,6 +9,7 @@
     {
       "name": "bluf",
       "source": "./bluf",
+      "license": "MIT AND CC-BY-4.0",
       "description": "Enforce SEE-100 on executive prose: bottom line up front, named owners, real dates, no evasion."
     }
   ]
