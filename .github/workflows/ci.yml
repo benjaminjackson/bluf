@@ -1,0 +1,53 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Sync check (prose vs dictionary)
+        run: python3 scripts/sync_check.py
+
+      - name: Unit tests
+        run: python3 -m unittest discover -s tests
+
+      # The Claude CLI is not guaranteed in CI. Try to install it; if that
+      # fails, fall back to bare JSON checks on both manifests so a broken
+      # manifest still fails the build.
+      - name: Install Claude CLI
+        id: cli
+        continue-on-error: true
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Validate manifests (claude plugin validate --strict)
+        if: steps.cli.outcome == 'success'
+        run: |
+          claude plugin validate ./plugins/bluf --strict
+          claude plugin validate . --strict
+
+      - name: Validate manifests (fallback, CLI unavailable)
+        if: steps.cli.outcome != 'success'
+        run: |
+          python3 - <<'EOF'
+          import json, sys
+          errors = []
+          plugin = json.load(open("plugins/bluf/.claude-plugin/plugin.json"))
+          market = json.load(open(".claude-plugin/marketplace.json"))
+          for key in ("name", "version", "description"):
+              if not plugin.get(key):
+                  errors.append(f"plugin.json missing {key}")
+          if market.get("name") != "bluf":
+              errors.append("marketplace.json name must be 'bluf'")
+          entries = market.get("plugins", [])
+          if not any(e.get("name") == "bluf" and e.get("source") == "./plugins/bluf"
+                     for e in entries):
+              errors.append("marketplace.json needs entry name=bluf source=./plugins/bluf")
+          if any("version" in e for e in entries):
+              errors.append("marketplace entry must not set a version (plugin.json owns it)")
+          for e in errors:
+              print(f"MANIFEST CHECK FAILED: {e}")
+          sys.exit(1 if errors else 0)
+          EOF
