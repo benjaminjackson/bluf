@@ -14,6 +14,10 @@ Layers are graded differently (see bluf/tests/README.md):
   produce zero non-candidate checker findings, name every required gap rule,
   and pass a closed-world fact check: numbers, dollar amounts, and proper
   nouns in the output must already exist in the input.
+- Triage (--skill triage): fixtures in bluf/tests/triage/ with hand-written
+  .gold.json files. Recall against gold facts; fabrication (ungrounded
+  fields, invented types, false gaps) is a hard fail. Matching semantics:
+  bluf/tests/triage/README.md.
 
 The harness consumes JSON only. It never parses rendered prose outside the
 fenced json block the skills emit on request.
@@ -22,6 +26,7 @@ Usage:
   python3 scripts/grade.py                      # script layer only
   python3 scripts/grade.py --skill lint         # + lint judgment grading
   python3 scripts/grade.py --skill rewrite      # + rewrite grading
+  python3 scripts/grade.py --skill triage       # + triage extraction grading
   python3 scripts/grade.py --skill all --runs 3 --only lock-misuse
 """
 import argparse
@@ -270,13 +275,29 @@ def grade_rewrite(runs, only, results):
 
 # Matching semantics are specified in bluf/tests/triage/README.md; this is
 # their implementation. Change them there first.
+FACT_TYPES = {"decision", "commitment", "number", "risk", "claimed_state"}
+GAP_SLOTS = ("owner", "date", "decider", "decision", "value", "baseline",
+             "denominator")
 GOLD_SCALARS = ("owner", "date", "decider", "value", "baseline",
                 "provenance", "speaker", "message_date")
 GROUNDED_FIELDS = ("owner", "date", "decider", "value", "baseline")
+FIRST_PERSON = re.compile(r"\b(I|I'll|I'd|I'm|my)\b")
+MONTH = (r"(jan(uary)?|feb(ruary)?|mar(ch)?|apr(il)?|may|jun(e)?|jul(y)?"
+         r"|aug(ust)?|sep(t|tember)?|oct(ober)?|nov(ember)?|dec(ember)?)")
 CALENDAR_DATE = re.compile(
-    r"(?i)\b(jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec)[a-z]*\.?"
-    r"\s*\d|\d{4}-\d{2}-\d{2}|\b\d{1,2}/\d{1,2}\b")
-RULE_NUMBER = re.compile(r"(?i)\bsee-100\b|\brule\s*\d")
+    r"(?i)\b" + MONTH + r"\b\.?\s*\d"
+    r"|\b\d{1,2}(st|nd|rd|th)?\s+(of\s+)?" + MONTH + r"\b"
+    r"|\b\d{4}-\d{2}(-\d{2})?\b"
+    r"|\b\d{1,2}/\d{1,2}\b")
+RULE_NUMBER = re.compile(r"(?i)\bsee[- ]?100\b|\brule\s*\d")
+
+
+def contains_any(wanted, blob):
+    """about_contains semantics: a string, a list of alternatives, or
+    absent (matches anything)."""
+    if isinstance(wanted, str):
+        wanted = [wanted] if wanted else []
+    return not wanted or any(w.lower() in blob for w in wanted)
 
 
 def gold_fact_matches(skill_fact, gold_fact):
@@ -296,43 +317,96 @@ def gold_fact_matches(skill_fact, gold_fact):
     return True
 
 
-def containing_line(doc, quote):
-    """The full line(s) around a quote — the sentence approximation the
-    corpus README specifies for grounding checks. Fixture quotes sit inside
-    a single line by construction."""
+def quote_sentences(doc, quote):
+    """Every sentence containing an occurrence of the quote, over ALL
+    occurrences. Sentences are split crudely inside the containing line.
+    ponytail: a sentence spanning a hard line break counts as two; fixture
+    prose keeps each sentence on one line."""
+    found = []
+    at = doc.find(quote)
+    while at >= 0:
+        start = doc.rfind("\n", 0, at) + 1
+        end = doc.find("\n", at + len(quote))
+        line = doc[start: end if end >= 0 else len(doc)]
+        qs, qe = at - start, at - start + len(quote)
+        # A boundary is punctuation followed by whitespace and a capital —
+        # a period inside a decimal (2.9%) never splits.
+        cuts = ([0] + [m.end() for m in re.finditer(
+            r"[.!?]+(?=\s+[\"'(]?[A-Z])", line)] + [len(line)])
+        for a, b in zip(cuts, cuts[1:]):
+            if a < qe and b > qs:
+                found.append(line[a:b])
+        at = doc.find(quote, at + 1)
+    return found
+
+
+def message_speaker(doc, quote):
+    """The From: name of the thread message holding the quote, matched by
+    quote-nesting depth. ponytail: depth heuristic for pasted email threads;
+    exotic quoting styles fall back to None (no first-person credit)."""
     at = doc.find(quote)
     if at < 0:
-        return ""
-    start = doc.rfind("\n", 0, at) + 1
-    end = doc.find("\n", at + len(quote))
-    return doc[start:end if end >= 0 else None]
+        return None
+
+    def depth(line):
+        return re.match(r"[\s>]*", line).group().count(">")
+
+    lines = doc[:at].split("\n")
+    current = (lines[-1] if lines else "") + doc[at:].split("\n", 1)[0]
+    want = depth(current)
+    for line in reversed(lines[:-1]):
+        m = re.match(r"[\s>]*From:\s*([A-Za-z]+)", line)
+        if m and depth(line) == want:
+            return m.group(1)
+    return None
 
 
-def gap_matches(gap, spec):
-    if spec.get("missing", "") not in str(gap.get("missing", "")).lower():
+def field_grounded(doc, fact, key, is_thread):
+    """Fabrication test for one scalar field. stated: the value must sit in
+    a sentence holding the quote (any occurrence), or resolve an explicit
+    first person to the message's own speaker. inferred: the value must at
+    least exist in the document, and the inference must be shown."""
+    value = str(fact[key]).lower()
+    if fact.get("provenance") == "inferred":
+        return value in doc.lower()
+    sentences = quote_sentences(doc, fact.get("quote", ""))
+    if any(value in s.lower() for s in sentences):
+        return True
+    if (is_thread and key in ("owner", "decider")
+            and str(fact[key]) == str(fact.get("speaker", ""))
+            and fact.get("speaker") == message_speaker(doc,
+                                                      fact.get("quote", ""))
+            and any(FIRST_PERSON.search(s) for s in sentences)):
+        return True
+    return False
+
+
+def gap_matches(gap, spec, strict=False):
+    """strict=True (gaps_must_not_include): about field only — a trap must
+    key on the claim, not on a long quote that happens to contain the
+    phrase. Lenient (gaps_must_include): about + quote."""
+    if (str(spec.get("missing", "")).lower()
+            not in str(gap.get("missing", "")).lower()):
         return False
-    about = (str(gap.get("about", "")) + " "
-             + str(gap.get("quote", ""))).lower()
-    wanted = spec.get("about_contains", "")
-    if isinstance(wanted, str):
-        wanted = [wanted] if wanted else []
-    return not wanted or any(w.lower() in about for w in wanted)
+    blob = str(gap.get("about", "")).lower()
+    if not strict:
+        blob += " " + str(gap.get("quote", "")).lower()
+    return contains_any(spec.get("about_contains", ""), blob)
 
 
 def grade_triage_run(md, gold, payload, errors):
     doc = md.read_text()
-    # A JSON null is an absent field, not a value — normalize before
-    # matching so "value": null neither matches nor fails grounding.
-    facts = [{k: v for k, v in f.items() if v is not None}
-             for f in payload.get("facts", [])]
+    facts = payload.get("facts", [])
     gaps = payload.get("gaps", [])
     questions = payload.get("questions", [])
+    is_thread = bool(gold.get("is_thread"))
     verdict = []
 
     # Only gold-anchored checks join the cross-run variance verdict.
     # Payload-derived keys (a fact's own quote) legitimately differ
     # between runs; tracking them made all-pass runs "disagree".
-    UNSTABLE = {"grounded-quote", "grounded-field", "thread-attribution"}
+    UNSTABLE = {"grounded-quote", "grounded-field", "thread-attribution",
+                "fact-shape", "gap-shape"}
 
     def check(kind, spec, ok):
         if kind not in UNSTABLE:
@@ -340,46 +414,60 @@ def grade_triage_run(md, gold, payload, errors):
                             bool(ok)))
         return ok
 
-    # Budget invariants, every run (corpus README).
+    # Contract shape, every run.
+    if not check("verdict-line", "verdict nonempty",
+                 str(payload.get("verdict", "") or "").strip()):
+        fail(errors, f"{md.name}: missing verdict (the lead line)")
     if not check("budget-facts", "facts<=12", len(facts) <= 12):
         fail(errors, f"{md.name}: {len(facts)} facts — budget is 12")
-    if not check("budget-gaps", "gaps<=5,ranks unique from 1",
-                 len(gaps) <= 5 and sorted(g.get("rank") for g in gaps)
-                 == list(range(1, len(gaps) + 1))):
-        fail(errors, f"{md.name}: gaps break the budget (max 5, unique "
-                     "ranks starting at 1)")
+    ranks = [g.get("rank") for g in gaps]
+    if not check("budget-gaps", "gaps<=5,int ranks unique from 1",
+                 len(gaps) <= 5 and all(isinstance(r, int) for r in ranks)
+                 and sorted(ranks) == list(range(1, len(gaps) + 1))):
+        fail(errors, f"{md.name}: gaps break the budget (max 5, integer "
+                     "ranks unique from 1)")
     if not check("budget-questions", "questions<=5", len(questions) <= 5):
         fail(errors, f"{md.name}: {len(questions)} questions — budget is 5")
     if not check("no-rule-numbers", "output carries no rule number",
                  not RULE_NUMBER.search(json.dumps(payload))):
         fail(errors, f"{md.name}: SEE-100 rule number in triage output")
+
+    # Per-fact contract checks and fabrication grounding. Grounding runs on
+    # EVERY fact — matching a gold entry is no licence to invent the fields
+    # the entry does not pin.
+    clean = []
     for f in facts:
+        nulls = sorted(k for k, v in f.items() if v is None)
+        if nulls:
+            check("fact-shape", nulls, False)
+            fail(errors, f"{md.name}: null field(s) {nulls} — the contract "
+                         "says omit absent fields")
+        f = {k: v for k, v in f.items() if v is not None}
+        clean.append(f)
+        if not check("fact-shape", f.get("type"),
+                     f.get("type") in FACT_TYPES):
+            fail(errors, f"{md.name}: invented fact type "
+                         f"{f.get('type')!r} — the five types are closed")
         thread_ok = (all(k in f for k in ("speaker", "message_date"))
-                     if gold.get("is_thread")
+                     if is_thread
                      else not any(k in f for k in ("speaker",
                                                    "message_date")))
         if not check("thread-attribution", f.get("quote", ""), thread_ok):
             fail(errors, f"{md.name}: speaker/message_date wrong for "
-                         f"is_thread={gold.get('is_thread')} on "
-                         f"{f.get('quote', '')!r}")
-
-    # Fabrication, hard fail: unmatched facts must be grounded in the
-    # sentence holding their quote.
-    matchable = gold.get("facts", []) + gold.get("allowed_facts", [])
-    for f in facts:
+                         f"is_thread={is_thread} on {f.get('quote', '')!r}")
+        if f.get("provenance") == "inferred" and not f.get("inference"):
+            check("fact-shape", "inference", False)
+            fail(errors, f"{md.name}: provenance 'inferred' without the "
+                         "inference shown")
         quote = f.get("quote", "")
         if not check("grounded-quote", quote, bool(quote) and quote in doc):
             fail(errors, f"{md.name}: fabricated/mangled quote {quote!r}")
             continue
-        if any(gold_fact_matches(f, spec) for spec in matchable):
-            continue
-        sentence = containing_line(doc, quote).lower()
         for key in GROUNDED_FIELDS:
-            if key in f and str(f[key]).lower() not in sentence:
-                check("grounded-field", f"{key}={f[key]}", False)
-                fail(errors, f"{md.name}: unmatched fact asserts "
-                             f"{key}={f[key]!r} unsupported by its own "
-                             "sentence")
+            if key in f and not field_grounded(doc, f, key, is_thread):
+                fail(errors, f"{md.name}: fact asserts {key}={f[key]!r} "
+                             "unsupported by the sentence holding its quote")
+    facts = clean
 
     # A fact whose type is invented over a real quote.
     for spec in gold.get("must_not_extract", []):
@@ -395,6 +483,18 @@ def grade_triage_run(md, gold, payload, errors):
                      any(gold_fact_matches(f, spec) for f in facts)):
             fail(errors, f"{md.name}: gold fact missed {spec}")
 
+    # Gap shape: closed slot vocabulary, verbatim quotes.
+    for g in gaps:
+        slot = str(g.get("missing", "")).lower()
+        if not check("gap-shape", slot,
+                     any(s in slot for s in GAP_SLOTS)):
+            fail(errors, f"{md.name}: gap slot {g.get('missing')!r} outside "
+                         "the vocabulary (owner/date/decider/decision/"
+                         "value/baseline/denominator)")
+        q = g.get("quote")
+        if q and not check("gap-shape", q, q in doc):
+            fail(errors, f"{md.name}: gap quote not verbatim: {q!r}")
+
     if gold.get("gaps_must_be_empty"):
         if not check("no-gaps", "gaps==[]", not gaps):
             fail(errors, f"{md.name}: invented {len(gaps)} gap(s) on a "
@@ -404,27 +504,38 @@ def grade_triage_run(md, gold, payload, errors):
                      any(gap_matches(g, spec) for g in gaps)):
             fail(errors, f"{md.name}: gold gap missed {spec}")
     # A false gap — claiming absent what the document states — is
-    # fabrication in the other direction.
+    # fabrication in the other direction. Strict matching: about only.
     for spec in gold.get("gaps_must_not_include", []):
         if not check("false-gap", spec,
-                     not any(gap_matches(g, spec) for g in gaps)):
+                     not any(gap_matches(g, spec, strict=True)
+                             for g in gaps)):
             fail(errors, f"{md.name}: false gap — claims missing "
                          f"{spec.get('missing')!r} which the document states")
 
     contradictions = payload.get("contradictions", [])
+    for c in contradictions:
+        for q in c.get("quotes", []):
+            if not check("gap-shape", q, str(q) in doc):
+                fail(errors, f"{md.name}: contradiction quote not "
+                             f"verbatim: {q!r}")
     for spec in gold.get("contradictions_must_include", []):
         def contra_hit(c):
-            blob = (str(c.get("about", "")) + " "
-                    + " ".join(map(str, c.get("quotes", [])))).lower()
-            return (spec.get("about_contains", "").lower() in blob
-                    and all(q.lower() in blob
+            quotes_blob = " ".join(map(str, c.get("quotes", []))).lower()
+            about_blob = str(c.get("about", "")).lower() + " " + quotes_blob
+            return (contains_any(spec.get("about_contains", ""), about_blob)
+                    and all(q.lower() in quotes_blob
                             for q in spec.get("quotes_contain", [])))
         if not check("contradiction", spec,
                      any(map(contra_hit, contradictions))):
             fail(errors, f"{md.name}: contradiction missed {spec}")
 
-    unresolved = " ".join(str(u.get("quote", ""))
-                          for u in payload.get("unresolved_dates", []))
+    unresolved_entries = payload.get("unresolved_dates", [])
+    for u in unresolved_entries:
+        q = str(u.get("quote", ""))
+        if q and not check("gap-shape", q, q in doc):
+            fail(errors, f"{md.name}: unresolved-date quote not verbatim: "
+                         f"{q!r}")
+    unresolved = " ".join(str(u.get("quote", "")) for u in unresolved_entries)
     for token in gold.get("unresolved_must_include", []):
         if not check("unresolved", token,
                      token.lower() in unresolved.lower()):
@@ -442,8 +553,8 @@ def grade_triage_run(md, gold, payload, errors):
                          "'skipped'")
     if gold.get("verdict_regex"):
         if not check("verdict", gold["verdict_regex"],
-                     re.search(gold["verdict_regex"],
-                               str(payload.get("verdict", "")))):
+                     bool(re.search(gold["verdict_regex"],
+                                    str(payload.get("verdict", ""))))):
             fail(errors, f"{md.name}: verdict fails "
                          f"{gold['verdict_regex']!r}")
     return verdict

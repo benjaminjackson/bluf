@@ -89,15 +89,24 @@ how the "discussion of a decision is not a decision" trap is caught.
 **Recall.** Every entry in `facts` must be matched by at least one skill fact.
 A missed entry is a recall failure.
 
-**Fabrication (hard fail).** Any skill fact that matches nothing in `facts` +
-`allowed_facts` is a fabrication, judged two ways:
+**Fabrication (hard fail).** Every fact is tested, matched or not — matching
+a gold entry is no licence to invent the fields the entry does not pin. A
+fact is fabrication when:
 
 - its `quote` does not appear verbatim in the document; or
-- its stated `owner` / `date` / `decider` / `value` / `baseline` is not
-  supported by the **sentence containing the quote**. Judge against the
-  sentence, not the quote alone — a quote is a location mechanism and a skill
-  may legitimately quote a clause of a longer sentence. It is not a licence to
-  reach into a neighbouring sentence for an owner.
+- a stated `owner` / `date` / `decider` / `value` / `baseline` is not
+  supported by a **sentence containing the quote** (every occurrence of the
+  quote is tried). Judge against the sentence, not the quote alone — a skill
+  may legitimately quote a clause of a longer sentence — but never against a
+  neighbouring sentence on the same line. One exception: in a thread, an
+  `owner`/`decider` equal to the fact's `speaker` is grounded when that
+  speaker matches the `From:` name of the message holding the quote and the
+  sentence speaks in the first person ("I'll send X"). That is the contract's
+  blessed first-person resolution.
+- its `type` is outside the closed five, or its `provenance` is `inferred`
+  with no `inference` shown. Inferred values are grounded against the whole
+  document instead of the sentence.
+- any field is JSON `null` — the contract says omit absent fields.
 
 Anything listed in `must_not_extract` is a fabrication even if its quote is
 real. That list exists for facts whose quote is genuine but whose *type* is
@@ -105,7 +114,9 @@ invented, which quote-checking alone cannot catch.
 
 **False gap (hard fail, same weight as fabrication).** A `gaps` entry claiming
 something is absent that the document states. `gaps_must_not_include` enumerates
-the specific ones each fixture baits. A false gap is fabrication in the other
+the specific ones each fixture baits, and matches **strictly**: `about_contains`
+is tested against the gap's `about` field only, never its quote — a correct gap
+whose long quote happens to contain the trap phrase must not trip it. A false gap is fabrication in the other
 direction, and `compliant-memo.md` exists to catch it: inventing gaps for a
 clean document is a graded failure, symmetric with inventing facts.
 
@@ -115,7 +126,10 @@ clean document is a graded failure, symmetric with inventing facts.
   `quotes_contain`. `about_contains` is matched against the contradiction's
   `about` field **concatenated with its quotes**, so it passes however the run
   words the summary, as long as it found the right conflict. Every string in
-  `quotes_contain` must appear somewhere in the concatenated `quotes` array.
+  `quotes_contain` must appear in the concatenated `quotes` array — the
+  `quotes` array alone, never `about`, so a run cannot satisfy it by narrating
+  the conflict while quoting nothing. Each entry in a contradiction's `quotes`
+  must itself appear verbatim in the document.
 - `unresolved_must_include` — each string must appear in the `quote` of some
   `unresolved_dates` entry.
 - `no_resolved_dates` — when true, no calendar date (month name, ISO date, or
@@ -140,17 +154,25 @@ clean document is a graded failure, symmetric with inventing facts.
 From the output budget in `TRIAGE.md`, checked on every run rather than
 declared per fixture:
 
+- `verdict` is present and non-empty — it is the lead line.
 - `facts` holds at most 12 entries.
-- `gaps` holds at most 5, with unique `rank` values starting at 1.
+- `gaps` holds at most 5, with integer `rank` values unique from 1. A gap
+  without a rank fails the run (it must never crash the harness).
+- `gaps[].missing` names a slot from the closed vocabulary (owner, date,
+  decider, decision, value, baseline, denominator) — a reworded slot name
+  ("deadline", "accountable party") fails the run, which is what keeps the
+  false-gap traps unavoidable.
+- A `quote` on a gap, a contradiction, or an unresolved-date entry appears
+  verbatim in the document.
 - `questions` holds at most 5.
 - `speaker` and `message_date` are required on every fact when `is_thread` is
   true, and absent when it is false.
 - No SEE-100 rule number appears anywhere in the output.
 
-Recall passing is not sufficient on `long-report.md`. A run that fills its
-twelve slots with appendix trivia and drops the $240,000 risk has failed the
-ranking even though the required six are present, because the required six are
-chosen to be the consequential ones.
+On `long-report.md`, recall on the six required facts *is* the ranking
+enforcement: they are chosen to be the consequential ones, so a run that fills
+its twelve slots with appendix trivia necessarily drops one of the six and
+fails recall.
 
 ## First person versus the `From:` line
 
@@ -177,8 +199,9 @@ every grade taken after it. Before adding one:
    each one inside a single line so quoted-reply prefixes (`> `) cannot break
    the substring.
 2. Confirm every owner, date, decider, value and baseline in `facts` is
-   genuinely stated in the sentence holding the quote, not merely inferable
-   from it.
+   genuinely stated in the sentence holding the quote — or, for a thread
+   fact, is the first-person speaker named in that message's `From:` line.
+   Never merely inferable.
 3. Confirm every `gaps_must_include` entry is genuinely absent from the
    document, and every `gaps_must_not_include` entry is genuinely present.
 4. Put anything true but not required in `allowed_facts`, so a good run is

@@ -5,28 +5,51 @@
       "type": "commitment",
       "owner": "Priya",
       "quote_contains": "Priya finishes the merchant onboarding screens by Friday",
-      "provenance": "stated"
+      "provenance": "stated",
+      "date": "Friday"
     },
     {
       "type": "commitment",
       "owner": "Marco",
       "quote_contains": "Marco starts load testing the week after next",
-      "provenance": "stated"
+      "provenance": "stated",
+      "date": "week after next"
     },
     {
       "type": "commitment",
       "owner": "Sam",
       "quote_contains": "will circulate it end of next week",
-      "provenance": "stated"
+      "provenance": "stated",
+      "date": "end of next week"
     }
   ],
   "allowed_facts": [
-    {"type": "claimed_state", "quote_contains": "Sandbox work is finished"},
-    {"type": "number", "value": "four", "quote_contains": "Support headcount stays at four through the pilot"},
-    {"type": "claimed_state", "quote_contains": "Support headcount stays at four through the pilot"},
-    {"type": "number", "value": "ten", "quote_contains": "the first ten merchants early next month"},
-    {"type": "commitment", "quote_contains": "we open the pilot to the first ten merchants early next month"},
-    {"type": "claimed_state", "quote_contains": "Nothing here is blocked"}
+    {
+      "type": "claimed_state",
+      "quote_contains": "Sandbox work is finished"
+    },
+    {
+      "type": "number",
+      "value": "four",
+      "quote_contains": "Support headcount stays at four through the pilot"
+    },
+    {
+      "type": "claimed_state",
+      "quote_contains": "Support headcount stays at four through the pilot"
+    },
+    {
+      "type": "number",
+      "value": "ten",
+      "quote_contains": "the first ten merchants early next month"
+    },
+    {
+      "type": "commitment",
+      "quote_contains": "we open the pilot to the first ten merchants early next month"
+    },
+    {
+      "type": "claimed_state",
+      "quote_contains": "Nothing here is blocked"
+    }
   ],
   "must_not_extract": [],
   "contradictions_must_include": [],
@@ -38,7 +61,10 @@
   ],
   "no_resolved_dates": true,
   "gaps_must_include": [
-    {"missing": "owner", "about_contains": "pilot"}
+    {
+      "missing": "owner",
+      "about_contains": "pilot"
+    }
   ],
   "gaps_must_not_include": [
     {

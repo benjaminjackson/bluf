@@ -207,5 +207,6 @@ In order:
 - README meets the requirements above.
 - LICENSE file present.
 
-Everything else — triage, draft, explain, CI hooks for team enforcement —
-ships after public launch.
+Everything else — draft, explain, CI hooks for team enforcement — ships
+after public launch. (Triage shipped ahead of that plan; its contract and
+corpus live under `bluf/docs/TRIAGE.md` and `bluf/tests/triage/`.)

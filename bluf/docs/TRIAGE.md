@@ -28,6 +28,7 @@ Rendered output, in order:
 4. **Gaps.** Ranked by consequence, capped (see budget).
 5. **Questions.** A short block of neutral questions the user can paste into
    a reply verbatim.
+6. **Skipped.** One line naming what the output budget dropped.
 
 ## Fact types
 
@@ -144,7 +145,8 @@ On request ("emit triage JSON") the skill appends one fenced json block:
 Field rules:
 
 - `type` — `decision`, `commitment`, `number`, `risk`, or `claimed_state`.
-- `statement` — the fact in triage's words, one sentence.
+- `statement` — the fact in triage's words, one sentence. For rendering;
+  the harness does not grade it.
 - `quote` — verbatim from the document; the location mechanism, exactly as
   in the findings contract. Required on every fact and every span gap.
 - `provenance` — `stated` or `inferred`; `inferred` requires `inference`.
