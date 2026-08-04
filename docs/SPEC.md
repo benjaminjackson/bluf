@@ -93,6 +93,10 @@ Field notes:
   `condition`, delete-instructions in the substitution column → `delete: true`
   plus `note`.
 - `exceptions` suppress a match ("pivot table", "action items").
+- Entries with `condition`, `scope`, or `confirm: true` emit candidates the
+  model must confirm (hybrid layer, per FINDINGS.md); `confirm` marks
+  part-of-speech bans on common nouns where text alone cannot tell verb from
+  noun. All other entries are plain deterministic findings.
 - `prose_bans` holds terms Part 1 bans in prose that the tables omit
   (intensifiers, non-dates, nominalizations, "we should").
 - Vague quarter references without a day ("Q3", "EOY") are deliberately not

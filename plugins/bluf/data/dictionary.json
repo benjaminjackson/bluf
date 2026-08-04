@@ -7,15 +7,30 @@
       "rule": "1.1",
       "pos": "verb",
       "instead": "use",
-      "patterns": ["leverage", "leverages", "leveraged", "leveraging"],
-      "exceptions": ["leverage ratio", "leveraged buyout"]
+      "patterns": [
+        "leverage",
+        "leverages",
+        "leveraged",
+        "leveraging"
+      ],
+      "exceptions": [
+        "leverage ratio",
+        "leveraged buyout"
+      ],
+      "confirm": true
     },
     {
       "term": "utilize",
       "row": "utilize",
       "rule": "1.1",
       "instead": "use",
-      "patterns": ["utilize", "utilizes", "utilized", "utilizing", "utilization"]
+      "patterns": [
+        "utilize",
+        "utilizes",
+        "utilized",
+        "utilizing",
+        "utilization"
+      ]
     },
     {
       "term": "synergy",
@@ -24,7 +39,11 @@
       "instead": "(delete; state the specific combined benefit)",
       "delete": true,
       "note": "state the specific combined benefit",
-      "patterns": ["synergy", "synergies", "synergistic"]
+      "patterns": [
+        "synergy",
+        "synergies",
+        "synergistic"
+      ]
     },
     {
       "term": "alignment",
@@ -32,7 +51,13 @@
       "rule": "1.1",
       "instead": "agreement / agreed — name who agreed to what",
       "note": "name who agreed to what",
-      "patterns": ["alignment", "aligned", "align", "aligns", "aligning"]
+      "patterns": [
+        "alignment",
+        "aligned",
+        "align",
+        "aligns",
+        "aligning"
+      ]
     },
     {
       "term": "learnings",
@@ -40,7 +65,9 @@
       "rule": "1.2",
       "pos": "noun",
       "instead": "lessons",
-      "patterns": ["learnings"]
+      "patterns": [
+        "learnings"
+      ]
     },
     {
       "term": "ask",
@@ -48,7 +75,13 @@
       "rule": "1.2",
       "pos": "noun",
       "instead": "the request",
-      "patterns": ["the ask", "an ask", "the asks", "our ask", "big ask"]
+      "patterns": [
+        "the ask",
+        "an ask",
+        "the asks",
+        "our ask",
+        "big ask"
+      ]
     },
     {
       "term": "spend",
@@ -56,7 +89,12 @@
       "rule": "1.2",
       "pos": "noun",
       "instead": "the cost",
-      "patterns": ["the spend", "our spend", "total spend", "ad spend"]
+      "patterns": [
+        "the spend",
+        "our spend",
+        "total spend",
+        "ad spend"
+      ]
     },
     {
       "term": "solve",
@@ -64,7 +102,11 @@
       "rule": "1.2",
       "pos": "noun",
       "instead": "the solution",
-      "patterns": ["the solve", "a solve", "the solves"]
+      "patterns": [
+        "the solve",
+        "a solve",
+        "the solves"
+      ]
     },
     {
       "term": "bandwidth",
@@ -72,43 +114,69 @@
       "rule": "1.1",
       "scope": "of people",
       "instead": "time",
-      "patterns": ["bandwidth"],
-      "exceptions": ["network bandwidth", "memory bandwidth"]
+      "patterns": [
+        "bandwidth"
+      ],
+      "exceptions": [
+        "network bandwidth",
+        "memory bandwidth"
+      ]
     },
     {
       "term": "headwinds",
       "row": "headwinds / tailwinds",
       "rule": "1.1",
       "instead": "X fell/rose by N",
-      "patterns": ["headwind", "headwinds"]
+      "patterns": [
+        "headwind",
+        "headwinds"
+      ]
     },
     {
       "term": "tailwinds",
       "row": "headwinds / tailwinds",
       "rule": "1.1",
       "instead": "X fell/rose by N",
-      "patterns": ["tailwind", "tailwinds"]
+      "patterns": [
+        "tailwind",
+        "tailwinds"
+      ]
     },
     {
       "term": "circle back",
       "row": "circle back",
       "rule": "3.5",
       "instead": "discuss on DATE",
-      "patterns": ["circle back", "circles back", "circling back", "circled back"]
+      "patterns": [
+        "circle back",
+        "circles back",
+        "circling back",
+        "circled back"
+      ]
     },
     {
       "term": "reach out",
       "row": "reach out",
       "rule": "3.5",
       "instead": "call, email",
-      "patterns": ["reach out", "reaches out", "reaching out", "reached out"]
+      "patterns": [
+        "reach out",
+        "reaches out",
+        "reaching out",
+        "reached out"
+      ]
     },
     {
       "term": "touch base",
       "row": "touch base",
       "rule": "3.5",
       "instead": "meet",
-      "patterns": ["touch base", "touches base", "touching base", "touched base"]
+      "patterns": [
+        "touch base",
+        "touches base",
+        "touching base",
+        "touched base"
+      ]
     },
     {
       "term": "double-click",
@@ -116,7 +184,14 @@
       "rule": "1.1",
       "scope": "on a topic",
       "instead": "examine",
-      "patterns": ["double-click", "double click", "double-clicks", "double-clicking", "double clicking", "double-clicked"]
+      "patterns": [
+        "double-click",
+        "double click",
+        "double-clicks",
+        "double-clicking",
+        "double clicking",
+        "double-clicked"
+      ]
     },
     {
       "term": "socialize",
@@ -124,21 +199,37 @@
       "rule": "1.1",
       "scope": "a document",
       "instead": "send to, discuss with",
-      "patterns": ["socialize", "socializes", "socializing", "socialized"]
+      "patterns": [
+        "socialize",
+        "socializes",
+        "socializing",
+        "socialized"
+      ]
     },
     {
       "term": "operationalize",
       "row": "operationalize",
       "rule": "1.1",
       "instead": "put into use; state the mechanism",
-      "patterns": ["operationalize", "operationalizes", "operationalizing", "operationalized"]
+      "patterns": [
+        "operationalize",
+        "operationalizes",
+        "operationalizing",
+        "operationalized"
+      ]
     },
     {
       "term": "ideate",
       "row": "ideate",
       "rule": "1.1",
       "instead": "think, propose",
-      "patterns": ["ideate", "ideates", "ideating", "ideated", "ideation"]
+      "patterns": [
+        "ideate",
+        "ideates",
+        "ideating",
+        "ideated",
+        "ideation"
+      ]
     },
     {
       "term": "action",
@@ -146,8 +237,17 @@
       "rule": "1.6",
       "pos": "verb",
       "instead": "do, complete",
-      "patterns": ["action", "actions", "actioning", "actioned"],
-      "exceptions": ["action item", "action items"]
+      "patterns": [
+        "action",
+        "actions",
+        "actioning",
+        "actioned"
+      ],
+      "exceptions": [
+        "action item",
+        "action items"
+      ],
+      "confirm": true
     },
     {
       "term": "dialogue",
@@ -155,7 +255,13 @@
       "rule": "1.6",
       "pos": "verb",
       "instead": "talk",
-      "patterns": ["dialogue", "dialogues", "dialoguing", "dialogued"]
+      "patterns": [
+        "dialogue",
+        "dialogues",
+        "dialoguing",
+        "dialogued"
+      ],
+      "confirm": true
     },
     {
       "term": "whiteboard",
@@ -163,14 +269,22 @@
       "rule": "1.6",
       "pos": "verb",
       "instead": "plan, sketch",
-      "patterns": ["whiteboard", "whiteboards", "whiteboarding", "whiteboarded"]
+      "patterns": [
+        "whiteboard",
+        "whiteboards",
+        "whiteboarding",
+        "whiteboarded"
+      ],
+      "confirm": true
     },
     {
       "term": "going forward",
       "row": "going forward",
       "rule": "1.1",
       "instead": "from now / from DATE",
-      "patterns": ["going forward"]
+      "patterns": [
+        "going forward"
+      ]
     },
     {
       "term": "at the end of the day",
@@ -178,14 +292,21 @@
       "rule": "1.1",
       "instead": "(delete)",
       "delete": true,
-      "patterns": ["at the end of the day"]
+      "patterns": [
+        "at the end of the day"
+      ]
     },
     {
       "term": "move the needle",
       "row": "move the needle",
       "rule": "1.1",
       "instead": "change X by N",
-      "patterns": ["move the needle", "moves the needle", "moving the needle", "moved the needle"]
+      "patterns": [
+        "move the needle",
+        "moves the needle",
+        "moving the needle",
+        "moved the needle"
+      ]
     },
     {
       "term": "boil the ocean",
@@ -194,14 +315,21 @@
       "instead": "(delete; state the smaller scope)",
       "delete": true,
       "note": "state the smaller scope",
-      "patterns": ["boil the ocean", "boiling the ocean", "boils the ocean"]
+      "patterns": [
+        "boil the ocean",
+        "boiling the ocean",
+        "boils the ocean"
+      ]
     },
     {
       "term": "low-hanging fruit",
       "row": "low-hanging fruit",
       "rule": "1.1",
       "instead": "the easiest item: NAME IT",
-      "patterns": ["low-hanging fruit", "low hanging fruit"]
+      "patterns": [
+        "low-hanging fruit",
+        "low hanging fruit"
+      ]
     },
     {
       "term": "best-in-class",
@@ -210,7 +338,10 @@
       "instead": "(delete, or cite the comparison)",
       "delete": true,
       "note": "or cite the comparison",
-      "patterns": ["best-in-class", "best in class"]
+      "patterns": [
+        "best-in-class",
+        "best in class"
+      ]
     },
     {
       "term": "world-class",
@@ -219,7 +350,10 @@
       "instead": "(delete, or cite the comparison)",
       "delete": true,
       "note": "or cite the comparison",
-      "patterns": ["world-class", "world class"]
+      "patterns": [
+        "world-class",
+        "world class"
+      ]
     },
     {
       "term": "robust",
@@ -229,7 +363,9 @@
       "instead": "(delete, or state the measured property)",
       "delete": true,
       "note": "or state the measured property",
-      "patterns": ["robust"]
+      "patterns": [
+        "robust"
+      ]
     },
     {
       "term": "seamless",
@@ -239,7 +375,10 @@
       "instead": "(delete, or state the measured property)",
       "delete": true,
       "note": "or state the measured property",
-      "patterns": ["seamless", "seamlessly"]
+      "patterns": [
+        "seamless",
+        "seamlessly"
+      ]
     },
     {
       "term": "scalable",
@@ -249,42 +388,64 @@
       "instead": "(delete, or state the measured property)",
       "delete": true,
       "note": "or state the measured property",
-      "patterns": ["scalable", "scalability"]
+      "patterns": [
+        "scalable",
+        "scalability"
+      ]
     },
     {
       "term": "pressure-test",
       "row": "pressure-test",
       "rule": "1.1",
       "instead": "check, verify",
-      "patterns": ["pressure-test", "pressure test", "pressure-testing", "pressure testing", "pressure-tested", "pressure tested"]
+      "patterns": [
+        "pressure-test",
+        "pressure test",
+        "pressure-testing",
+        "pressure testing",
+        "pressure-tested",
+        "pressure tested"
+      ]
     },
     {
       "term": "granular",
       "row": "granular",
       "rule": "1.1",
       "instead": "detailed",
-      "patterns": ["granular", "granularity"]
+      "patterns": [
+        "granular",
+        "granularity"
+      ]
     },
     {
       "term": "holistic",
       "row": "holistic",
       "rule": "1.1",
       "instead": "complete",
-      "patterns": ["holistic", "holistically"]
+      "patterns": [
+        "holistic",
+        "holistically"
+      ]
     },
     {
       "term": "cadence",
       "row": "cadence",
       "rule": "1.1",
       "instead": "schedule",
-      "patterns": ["cadence", "cadences"]
+      "patterns": [
+        "cadence",
+        "cadences"
+      ]
     },
     {
       "term": "north star",
       "row": "north star",
       "rule": "1.1",
       "instead": "goal",
-      "patterns": ["north star", "north-star"]
+      "patterns": [
+        "north star",
+        "north-star"
+      ]
     },
     {
       "term": "tiger team",
@@ -292,28 +453,41 @@
       "rule": "1.1",
       "instead": "team — name the members",
       "note": "name the members",
-      "patterns": ["tiger team", "tiger teams"]
+      "patterns": [
+        "tiger team",
+        "tiger teams"
+      ]
     },
     {
       "term": "stakeholders",
       "row": "stakeholders",
       "rule": "1.1",
       "instead": "the people affected: NAME THEM",
-      "patterns": ["stakeholder", "stakeholders"]
+      "patterns": [
+        "stakeholder",
+        "stakeholders"
+      ]
     },
     {
       "term": "value-add",
       "row": "value-add",
       "rule": "1.1",
       "instead": "benefit: state it",
-      "patterns": ["value-add", "value add", "value-adds"]
+      "patterns": [
+        "value-add",
+        "value add",
+        "value-adds"
+      ]
     },
     {
       "term": "core competency",
       "row": "core competency",
       "rule": "1.1",
       "instead": "strength",
-      "patterns": ["core competency", "core competencies"]
+      "patterns": [
+        "core competency",
+        "core competencies"
+      ]
     },
     {
       "term": "paradigm shift",
@@ -322,29 +496,51 @@
       "instead": "(delete; state what changed)",
       "delete": true,
       "note": "state what changed",
-      "patterns": ["paradigm shift", "paradigm shifts", "paradigm-shift"]
+      "patterns": [
+        "paradigm shift",
+        "paradigm shifts",
+        "paradigm-shift"
+      ]
     },
     {
       "term": "deep dive",
       "row": "deep dive",
       "rule": "1.1",
       "instead": "detailed review",
-      "patterns": ["deep dive", "deep dives", "deep-dive", "deep diving"]
+      "patterns": [
+        "deep dive",
+        "deep dives",
+        "deep-dive",
+        "deep diving"
+      ]
     },
     {
       "term": "pivot",
       "row": "pivot",
       "rule": "1.1",
       "instead": "change of plan: state old → new",
-      "patterns": ["pivot", "pivots", "pivoting", "pivoted"],
-      "exceptions": ["pivot table", "pivot tables"]
+      "patterns": [
+        "pivot",
+        "pivots",
+        "pivoting",
+        "pivoted"
+      ],
+      "exceptions": [
+        "pivot table",
+        "pivot tables"
+      ]
     },
     {
       "term": "streamline",
       "row": "streamline",
       "rule": "1.1",
       "instead": "simplify; state what gets removed",
-      "patterns": ["streamline", "streamlines", "streamlining", "streamlined"]
+      "patterns": [
+        "streamline",
+        "streamlines",
+        "streamlining",
+        "streamlined"
+      ]
     }
   ],
   "locks": [
@@ -412,7 +608,9 @@
       "term": "material",
       "rule": "1.3",
       "meaning": "Accounting sense only: large enough to change a decision.",
-      "exceptions": ["material weakness"]
+      "exceptions": [
+        "material weakness"
+      ]
     },
     {
       "term": "priority",
@@ -426,101 +624,154 @@
       "rule": "8.5",
       "condition": "on a quantity",
       "instead": "state the number, or label the claim an estimate or opinion",
-      "patterns": ["significant", "significantly"]
+      "patterns": [
+        "significant",
+        "significantly"
+      ]
     },
     {
       "term": "substantial",
       "rule": "8.5",
       "condition": "on a quantity",
       "instead": "state the number, or label the claim an estimate or opinion",
-      "patterns": ["substantial", "substantially"]
+      "patterns": [
+        "substantial",
+        "substantially"
+      ]
     },
     {
       "term": "massive",
       "rule": "8.5",
       "condition": "on a quantity",
       "instead": "state the number, or label the claim an estimate or opinion",
-      "patterns": ["massive", "massively"]
+      "patterns": [
+        "massive",
+        "massively"
+      ]
     },
     {
       "term": "meaningful",
       "rule": "8.5",
       "condition": "on a quantity",
       "instead": "state the number, or label the claim an estimate or opinion",
-      "patterns": ["meaningful", "meaningfully"]
+      "patterns": [
+        "meaningful",
+        "meaningfully"
+      ]
     },
     {
       "term": "material",
       "rule": "8.5",
       "condition": "on a quantity; the accounting sense is meaning-locked",
       "instead": "state the number, or label the claim an estimate or opinion",
-      "patterns": ["material", "materially"],
-      "exceptions": ["material weakness"]
+      "patterns": [
+        "material",
+        "materially"
+      ],
+      "exceptions": [
+        "material weakness"
+      ]
     },
     {
       "term": "soon",
       "rule": "8.2",
       "condition": "as a date",
       "instead": "a calendar date",
-      "patterns": ["soon"]
+      "patterns": [
+        "soon"
+      ]
     },
     {
       "term": "shortly",
       "rule": "8.2",
       "condition": "as a date",
       "instead": "a calendar date",
-      "patterns": ["shortly"]
+      "patterns": [
+        "shortly"
+      ]
     },
     {
       "term": "in the coming weeks",
       "rule": "8.2",
       "condition": "as a date",
       "instead": "a calendar date",
-      "patterns": ["in the coming weeks", "in coming weeks", "in the coming months"]
+      "patterns": [
+        "in the coming weeks",
+        "in coming weeks",
+        "in the coming months"
+      ]
     },
     {
       "term": "next sprint",
       "rule": "8.2",
       "condition": "as a date",
       "instead": "a calendar date",
-      "patterns": ["next sprint"]
+      "patterns": [
+        "next sprint"
+      ]
     },
     {
       "term": "by EOQ",
       "rule": "8.2",
       "condition": "without a day",
       "instead": "a calendar date",
-      "patterns": ["by EOQ", "by end of quarter", "by the end of the quarter"]
+      "patterns": [
+        "by EOQ",
+        "by end of quarter",
+        "by the end of the quarter"
+      ]
     },
     {
       "term": "make a decision",
       "rule": "3.4",
       "instead": "decide",
-      "patterns": ["make a decision", "makes a decision", "making a decision", "made a decision"]
+      "patterns": [
+        "make a decision",
+        "makes a decision",
+        "making a decision",
+        "made a decision"
+      ]
     },
     {
       "term": "conduct an analysis",
       "rule": "3.4",
       "instead": "analyze",
-      "patterns": ["conduct an analysis", "conducts an analysis", "conducting an analysis", "conducted an analysis"]
+      "patterns": [
+        "conduct an analysis",
+        "conducts an analysis",
+        "conducting an analysis",
+        "conducted an analysis"
+      ]
     },
     {
       "term": "provide a recommendation",
       "rule": "3.4",
       "instead": "recommend",
-      "patterns": ["provide a recommendation", "provides a recommendation", "providing a recommendation", "provided a recommendation"]
+      "patterns": [
+        "provide a recommendation",
+        "provides a recommendation",
+        "providing a recommendation",
+        "provided a recommendation"
+      ]
     },
     {
       "term": "achieve alignment",
       "rule": "3.4",
       "instead": "agree",
-      "patterns": ["achieve alignment", "achieves alignment", "achieving alignment", "achieved alignment"]
+      "patterns": [
+        "achieve alignment",
+        "achieves alignment",
+        "achieving alignment",
+        "achieved alignment"
+      ]
     },
     {
       "term": "we should",
       "rule": "5.4",
       "instead": "name an owner and a date",
-      "patterns": ["we should"]
+      "patterns": [
+        "we should"
+      ]
     }
   ]
 }
