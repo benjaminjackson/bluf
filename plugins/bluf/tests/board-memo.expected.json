@@ -1,0 +1,28 @@
+{
+  "script": [
+    {
+      "rule": "2.1",
+      "layer": "judgment",
+      "severity": "warning",
+      "scope": "span",
+      "line": 3,
+      "col": 17,
+      "quote": "approve moving payment processing",
+      "message": "possible noun cluster of 4 words",
+      "candidate": true
+    }
+  ],
+  "judgment": {
+    "must_find": [],
+    "must_not_find": [
+      {
+        "rule": "6.2"
+      }
+    ],
+    "allowed": [
+      {
+        "rule": "*"
+      }
+    ]
+  }
+}

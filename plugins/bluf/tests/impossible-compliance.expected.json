@@ -1,0 +1,44 @@
+{
+  "script": [
+    {
+      "rule": "8.5",
+      "layer": "judgment",
+      "severity": "error",
+      "scope": "span",
+      "line": 3,
+      "col": 63,
+      "quote": "significant",
+      "message": "banned term 'significant' (rule 8.5, if on a quantity)",
+      "suggestion": "state the number, or label the claim an estimate or opinion",
+      "candidate": true
+    }
+  ],
+  "judgment": {
+    "must_find": [
+      {
+        "rule": "5.4",
+        "quote": "Someone needs to own the rollout"
+      },
+      {
+        "rule": "8.5",
+        "quote": "significant"
+      },
+      {
+        "rule": "8.1",
+        "quote": "Support tickets are down"
+      }
+    ],
+    "must_not_find": [],
+    "allowed": [
+      {
+        "rule": "*"
+      }
+    ]
+  },
+  "rewrite": {
+    "gaps_must_include": [
+      "5.4",
+      "8.1"
+    ]
+  }
+}

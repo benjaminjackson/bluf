@@ -1,0 +1,45 @@
+{
+  "script": [
+    {
+      "rule": "2.1",
+      "layer": "judgment",
+      "severity": "warning",
+      "scope": "span",
+      "line": 3,
+      "col": 27,
+      "quote": "Enterprise Customer Retention Acceleration Program",
+      "message": "possible noun cluster of 5 words",
+      "candidate": true
+    },
+    {
+      "rule": "2.1",
+      "layer": "judgment",
+      "severity": "warning",
+      "scope": "span",
+      "line": 7,
+      "col": 38,
+      "quote": "vendor contract renewal negotiation timeline",
+      "message": "possible noun cluster of 5 words",
+      "candidate": true
+    }
+  ],
+  "judgment": {
+    "must_find": [
+      {
+        "rule": "2.1",
+        "quote": "vendor contract renewal negotiation timeline"
+      }
+    ],
+    "must_not_find": [
+      {
+        "rule": "2.1",
+        "quote": "Enterprise Customer Retention Acceleration Program"
+      }
+    ],
+    "allowed": [
+      {
+        "rule": "*"
+      }
+    ]
+  }
+}

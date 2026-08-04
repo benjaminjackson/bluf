@@ -1,0 +1,22 @@
+# Test Corpus
+
+Each `<name>.md` fixture has a `<name>.expected.json` file:
+
+- `script` — the exact findings array `scripts/see100_check.py` must emit for
+  the fixture, including `candidate: true` entries. Graded by set equality on
+  every field. Regenerate only when the checker intentionally changes, and
+  eyeball the diff: this file is the checker's contract.
+- `judgment` — grading for `/bluf:lint`'s judgment layer:
+  - `must_find` — each entry names a `rule` and optionally a `quote`; a skill
+    finding matches by rule plus span overlap with the quote, never by
+    wording. All must be present in every run.
+  - `must_not_find` — matches here fail the run. `"rule": "*"` means any
+    finding fails.
+  - `allowed` — extras that neither pass nor fail.
+- `rewrite` — for rewrite fixtures: `gaps_must_include` lists rule numbers
+  that must appear in the Gaps section. The harness also checks every number,
+  date, proper noun, and dollar amount in the rewrite against the input
+  (closed world): a new fact is a hard fail.
+
+The harness runs each fixture through the skill 3 times; disagreement between
+runs on `must_find`/`must_not_find` is a failure.

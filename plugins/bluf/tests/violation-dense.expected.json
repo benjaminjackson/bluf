@@ -1,0 +1,241 @@
+{
+  "script": [
+    {
+      "rule": "4.1",
+      "layer": "deterministic",
+      "severity": "error",
+      "scope": "span",
+      "line": 3,
+      "col": 1,
+      "quote": "Things are progressing well and the team has been working hard on multiple fronts across several workstreams; we held three meetings about churn and two about the roadmap this week.",
+      "message": "sentence has 30 words (max 25)"
+    },
+    {
+      "rule": "8.7",
+      "layer": "deterministic",
+      "severity": "error",
+      "scope": "span",
+      "line": 3,
+      "col": 109,
+      "quote": ";",
+      "message": "semicolon (rule 8.7): if both clauses matter, write two sentences"
+    },
+    {
+      "rule": "5.4",
+      "layer": "deterministic",
+      "severity": "error",
+      "scope": "span",
+      "line": 5,
+      "col": 1,
+      "quote": "We should",
+      "message": "banned term 'We should' (rule 5.4)",
+      "suggestion": "name an owner and a date"
+    },
+    {
+      "rule": "3.5",
+      "layer": "deterministic",
+      "severity": "error",
+      "scope": "span",
+      "line": 5,
+      "col": 11,
+      "quote": "circle back",
+      "message": "banned term 'circle back' (rule 3.5)",
+      "suggestion": "discuss on DATE"
+    },
+    {
+      "rule": "2.1",
+      "layer": "judgment",
+      "severity": "warning",
+      "scope": "span",
+      "line": 5,
+      "col": 30,
+      "quote": "enterprise customer churn mitigation workstream kickoff soon.",
+      "message": "possible noun cluster of 7 words",
+      "candidate": true
+    },
+    {
+      "rule": "8.2",
+      "layer": "judgment",
+      "severity": "error",
+      "scope": "span",
+      "line": 5,
+      "col": 86,
+      "quote": "soon",
+      "message": "banned term 'soon' (rule 8.2, if as a date)",
+      "suggestion": "a calendar date",
+      "candidate": true
+    },
+    {
+      "rule": "1.2",
+      "layer": "deterministic",
+      "severity": "error",
+      "scope": "span",
+      "line": 7,
+      "col": 1,
+      "quote": "The ask",
+      "message": "banned term 'The ask' (rule 1.2)",
+      "suggestion": "the request"
+    },
+    {
+      "rule": "1.1",
+      "layer": "judgment",
+      "severity": "error",
+      "scope": "span",
+      "line": 7,
+      "col": 17,
+      "quote": "bandwidth",
+      "message": "banned term 'bandwidth' (rule 1.1, if of people)",
+      "suggestion": "time",
+      "candidate": true
+    },
+    {
+      "rule": "1.1",
+      "layer": "deterministic",
+      "severity": "error",
+      "scope": "span",
+      "line": 7,
+      "col": 27,
+      "quote": "going forward",
+      "message": "banned term 'going forward' (rule 1.1)",
+      "suggestion": "from now / from DATE"
+    },
+    {
+      "rule": "1.1",
+      "layer": "judgment",
+      "severity": "error",
+      "scope": "span",
+      "line": 7,
+      "col": 50,
+      "quote": "leverage",
+      "message": "banned term 'leverage' (rule 1.1)",
+      "suggestion": "use",
+      "candidate": true
+    },
+    {
+      "rule": "1.1",
+      "layer": "deterministic",
+      "severity": "error",
+      "scope": "span",
+      "line": 7,
+      "col": 59,
+      "quote": "synergies",
+      "message": "banned term 'synergies' (rule 1.1)",
+      "suggestion": "(delete; state the specific combined benefit)"
+    },
+    {
+      "rule": "1.1",
+      "layer": "deterministic",
+      "severity": "error",
+      "scope": "span",
+      "line": 7,
+      "col": 72,
+      "quote": "move the needle",
+      "message": "banned term 'move the needle' (rule 1.1)",
+      "suggestion": "change X by N"
+    },
+    {
+      "rule": "8.2",
+      "layer": "deterministic",
+      "severity": "error",
+      "scope": "span",
+      "line": 7,
+      "col": 88,
+      "quote": "by EOQ",
+      "message": "vague date 'by EOQ': no calendar day in the sentence",
+      "suggestion": "a calendar date"
+    },
+    {
+      "rule": "8.6",
+      "layer": "judgment",
+      "severity": "error",
+      "scope": "span",
+      "line": 9,
+      "col": 15,
+      "quote": "30%",
+      "message": "'30%' names no baseline or period in its sentence",
+      "candidate": true
+    },
+    {
+      "rule": "8.5",
+      "layer": "judgment",
+      "severity": "error",
+      "scope": "span",
+      "line": 9,
+      "col": 31,
+      "quote": "significantly",
+      "message": "banned term 'significantly' (rule 8.5, if on a quantity)",
+      "suggestion": "state the number, or label the claim an estimate or opinion",
+      "candidate": true
+    },
+    {
+      "rule": "1.1",
+      "layer": "deterministic",
+      "severity": "error",
+      "scope": "span",
+      "line": 9,
+      "col": 57,
+      "quote": "utilize",
+      "message": "banned term 'utilize' (rule 1.1)",
+      "suggestion": "use"
+    },
+    {
+      "rule": "3.4",
+      "layer": "deterministic",
+      "severity": "warning",
+      "scope": "span",
+      "line": 9,
+      "col": 84,
+      "quote": "make a decision",
+      "message": "banned term 'make a decision' (rule 3.4)",
+      "suggestion": "decide"
+    },
+    {
+      "rule": "8.2",
+      "layer": "judgment",
+      "severity": "error",
+      "scope": "span",
+      "line": 9,
+      "col": 111,
+      "quote": "in the coming weeks",
+      "message": "banned term 'in the coming weeks' (rule 8.2, if as a date)",
+      "suggestion": "a calendar date",
+      "candidate": true
+    }
+  ],
+  "judgment": {
+    "must_find": [
+      {
+        "rule": "5.1"
+      },
+      {
+        "rule": "6.2"
+      },
+      {
+        "rule": "6.5",
+        "quote": "held three meetings"
+      },
+      {
+        "rule": "8.5",
+        "quote": "significantly"
+      },
+      {
+        "rule": "8.2",
+        "quote": "soon"
+      },
+      {
+        "rule": "1.1",
+        "quote": "bandwidth"
+      },
+      {
+        "rule": "2.1",
+        "quote": "enterprise customer churn mitigation workstream kickoff"
+      }
+    ],
+    "must_not_find": [],
+    "allowed": [
+      {
+        "rule": "*"
+      }
+    ]
+  }
+}

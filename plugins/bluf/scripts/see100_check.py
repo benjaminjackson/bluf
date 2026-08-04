@@ -37,7 +37,12 @@ he she not no will would shall can could may might must has have had do does
 did than then there who whom whose which when where while after before over
 under between into per each every all any some more most less least very also
 only if because therefore however up down out about across against along
-around during without within
+around during without within since past ago still already first next last new
+one two three four five six seven eight nine ten
+monday tuesday wednesday thursday friday saturday sunday
+jan feb mar apr may jun jul aug sep sept oct nov dec
+january february march april june july august september october november
+december
 """.split())
 
 VAGUE_QUARTER = re.compile(
@@ -257,8 +262,11 @@ def structure_findings(text, mask, starts):
             # noun-cluster candidates: 4+ words, no function word between
             run = []
             for m in WORD_RE.finditer(sent):
-                token = m.group(0).strip(".,:;!?()[]\"'").rstrip("*_")
-                if (token and token.replace("-", "").isalpha()
+                raw = m.group(0)
+                token = raw.strip(".!?()[]\"'").rstrip("*_")
+                clause_break = any(c in raw for c in ",;:")
+                if (not clause_break and token
+                        and token.replace("-", "").isalpha()
                         and token.lower() not in CLUSTER_BREAKERS):
                     run.append((m.start(), m.end(), token))
                 else:

@@ -1,0 +1,21 @@
+{
+  "script": [],
+  "judgment": {
+    "must_find": [
+      {
+        "rule": "1.3",
+        "quote": "done pending review"
+      },
+      {
+        "rule": "1.3",
+        "quote": "blocked"
+      }
+    ],
+    "must_not_find": [],
+    "allowed": [
+      {
+        "rule": "*"
+      }
+    ]
+  }
+}
