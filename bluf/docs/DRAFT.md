@@ -79,6 +79,25 @@ document.
   the marked-unknown convention in FINDINGS.md — the assembled document is
   graded by gaps-aware lint, so the honest document passes.
 
+## Seed input
+
+Nobody drafts from nothing. When the invocation carries material — notes,
+last week's update, a pasted thread — the interview starts from it:
+
+1. **Extract** what the seed already answers, field by field. Seeded facts
+   follow the triage provenance rule: never upgraded beyond what the
+   source states. Notes saying "checkout is faster" seed no number; notes
+   saying "ship next week" seed no date.
+2. **Confirm before use.** Show the extraction as a filled answer sheet —
+   "here is what your notes already answer" — and let the user correct it.
+   In non-interactive mode the extraction is used as-is but labeled seeded
+   in the sheet (`"seeded": true`), so the trace stays honest.
+3. **Interview only the gaps.** Questions cover the fields the seed left
+   open, nothing already confirmed.
+
+A seeded answer counts toward the required floor only after confirmation
+(or immediately, in non-interactive mode).
+
 ## Non-interactive mode
 
 `claude -p` and agent callers cannot answer AskUserQuestion. When the

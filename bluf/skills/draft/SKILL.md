@@ -27,6 +27,13 @@ document is its receipt.
    exists, resume: one-line summary of what it holds, then the first open
    required field. Otherwise start the interview in the template's field
    order — the recommendation is always asked last and placed first.
+   - **Seed material** (notes, a prior update, a pasted thread in the
+     invocation): extract what it already answers per DRAFT.md's seed
+     rules — never upgraded beyond what the source states — show the
+     filled sheet for confirmation, and interview only the open fields.
+     A skill that answers "here are my notes" with question 1 of 14 gets
+     abandoned; the first thing the user sees is what they already told
+     you.
 4. Ask per the protocol: facts free-text, AskUserQuestion only for the
    closed sets, one re-ask for a refusal ("A named person, or shall I
    list the owner in Gaps?"), then Gaps. Write the answer sheet after
