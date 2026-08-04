@@ -329,8 +329,15 @@ def grade_triage_run(md, gold, payload, errors):
     questions = payload.get("questions", [])
     verdict = []
 
+    # Only gold-anchored checks join the cross-run variance verdict.
+    # Payload-derived keys (a fact's own quote) legitimately differ
+    # between runs; tracking them made all-pass runs "disagree".
+    UNSTABLE = {"grounded-quote", "grounded-field", "thread-attribution"}
+
     def check(kind, spec, ok):
-        verdict.append((kind, json.dumps(spec, sort_keys=True), bool(ok)))
+        if kind not in UNSTABLE:
+            verdict.append((kind, json.dumps(spec, sort_keys=True),
+                            bool(ok)))
         return ok
 
     # Budget invariants, every run (corpus README).

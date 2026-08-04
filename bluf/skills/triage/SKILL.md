@@ -51,8 +51,12 @@ in JSON. "Three of the five commitments name no owner" is the register;
 7. Compare across messages: same subject, different dates, numbers, or
    owners → a dated, attributed contradiction entry. This is the report no
    single-document pass can make; do not bury it in prose.
-8. Rank gaps by consequence — a missing owner on a dated commitment
-   outranks a missing denominator in an aside. Then write the questions: a
+8. Rank gaps by consequence, measured in what the document itself states —
+   money, deadlines, named accounts. An undecided item carrying a dollar
+   amount and a deadline outranks everything that carries neither; a
+   missing owner on a dated commitment outranks a missing denominator in
+   an aside. Never let an appendix statistic push a funded, dated gap out
+   of the top five. Then write the questions: a
    short block of neutral questions the user can paste into a reply without
    editing. Describe the document, never indict the sender: "the date for
    the migration is not stated", never "Dana dodged the date".

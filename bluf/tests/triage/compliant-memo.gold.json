@@ -18,9 +18,9 @@
     {
       "type": "number",
       "value": "19,000",
-      "baseline": "2.4M",
       "quote_contains": "On last year's volume of $2.4M that saves $19,000 a year",
-      "provenance": "stated"
+      "provenance": "stated",
+      "why": "2.4M is the volume the saving is computed on, not a prior value of this metric. The contract bans restating context as a baseline, so gold must not require one here."
     },
     {
       "type": "commitment",
@@ -44,7 +44,11 @@
     }
   ],
   "allowed_facts": [
-    {"type": "*", "quote_contains": "*", "why": "Every sentence in this memo is a stated fact. Any well-formed extraction is acceptable."}
+    {
+      "type": "*",
+      "quote_contains": "*",
+      "why": "Every sentence in this memo is a stated fact. Any well-formed extraction is acceptable."
+    }
   ],
   "must_not_extract": [],
   "contradictions_must_include": [],

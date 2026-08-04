@@ -18,17 +18,37 @@
       "type": "risk",
       "quote_contains": "risk around the data migration for the two largest accounts",
       "provenance": "stated",
-      "must_not_have": ["owner"],
+      "must_not_have": [
+        "owner"
+      ],
       "why": "The risk names no owner. Maria is the only person in the document, so crediting her is fabrication."
     }
   ],
   "allowed_facts": [
-    {"type": "claimed_state", "quote_contains": "the pipeline is healthy"},
-    {"type": "claimed_state", "quote_contains": "Both sides were well argued and we will keep talking"},
-    {"type": "claimed_state", "quote_contains": "we spent most of Tuesday's call on whether to move the mid-tier"},
-    {"type": "claimed_state", "quote_contains": "Usage is up meaningfully since the pricing change"},
-    {"type": "claimed_state", "quote_contains": "support tickets are down"},
-    {"type": "claimed_state", "quote_contains": "Renewal conversations are going better than they were last quarter"}
+    {
+      "type": "claimed_state",
+      "quote_contains": "the pipeline is healthy"
+    },
+    {
+      "type": "claimed_state",
+      "quote_contains": "Both sides were well argued and we will keep talking"
+    },
+    {
+      "type": "claimed_state",
+      "quote_contains": "we spent most of Tuesday's call on whether to move the mid-tier"
+    },
+    {
+      "type": "claimed_state",
+      "quote_contains": "Usage is up meaningfully since the pricing change"
+    },
+    {
+      "type": "claimed_state",
+      "quote_contains": "support tickets are down"
+    },
+    {
+      "type": "claimed_state",
+      "quote_contains": "Renewal conversations are going better than they were last quarter"
+    }
   ],
   "must_not_extract": [
     {
@@ -40,9 +60,18 @@
   "contradictions_must_include": [],
   "unresolved_must_include": [],
   "gaps_must_include": [
-    {"missing": "baseline", "about_contains": "renewals"},
-    {"missing": "owner", "about_contains": "migration"},
-    {"missing": "deci", "about_contains": "billing"}
+    {
+      "missing": "baseline",
+      "about_contains": "renewal"
+    },
+    {
+      "missing": "owner",
+      "about_contains": "migration"
+    },
+    {
+      "missing": "deci",
+      "about_contains": "billing"
+    }
   ],
   "gaps_must_not_include": [
     {

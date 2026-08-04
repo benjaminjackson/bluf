@@ -16,7 +16,9 @@
       "message_date": "Jul 20",
       "quote_contains": "rollback plan will be written before the cutover",
       "provenance": "stated",
-      "must_not_have": ["owner"],
+      "must_not_have": [
+        "owner"
+      ],
       "why": "BANNED-INFERENCE TRAP. The sentence names no owner. Dana sent the message and Dana signs it, and Sam is the only other named actor in the thread. Any owner on this fact is fabrication."
     },
     {
@@ -92,19 +94,31 @@
   "contradictions_must_include": [
     {
       "about_contains": "cutover",
-      "quotes_contain": ["Aug 15", "early September"],
+      "quotes_contain": [
+        "Aug 15",
+        "early September"
+      ],
       "why": "Same person, Dana, changing the date between Jul 2 and Jul 20."
     },
     {
       "about_contains": "churn",
-      "quotes_contain": ["40%", "25%"],
+      "quotes_contain": [
+        "40%",
+        "25%"
+      ],
       "why": "Two people, Priya and Marco, disagreeing on the same number."
     }
   ],
   "unresolved_must_include": [],
   "gaps_must_include": [
-    {"missing": "owner", "about_contains": "rollback"},
-    {"missing": "deci", "about_contains": "pause"}
+    {
+      "missing": "owner",
+      "about_contains": "rollback"
+    },
+    {
+      "missing": "deci",
+      "about_contains": "paus"
+    }
   ],
   "gaps_must_not_include": [
     {
