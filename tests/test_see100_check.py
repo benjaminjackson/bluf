@@ -1,11 +1,11 @@
-"""Unit tests for plugins/bluf/scripts/see100_check.py. Stdlib only."""
+"""Unit tests for bluf/scripts/see100_check.py. Stdlib only."""
 import json
 import sys
 import unittest
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(REPO / "plugins" / "bluf" / "scripts"))
+sys.path.insert(0, str(REPO / "bluf" / "scripts"))
 import see100_check
 
 

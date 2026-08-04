@@ -25,7 +25,7 @@ jobs:
       - name: Validate manifests (claude plugin validate --strict)
         if: steps.cli.outcome == 'success'
         run: |
-          claude plugin validate ./plugins/bluf --strict
+          claude plugin validate ./bluf --strict
           claude plugin validate . --strict
 
       - name: Validate manifests (fallback, CLI unavailable)
@@ -34,7 +34,7 @@ jobs:
           python3 - <<'EOF'
           import json, sys
           errors = []
-          plugin = json.load(open("plugins/bluf/.claude-plugin/plugin.json"))
+          plugin = json.load(open("bluf/.claude-plugin/plugin.json"))
           market = json.load(open(".claude-plugin/marketplace.json"))
           for key in ("name", "version", "description"):
               if not plugin.get(key):
@@ -42,9 +42,9 @@ jobs:
           if market.get("name") != "bluf":
               errors.append("marketplace.json name must be 'bluf'")
           entries = market.get("plugins", [])
-          if not any(e.get("name") == "bluf" and e.get("source") == "./plugins/bluf"
+          if not any(e.get("name") == "bluf" and e.get("source") == "./bluf"
                      for e in entries):
-              errors.append("marketplace.json needs entry name=bluf source=./plugins/bluf")
+              errors.append("marketplace.json needs entry name=bluf source=./bluf")
           if any("version" in e for e in entries):
               errors.append("marketplace entry must not set a version (plugin.json owns it)")
           for e in errors:

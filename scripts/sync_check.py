@@ -6,7 +6,7 @@ Checks, in order:
      and every entry's `instead` matches its row's substitution column.
   2. Section B table rows == dictionary `locks` (term and meaning, exact).
   3. The `Version:` line in SEE-100.md == the dictionary's `see100` value.
-  4. docs/SEE-100.md and plugins/bluf/docs/SEE-100.md are byte-identical.
+  4. docs/SEE-100.md and bluf/docs/SEE-100.md are byte-identical.
   5. Every dictionary entry carries a rule number and a non-empty pattern list
      (locks need no patterns; their term is the pattern).
 
@@ -19,8 +19,8 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
 STANDARD = REPO / "docs" / "SEE-100.md"
-PLUGIN_STANDARD = REPO / "plugins" / "bluf" / "docs" / "SEE-100.md"
-DICTIONARY = REPO / "plugins" / "bluf" / "data" / "dictionary.json"
+PLUGIN_STANDARD = REPO / "bluf" / "docs" / "SEE-100.md"
+DICTIONARY = REPO / "bluf" / "data" / "dictionary.json"
 
 
 # Slash rows that are inflections of one term (one JSON entry with pattern

@@ -5,8 +5,8 @@ import unittest
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
-CORPUS = REPO / "plugins" / "bluf" / "tests"
-sys.path.insert(0, str(REPO / "plugins" / "bluf" / "scripts"))
+CORPUS = REPO / "bluf" / "tests"
+sys.path.insert(0, str(REPO / "bluf" / "scripts"))
 import see100_check
 
 FIXTURES = sorted(CORPUS.glob("*.md"))

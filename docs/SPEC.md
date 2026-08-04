@@ -34,7 +34,7 @@ bluf/
 ```
 
 Installed plugins only get the plugin directory, so the standard and the
-dictionary ship inside `plugins/bluf/`. The root `docs/SEE-100.md` remains the
+dictionary ship inside `bluf/`. The root `docs/SEE-100.md` remains the
 canonical copy for readers and the README link target.
 
 ## The Dictionary: Prose and Data in Parallel
@@ -43,7 +43,7 @@ Part 2 of SEE-100 exists twice, on purpose:
 
 1. **Prose** — the markdown tables in `docs/SEE-100.md` (Section A banned words,
    Section B meaning locks). Canonical for humans.
-2. **Data** — `plugins/bluf/data/dictionary.json`. Canonical for skills.
+2. **Data** — `bluf/data/dictionary.json`. Canonical for skills.
 
 The two must never drift. Rules:
 
@@ -113,7 +113,7 @@ produced each finding.
   semicolons, quarter deadlines with no day. Some checks emit *candidates*
   the model must confirm (noun clusters, vague date words, percentages with
   no baseline, conditioned banned terms) — confirmed candidates are judgment
-  findings. The full layer contract lives in `plugins/bluf/docs/FINDINGS.md`.
+  findings. The full layer contract lives in `bluf/docs/FINDINGS.md`.
   Cited by rule number. No judgment, no false modesty.
 - **Judgment** — findings that need a model: is the recommendation first
   (5.1)? Does each action item name one owner and one date (5.4)? Are claims
@@ -172,7 +172,7 @@ standard and stop needing the tool.
 
 ## Test Corpus
 
-`plugins/bluf/tests/` holds sample documents with known violations, each with
+`bluf/tests/` holds sample documents with known violations, each with
 an expected-findings file. A change to a skill is checked against the corpus
 before merge. Without the corpus, every prompt tweak is a guess.
 

@@ -4,6 +4,6 @@
 # symlinks that resolve outside the plugin directory.
 set -e
 cd "$(dirname "$0")/.."
-mkdir -p plugins/bluf/docs
-cp -f docs/SEE-100.md plugins/bluf/docs/SEE-100.md
-echo "plugins/bluf/docs/SEE-100.md regenerated from docs/SEE-100.md"
+mkdir -p bluf/docs
+cp -f docs/SEE-100.md bluf/docs/SEE-100.md
+echo "bluf/docs/SEE-100.md regenerated from docs/SEE-100.md"

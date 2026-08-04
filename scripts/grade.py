@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Grade the bluf skills against the corpus. Stdlib only.
 
-Layers are graded differently (see plugins/bluf/tests/README.md):
+Layers are graded differently (see bluf/tests/README.md):
 
 - Script layer (always): see100_check.py output must equal each fixture's
   expected `script` array exactly.
@@ -32,7 +32,7 @@ import sys
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
-PLUGIN = REPO / "plugins" / "bluf"
+PLUGIN = REPO / "bluf"
 CORPUS = PLUGIN / "tests"
 DUMP_DIR = Path("/tmp/bluf-grade-runs")
 sys.path.insert(0, str(PLUGIN / "scripts"))
