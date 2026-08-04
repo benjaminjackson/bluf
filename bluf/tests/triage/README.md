@@ -124,8 +124,8 @@ clean document is a graded failure, symmetric with inventing facts.
 - `gaps_must_include` / `gaps_must_not_include` — each entry has an optional
   `missing` and an optional `about_contains`. `missing` is matched as a
   case-insensitive substring of the skill gap's `missing` field, so gold uses a
-  stem where the natural word varies: `"decid"` matches both `decision` and
-  `decider`. `about_contains` is matched against the gap's `about` field
+  stem where the natural word varies: `"deci"` matches `decision`, `decider`,
+  and `decided` (`"decid"` would not — the s in decision breaks it). `about_contains` is matched against the gap's `about` field
   concatenated with its `quote`, and may be **a list**, in which case any one
   member satisfies it. An omitted field matches anything.
 - `gaps_must_be_empty` — when true, any entry in `gaps` fails the run.

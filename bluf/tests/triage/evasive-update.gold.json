@@ -42,7 +42,7 @@
   "gaps_must_include": [
     {"missing": "baseline", "about_contains": "renewals"},
     {"missing": "owner", "about_contains": "migration"},
-    {"missing": "decid", "about_contains": "billing"}
+    {"missing": "deci", "about_contains": "billing"}
   ],
   "gaps_must_not_include": [
     {

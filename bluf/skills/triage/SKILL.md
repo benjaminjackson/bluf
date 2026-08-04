@@ -32,6 +32,13 @@ in JSON. "Three of the five commitments name no owner" is the register;
 4. Extract facts of exactly five types: decisions (decider + date),
    commitments (owner + date), numbers (value + baseline), risks, claimed
    states. Everything else is skipped and counted.
+   - Every field value keeps the document's written form: "ten" stays
+     "ten", never 10. Omit a field you cannot support — never emit null.
+   - A promise of future work with no owner ("A rollback plan will be
+     written") is still a **commitment** — no owner field, and an owner
+     gap. Do not soften it to a claimed state.
+   - `baseline` only when the document states a prior value. The current
+     value is never its own baseline.
 5. Provenance for every fact: the verbatim `quote`, labeled `stated` or
    `inferred` (with the inference spelled out). The banned inferences —
    owner from the From: line or signature, date from surrounding context,

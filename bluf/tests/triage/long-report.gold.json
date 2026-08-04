@@ -69,7 +69,7 @@
   "unresolved_must_include": [],
   "gaps_must_include": [
     {
-      "missing": "decid",
+      "missing": "deci",
       "about_contains": ["log vendor", "in-house storage"],
       "why": "Rank 1 by consequence: undecided, deadline Nov 1, $240,000 exposure. The alternatives list is here because a run may name this gap after the vendor or after the alternative being considered; either naming is correct."
     }

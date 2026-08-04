@@ -104,7 +104,7 @@
   "unresolved_must_include": [],
   "gaps_must_include": [
     {"missing": "owner", "about_contains": "rollback"},
-    {"missing": "decid", "about_contains": "pause"}
+    {"missing": "deci", "about_contains": "pause"}
   ],
   "gaps_must_not_include": [
     {

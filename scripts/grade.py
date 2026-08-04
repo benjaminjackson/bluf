@@ -321,7 +321,10 @@ def gap_matches(gap, spec):
 
 def grade_triage_run(md, gold, payload, errors):
     doc = md.read_text()
-    facts = payload.get("facts", [])
+    # A JSON null is an absent field, not a value — normalize before
+    # matching so "value": null neither matches nor fails grounding.
+    facts = [{k: v for k, v in f.items() if v is not None}
+             for f in payload.get("facts", [])]
     gaps = payload.get("gaps", [])
     questions = payload.get("questions", [])
     verdict = []

@@ -150,7 +150,13 @@ Field rules:
 - `provenance` — `stated` or `inferred`; `inferred` requires `inference`.
 - `owner` / `date` / `decider` / `value` / `baseline` — present only when the
   document supports them. A missing slot on an extracted fact is expressed
-  as a gap, not as `null`.
+  as a gap, not as `null` — omit the key entirely.
+- Field values keep the document's own written form: "ten" stays "ten",
+  never `10`; "four" never becomes `4`. Normalizing a value is rewriting
+  the document, and the harness grades it as fabrication.
+- `baseline` only when the document states a prior value. Restating the
+  current value as its own baseline ("four, the current level") invents a
+  comparison the document never made.
 - `speaker` / `message_date` — required when the input is a thread; omitted
   for single documents.
 - `verdict` — the lead line, as one string. The rendered lead line and this
