@@ -1,0 +1,15 @@
+{
+  "name": "bluf",
+  "description": "Plugins that enforce the SEE-100 standard on executive prose.",
+  "owner": {
+    "name": "Benjamin Jackson",
+    "email": "ben@benjaminjackson.co"
+  },
+  "plugins": [
+    {
+      "name": "bluf",
+      "source": "./plugins/bluf",
+      "description": "Enforce SEE-100 on executive prose: bottom line up front, named owners, real dates, no evasion."
+    }
+  ]
+}

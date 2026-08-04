@@ -23,6 +23,43 @@ bd close <id>         # Complete work
 bd dolt push          # Push beads data to remote
 ```
 
+## Build & Test
+
+```bash
+# Validate the plugin manifest (must exit 0)
+claude plugin validate ./plugins/bluf --strict
+
+# Regenerate the plugin copy of the standard from the root copy
+scripts/sync-standard
+
+# Check that prose (docs/SEE-100.md) and data (dictionary.json) agree
+python3 scripts/sync_check.py
+
+# Run unit tests
+python3 -m unittest discover -s tests
+```
+
+## Dev Loop
+
+To test plugin changes in a live session, use a plugin dir — NOT a marketplace
+install. Marketplace installs are cached per version, so an edit under
+`plugins/` is invisible until you reinstall.
+
+```bash
+claude --plugin-dir ./plugins/bluf   # session sees the working copy
+/reload-plugins                       # pick up edits inside the session
+```
+
+## Dictionary Rule
+
+Part 2 of SEE-100 exists twice: prose tables in `docs/SEE-100.md` and data in
+`plugins/bluf/data/dictionary.json`. A dictionary change lands in both files in
+the same commit, or not at all. `scripts/sync_check.py` enforces this.
+
+Version lives in `plugins/bluf/.claude-plugin/plugin.json` only. Do not add a
+version to the marketplace entry — plugin.json silently overrides it, so
+setting both invites drift.
+
 ## Non-Interactive Shell Commands
 
 **ALWAYS use non-interactive flags** with file operations to avoid hanging on confirmation prompts.

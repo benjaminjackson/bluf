@@ -5,3 +5,6 @@
 .beads-credential-key
 .beads/proxieddb/
 .DS_Store
+
+# Python
+__pycache__/
