@@ -44,6 +44,11 @@ Each template defines two tiers:
   produces the answer sheet and the open questions instead.
 - **Optional** — skippable straight to Gaps at any time.
 
+A **refused** required field counts toward the floor: the user addressed
+it, the document assembles, and the hole rides in Gaps — that is the
+honest artifact this whole mode exists for. Only never-addressed required
+fields block assembly.
+
 ## The answer sheet
 
 Answers persist to `bluf-draft-<template>.json` in the working directory,

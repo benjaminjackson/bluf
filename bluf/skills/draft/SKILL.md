@@ -47,7 +47,8 @@ document is its receipt.
    - A named owner who is not the document's author gets a confirm flag:
      "(confirm with Priya before sending)".
    - Below the floor: no document — list the open required fields
-     instead.
+     instead. A refused required field counts toward the floor (the hole
+     rides in Gaps); only never-addressed required fields block assembly.
 6. Self-check the assembled document with the checker:
    ```
    python3 "${CLAUDE_PLUGIN_ROOT}/scripts/see100_check.py" <tempfile>
