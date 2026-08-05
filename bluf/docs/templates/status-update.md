@@ -19,7 +19,7 @@ first placed.
 ## Skeleton
 
 ```
-# {title} — Status
+# {title — derived from the work the answers name; never asked} — Status
 
 {recommendation}
 

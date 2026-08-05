@@ -19,7 +19,7 @@ supports it. Recommendation asked last, placed first.
 ## Skeleton
 
 ```
-# {title} — Board Memo
+# {title — derived from the decision sought; never asked} — Board Memo
 
 {recommendation} {decision_sought framed as the ask: named body, date}
 

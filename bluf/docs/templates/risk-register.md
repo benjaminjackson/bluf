@@ -18,6 +18,16 @@ questions.
 3. **Severity is closed.** RISK vs BLOCKER via AskUserQuestion, batched.
 4. Refusals and unknowns per protocol: one re-ask, then Gaps.
 
+A register does not assemble while any risk lacks its severity — Rule 7.1
+labels are the register's spine, not a finishing touch.
+
+## Fields
+
+| id | tier | type | prompt |
+|---|---|---|---|
+| scope | optional | free | What project or launch does this register cover? |
+| next_review | optional | free | When is the next review, as a real date? |
+
 ## Fields (per risk)
 
 | id | tier | type | prompt |

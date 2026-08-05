@@ -15,6 +15,11 @@ The interview is the product; the document is its receipt.
   as typed answers to plain questions. The skill never proposes candidate
   owners, dates, or numbers — a menu of invented owners the user picks from
   is fabrication with extra steps.
+- **The field table is the whole interview.** Every question comes from
+  the template's field table. Skeleton slots that are not fields — the
+  title, a scope heading, the author line — are derived from answers
+  already given, or filled with a neutral generic ("Status Update").
+  Never asked.
 - **AskUserQuestion only for genuinely closed sets**: template choice,
   document state (on track / at risk / off track), RISK vs BLOCKER, and the
   fact / estimate / opinion tag. Nothing else.
@@ -104,11 +109,18 @@ A seeded answer counts toward the required floor only after confirmation
 invocation itself supplies answers — inline after the command, or as a
 file path — the skill runs single-shot:
 
-1. Parse the supplied answers into the sheet (same refusal rules).
-2. Emit the questions it would have asked for every open field, as a
-   numbered list — the interview made visible.
-3. Assemble if the required floor is met; otherwise say what is missing.
-4. Gaps as always.
+1. Parse the supplied answers into the sheet.
+2. **Refusals go straight to Gaps.** The one re-ask is an interactive
+   courtesy; single-shot has no turns. A hostile answer ("the team",
+   "soon") or a declared unknown ("no owner yet", "cost unknown") becomes
+   a Gaps entry, never a question — a question AND a gap double-counts
+   the same hole.
+3. Emit questions for the **never-answered** fields only, and only fields
+   from the template's field table. Skeleton slots outside the table
+   (title, scope headings, the author) are derived from the answers or a
+   neutral generic — never asked, in any mode.
+4. Assemble if the required floor is met; otherwise say what is missing.
+5. Gaps as always.
 
 The grading harness drives this path.
 
