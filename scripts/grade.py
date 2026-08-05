@@ -175,8 +175,12 @@ def explain_jobs(only=None):
         if spec.get("shape") != "rewrite":
             continue
         after = spec["pairs"][0].get("after", "")
+        # Single full sentences only — a two-sentence after invites a
+        # defensible 4.5 (missing connector) call and the case is then
+        # arguing with the model's judgment, not testing it.
         if (after and after[0].isupper() and after.endswith(".")
-                and len(after) > 30 and after not in writes):
+                and ". " not in after and len(after) > 30
+                and after not in writes):
             writes.append(after)
     for n, s in enumerate(writes[:5]):
         jobs.append(ExplainJob(
