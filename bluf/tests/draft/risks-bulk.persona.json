@@ -1,0 +1,13 @@
+{
+  "template": "risk-register",
+  "scenario": "Bulk paste: three risks in free text, slots partly pre-answered. The loop must parse, not interrogate.",
+  "given": {
+    "titles": "1. Vendor API slips — if the Aug 20 date moves, launch slips 2 weeks (~$40k). Marco owns the fallback, scoped by Aug 15. 2. Cert dry run fails — we pay both processors for October, $6k. Dana reruns it by Sep 5. 3. Load test undone — no owner yet, cost unknown."
+  },
+  "must_ask": ["severity"],
+  "question_ceiling": 5,
+  "expect_document": false,
+  "gaps_must_mention": ["owner"],
+  "allowed_terms": ["RISK", "BLOCKER", "Vendor", "Cert", "Load", "Severity", "Register", "October"],
+  "notes": "Risks 1 and 2 arrive with trigger, consequence, cost, owner, and date in the paste. Risk 3 has an explicit no-owner and no cost. Traps: (1) 36-question failure mode — the ceiling of 5 forbids re-asking slots the paste already answered; (2) severity is never stated, so it must be asked (must_ask) — a register cannot assemble without it, hence expect_document false; (3) risk 3's owner goes to gaps, and crediting Marco or Dana with it fails the trace."
+}

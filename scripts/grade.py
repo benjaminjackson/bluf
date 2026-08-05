@@ -115,9 +115,31 @@ COMMANDS = {
     "triage": "/bluf:triage {md} — emit triage JSON",
 }
 
+DRAFT_CORPUS = CORPUS / "draft"
+TEMPLATES_DIR = PLUGIN / "docs" / "templates"
+
+
+def draft_fixtures(only=None):
+    if not DRAFT_CORPUS.is_dir():
+        return
+    for pj in sorted(DRAFT_CORPUS.glob("*.persona.json")):
+        stem = pj.name.replace(".persona.json", "")
+        if only and stem not in only:
+            continue
+        yield pj, json.loads(pj.read_text())
+
+
+def draft_command(persona):
+    lines = "\n".join(f"{k}: {v}" for k, v in persona["given"].items())
+    return (f"/bluf:draft {persona['template']} — non-interactive, single "
+            f"shot; my answers:\n{lines}\n— emit draft JSON")
+
 
 def run_one(phase, md, i):
-    command = COMMANDS[phase].format(md=md)
+    if phase == "draft":
+        command = draft_command(json.loads(md.read_text()))
+    else:
+        command = COMMANDS[phase].format(md=md)
     return run_skill(command, f"{phase}-{md.stem}-{i}")
 
 
@@ -584,10 +606,90 @@ def grade_triage(runs, only, results):
     return errors
 
 
+# Draft grading — the four grades in bluf/tests/draft/README.md.
+def grade_draft_run(pj, persona, payload, errors):
+    name = pj.name
+    questions = payload.get("questions") or []
+    fields = {str(q.get("field", "")) for q in questions}
+    document = payload.get("document") or ""
+    gaps_blob = json.dumps(payload.get("gaps", [])).lower()
+    verdict = []
+
+    def check(kind, spec, ok):
+        if kind != "fabrication":  # payload-derived; kept out of variance
+            verdict.append((kind, json.dumps(spec, sort_keys=True),
+                            bool(ok)))
+        return ok
+
+    # 1. Required-field recall.
+    for field in persona.get("must_ask", []):
+        if not check("must-ask", field, field in fields):
+            fail(errors, f"{name}: never asked for {field!r}")
+    # 2. Question count.
+    ceiling = persona.get("question_ceiling", 99)
+    if not check("ceiling", ceiling, len(questions) <= ceiling):
+        fail(errors, f"{name}: {len(questions)} questions — ceiling is "
+                     f"{ceiling}")
+    # 3. Document presence and BLUF position.
+    if persona.get("expect_document"):
+        if not check("document", "present", bool(document.strip())):
+            fail(errors, f"{name}: no document assembled though the "
+                         "required floor is met")
+        else:
+            first = next((ln for ln in document.splitlines()
+                          if ln.strip() and not ln.startswith("#")), "")
+            want = persona.get("bluf_must_contain", "")
+            if want and not check("bluf", want, want.lower()
+                                  in first.lower()):
+                fail(errors, f"{name}: recommendation not in the first "
+                             f"line — wanted {want!r} in {first!r}")
+    else:
+        if not check("document", "absent", not document.strip()):
+            fail(errors, f"{name}: assembled a document below the "
+                         "required floor")
+    # Gaps content.
+    for token in persona.get("gaps_must_mention", []):
+        if not check("gap-mention", token, token.lower() in gaps_blob):
+            fail(errors, f"{name}: gaps never mention {token!r}")
+    # 4. Fabrication trace (hard fail): every name, date, and number in
+    # the document comes from the given answers, the template's own text,
+    # or the persona's allowed terms.
+    if document.strip():
+        corpus = "\n".join(str(v) for v in persona["given"].values())
+        template_file = TEMPLATES_DIR / f"{persona['template']}.md"
+        corpus += "\n" + template_file.read_text()
+        corpus += "\n" + " ".join(persona.get("allowed_terms", []))
+        for token in new_facts(corpus, document):
+            check("fabrication", token, False)
+            fail(errors, f"{name}: fabricated {token!r} — traces to no "
+                         "answer (closed-world violation)")
+    return verdict
+
+
+def grade_draft(runs, only, results):
+    errors = []
+    for pj, persona in draft_fixtures(only):
+        before = len(errors)
+        verdicts = []
+        for i in range(runs):
+            payload = results[("draft", pj.stem, i)]
+            if isinstance(payload, Exception):
+                fail(errors, f"{pj.name} run {i + 1}: {payload}")
+                continue
+            verdicts.append(grade_draft_run(pj, persona, payload, errors))
+        if len({json.dumps(v) for v in verdicts}) > 1:
+            fail(errors, f"{pj.name}: runs disagree — variance is a "
+                         "failure")
+        if len(errors) == before:
+            print(f"  ok   {pj.name}: {runs} draft run(s) agree")
+    return errors
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--skill",
-                        choices=["lint", "rewrite", "triage", "all"])
+                        choices=["lint", "rewrite", "triage", "draft",
+                                 "all"])
     parser.add_argument("--runs", type=int, default=3)
     parser.add_argument("--only", nargs="*", help="fixture stems to grade")
     parser.add_argument("--workers", type=int, default=4,
@@ -609,6 +711,10 @@ def main():
         jobs += [("triage", md, i)
                  for md, _ in triage_fixtures(args.only)
                  for i in range(args.runs)]
+    if args.skill in ("draft", "all"):
+        jobs += [("draft", pj, i)
+                 for pj, _ in draft_fixtures(args.only)
+                 for i in range(args.runs)]
     if jobs:
         print(f"running {len(jobs)} live job(s) on {args.workers} worker(s):")
     results = collect(jobs, args.workers)
@@ -622,6 +728,9 @@ def main():
     if args.skill in ("triage", "all"):
         print("triage:")
         errors += grade_triage(args.runs, args.only, results)
+    if args.skill in ("draft", "all"):
+        print("draft:")
+        errors += grade_draft(args.runs, args.only, results)
 
     print(f"\n{'FAIL' if errors else 'PASS'}: {len(errors)} failure(s)")
     return 1 if errors else 0

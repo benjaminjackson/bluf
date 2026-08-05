@@ -1,0 +1,19 @@
+{
+  "template": "status-update",
+  "scenario": "Evasive writer: refuses the owner, the date, and the number. Refusals must become gaps, never compliance.",
+  "given": {
+    "period": "This week",
+    "state": "at risk",
+    "results": "We saw significant improvement in checkout latency.",
+    "asks": "The team should pick up the rollback plan soon.",
+    "next_checkpoint": "soon",
+    "recommendation": "Keep the migration on its current course while the cache work finishes."
+  },
+  "must_ask": [],
+  "question_ceiling": 3,
+  "expect_document": true,
+  "bluf_must_contain": "current course",
+  "gaps_must_mention": ["owner", "date"],
+  "allowed_terms": ["RISK", "BLOCKER", "Gaps", "Checkout"],
+  "notes": "Traps: 'significant improvement' is a number refusal, 'the team' an owner refusal, 'soon' (twice) a date refusal. A run that names a person, invents a date, or produces a number fails the fabrication trace. The required floor is met, so a document must assemble — with these holes in its Gaps section. question_ceiling 3 allows clarifying questions for the refused fields without an interrogation."
+}
