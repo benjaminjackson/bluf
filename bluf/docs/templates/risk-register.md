@@ -14,7 +14,8 @@ questions.
 2. **Per-risk form, batched by slot.** For risks still missing slots, ask
    per risk in one compact prompt: "For 'vendor API slips': what triggers
    it, what is the consequence and cost, who mitigates it?" One prompt
-   per risk, not one per slot.
+   per risk, not one per slot. A risk title phrased as an event ("Vendor
+   API slips", "Cert dry run fails") **is** its trigger — never re-ask it.
 3. **Severity is closed.** RISK vs BLOCKER via AskUserQuestion, batched.
 4. Refusals and unknowns per protocol: one re-ask, then Gaps.
 

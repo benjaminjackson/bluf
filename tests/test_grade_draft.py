@@ -108,14 +108,20 @@ class TestDraftGrading(unittest.TestCase):
 
     # --- Phase 5 review regressions ---
 
-    def test_strict_trace_sees_every_shape(self):
+    def test_strict_trace_sees_every_actor_shape(self):
         corpus = "the rollback plan needs work"
         for doc in ("- Priya: approve the rollback plan.",
                     "| RISK | Priya |",
                     "**Owner: Priya.**",
-                    "Priya owns the rollback plan."):
+                    "Mitigation: Priya, fallback scope.",
+                    "The plan is owned by Priya."):
             self.assertIn("Priya", grade.new_facts(corpus, doc, strict=True),
                           doc)
+
+    def test_strict_trace_spares_honest_gaps_prose(self):
+        corpus = "the reporting period was refused"
+        doc = "- Calendar dates for the reporting period: not given."
+        self.assertEqual(grade.new_facts(corpus, doc, strict=True), [])
 
     def test_unit_suffixed_numbers_are_traced(self):
         out = grade.new_facts("Latency fell to 95ms.",

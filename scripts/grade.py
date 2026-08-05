@@ -268,9 +268,12 @@ def new_facts(input_text, output_text, strict=False):
     ponytail: a fabricated name used only sentence-initially slips through
     the rewrite grade; numbers and dates stay strict.
 
-    strict=True (draft): no positional escape. Draft documents are
-    assembled from answers, so bullets ("- Priya: ..."), table cells, and
-    bold runs — the shapes the templates mandate — must trace too.
+    strict=True (draft): actor positions also trace — after a colon or
+    pipe ("Owner: Priya", "| Priya |"), and the bullet-actor shape
+    ("- Priya: approve...") — the shapes the templates mandate for owners.
+    ponytail: a fabricated name used ONLY at the start of a prose sentence
+    still slips; honest Gaps prose ("- Calendar dates for...") must not
+    flag, and actor slots are where invented names actually land.
     """
     input_tokens = set(FACT_TOKEN.findall(input_text))
     input_lower = input_text.lower()
@@ -279,8 +282,13 @@ def new_facts(input_text, output_text, strict=False):
         if token[0].isalpha() and token[0].isupper():
             if token.lower() in input_lower:
                 continue
-            if strict or re.search(
-                    r"[a-z0-9,] +" + re.escape(token) + r"\b", output_text):
+            esc = re.escape(token)
+            hit = re.search(r"[a-z0-9,] +" + esc + r"\b", output_text)
+            if strict and not hit:
+                hit = (re.search(r"[:|][ *]*" + esc + r"\b", output_text)
+                       or re.search(r"(?m)^\s*[-*]\s+\**" + esc + r"\**:",
+                                    output_text))
+            if hit:
                 found.append(token)
         elif token[0].isalpha():
             continue

@@ -58,8 +58,10 @@ gaps in the draft JSON.
    number in `document` traces to the persona's `given` answers, the
    template's skeleton and field prompts (never its prose — the template's
    illustrative names are not facts), `allowed_terms`, or the gap slot
-   vocabulary. Strict: bullets, table cells, bold runs, and sentence-initial
-   words all trace. The harness also rejects mega-question field ids, checks
+   vocabulary. Actor positions trace — after a colon or pipe, the
+   bullet-actor shape ("- Priya: ..."), and mid-sentence; honest Gaps
+   prose ("- Calendar dates for...") does not flag, and a name used only
+   at the start of a prose sentence is the documented remaining gap. The harness also rejects mega-question field ids, checks
    `answers_used` against `given`, enforces the gap slot vocabulary, and runs
    the deterministic checker over the document — a finding without a covering
    Gaps entry fails.
