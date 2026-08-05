@@ -188,6 +188,11 @@ def check(standard_path=STANDARD, plugin_standard_path=PLUGIN_STANDARD,
             elif primary not in known:
                 errors.append(f"{name} routes to rule {primary!r}, which is "
                               "not in the FINDINGS.md classification table")
+            elif entry.get("rule") and primary != entry["rule"]:
+                # lint emits `rule`; explain routes on `primary`. If they
+                # diverge, the two skills disagree in public on one term.
+                errors.append(f"{name}: rule {entry['rule']!r} != "
+                              f"rule_ref.primary {primary!r}")
             for other in ref.get("see_also", []):
                 if other not in known:
                     errors.append(f"{name} cross-refers to rule {other!r}, "

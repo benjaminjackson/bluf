@@ -9,10 +9,13 @@ Prove this installed copy of the plugin reads its own data. Do exactly this:
 
 1. Read `${CLAUDE_PLUGIN_ROOT}/data/dictionary.json`.
 2. Read `${CLAUDE_PLUGIN_ROOT}/docs/SEE-100.md`.
-3. Count the data rows of the two markdown tables in SEE-100.md Part 2
+3. Read `${CLAUDE_PLUGIN_ROOT}/data/lineage.json` and
+   `${CLAUDE_PLUGIN_ROOT}/data/examples.json`; both must parse as
+   JSON and hold the same rule numbers as each other.
+4. Count the data rows of the two markdown tables in SEE-100.md Part 2
    (Section A banned words, Section B meaning locks). Do not count the header
    or separator rows.
-4. Report, in this order:
+5. Report, in this order:
    - The absolute path the plugin root resolved to.
    - Banned rows: the count of distinct `row` values in `banned`, the total
      entry count, and the Section A table row count. The distinct-row count
@@ -20,9 +23,10 @@ Prove this installed copy of the plugin reads its own data. Do exactly this:
    - Locks: the length of `locks` and the Section B table row count. They
      must be equal.
    - Prose bans: the length of `prose_bans`.
+   - Lineage and examples: their rule counts (must be equal).
    - The dictionary `see100` value and the `Version:` line from SEE-100.md
      (they must match).
-5. End with one verdict line: `SELFTEST PASS` if the dictionary counts match
+6. End with one verdict line: `SELFTEST PASS` if the dictionary counts match
    the table counts and the versions match, otherwise `SELFTEST FAIL` plus
    what was wrong.
 

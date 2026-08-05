@@ -145,8 +145,9 @@ class ExplainJob:
         self.command = command
 
 
-def explain_jobs():
+def explain_jobs(only=None):
     lineage = json.loads((PLUGIN / "data" / "lineage.json").read_text())
+    examples = json.loads((PLUGIN / "data" / "examples.json").read_text())
     standard = (REPO / "docs" / "SEE-100.md").read_text()
     jobs = [ExplainJob(f"rule-{r}",
                        f"/bluf:explain {r} — emit explain JSON")
@@ -161,13 +162,28 @@ def explain_jobs():
                    'new tooling to drive significant improvement soon." '
                    "— emit explain JSON"),
     ]
-    # Five compliant sentences from the standard's own Write: examples.
+    # Compliant sentences: the standard's own Write: examples that are
+    # full sentences (one Write: line is a noun-cluster rewrite fragment
+    # — a model correctly flags 4.3 on it, so it cannot serve here),
+    # topped up to five with curated full-sentence afters.
     writes = [s for s in re.findall(r'Write: "([^"]+)"', standard)
-              if len(s) > 25][:5]
-    for n, s in enumerate(writes):
+              if len(s) > 25 and s[0].isupper() and s.endswith(".")]
+    for rule in sorted(examples):
+        if len(writes) >= 5:
+            break
+        spec = examples[rule]
+        if spec.get("shape") != "rewrite":
+            continue
+        after = spec["pairs"][0].get("after", "")
+        if (after and after[0].isupper() and after.endswith(".")
+                and len(after) > 30 and after not in writes):
+            writes.append(after)
+    for n, s in enumerate(writes[:5]):
         jobs.append(ExplainJob(
             f"compliant-{n}",
             f'/bluf:explain this sentence: "{s}" — emit explain JSON'))
+    if only:
+        jobs = [j for j in jobs if j.stem in only]
     return jobs
 
 
@@ -806,10 +822,16 @@ def grade_draft(runs, only, results):
     return errors
 
 
-def grade_explain(jobs, results):
-    """Checks (a) and (b) of bluf-3oz.5: rule text verbatim from the
-    standard, STE citation string-matched to lineage.json, plus the
-    unknown-number, term, compliant, and multi-violation cases."""
+def grade_explain(jobs, runs, results):
+    """Checks (a) and (b) of bluf-3oz.5. rule_text must sit inside the
+    NAMED rule's own block (sync_check.rule_text), so quoting a heading
+    or another rule's text fails. Every branch that names a rule also
+    string-matches its ste against lineage.json. Caveat, stated: the
+    term case derives its expectation from the same dictionary the skill
+    reads — it proves the file was read, not that the routing is right;
+    the routing itself is guarded by sync_check."""
+    sys.path.insert(0, str(REPO / "scripts"))
+    import sync_check
     errors = []
     lineage = json.loads((PLUGIN / "data" / "lineage.json").read_text())
     examples = json.loads((PLUGIN / "data" / "examples.json").read_text())
@@ -819,50 +841,86 @@ def grade_explain(jobs, results):
                     if e["term"] == "material")
     maps_36 = next(r for r, e in lineage.items()
                    if "3.6" in (e.get("ste") or ""))
-    for job in jobs:
-        p = results[("explain", job.stem, 0)]
-        if isinstance(p, Exception):
-            fail(errors, f"{job.stem}: {p}")
-            continue
-        jid = job.stem
+    MULTI_VIOLATED = {"5.4", "1.1", "8.5", "8.2"}
+
+    def check_rule_fields(errs, jid, p, r):
+        block = sync_check.rule_text(standard, r) if r in lineage else ""
+        text = (p.get("rule_text") or "").strip()
+        if not text or text not in block:
+            errs.append(f"{jid}: rule_text is not verbatim from rule "
+                        f"{r}'s own block")
+        if p.get("ste") != lineage.get(r, {}).get("ste"):
+            errs.append(f"{jid}: ste {p.get('ste')!r} != lineage "
+                        f"{lineage.get(r, {}).get('ste')!r}")
+
+    def grade_one(jid, p):
+        errs = []
         if jid.startswith("rule-"):
             r = jid[5:]
             if p.get("rule") != r:
-                fail(errors, f"{jid}: answered rule {p.get('rule')!r}")
-            if not (p.get("rule_text") or "").strip() \
-                    or p["rule_text"].strip() not in standard:
-                fail(errors, f"{jid}: rule_text not verbatim from the "
-                             "standard")
-            if p.get("ste") != lineage[r]["ste"]:
-                fail(errors, f"{jid}: ste {p.get('ste')!r} != lineage "
-                             f"{lineage[r]['ste']!r}")
+                errs.append(f"{jid}: answered rule {p.get('rule')!r}")
+            check_rule_fields(errs, jid, p, r)
             if p.get("shape") != examples[r]["shape"]:
-                fail(errors, f"{jid}: shape {p.get('shape')!r} != "
-                             f"{examples[r]['shape']!r}")
+                errs.append(f"{jid}: shape {p.get('shape')!r} != "
+                            f"{examples[r]['shape']!r}")
         elif jid == "reject-10.1":
-            if p.get("rule") is not None or "rejected" not in p:
-                fail(errors, f"{jid}: out-of-range number not rejected: "
-                             f"{p}")
+            if p.get("rule") is not None                     or "10.1" not in str(p.get("rejected", "")):
+                errs.append(f"{jid}: out-of-range number not rejected: "
+                            f"{p}")
         elif jid == "steonly-3.6":
             if p.get("rule") is not None or p.get("maps_to") != maps_36:
-                fail(errors, f"{jid}: expected maps_to={maps_36!r}, got "
-                             f"{p}")
+                errs.append(f"{jid}: expected maps_to={maps_36!r}, got "
+                            f"{p}")
         elif jid == "term-material":
             if p.get("rule") != material:
-                fail(errors, f"{jid}: expected primary {material!r}, got "
-                             f"{p.get('rule')!r}")
+                errs.append(f"{jid}: expected primary {material!r}, got "
+                            f"{p.get('rule')!r}")
+            else:
+                check_rule_fields(errs, jid, p, material)
         elif jid.startswith("compliant-"):
+            r = p.get("rule")
             if p.get("compliant") is not True or p.get("also_violates"):
-                fail(errors, f"{jid}: clean sentence not called "
-                             f"compliant: {p}")
+                errs.append(f"{jid}: clean sentence not called "
+                            f"compliant: rule={r!r} "
+                            f"also={p.get('also_violates')!r}")
+            elif r not in lineage:
+                errs.append(f"{jid}: nearest rule {r!r} does not exist")
+            else:
+                check_rule_fields(errs, jid, p, r)
         elif jid == "multi":
-            if p.get("rule") != "5.4" or len(p.get("also_violates",
-                                                   [])) < 2:
-                fail(errors, f"{jid}: expected 5.4 + >=2 also_violates, "
-                             f"got {p.get('rule')!r} / "
-                             f"{p.get('also_violates')!r}")
+            r = p.get("rule")
+            also = set(p.get("also_violates") or [])
+            if r not in MULTI_VIOLATED:
+                errs.append(f"{jid}: headlined {r!r}, not one of the "
+                            f"violated rules {sorted(MULTI_VIOLATED)}")
+            elif not (MULTI_VIOLATED - {r}) <= also:
+                errs.append(f"{jid}: also_violates {sorted(also)} misses "
+                            f"{sorted(MULTI_VIOLATED - {r} - also)}")
+            elif not also <= set(lineage):
+                errs.append(f"{jid}: invented rule numbers in "
+                            f"also_violates: {sorted(also - set(lineage))}")
+            else:
+                check_rule_fields(errs, jid, p, r)
+        return errs
+
+    for job in jobs:
+        per_run = []
+        for i in range(runs):
+            p = results[("explain", job.stem, i)]
+            if isinstance(p, Exception):
+                per_run.append([f"{job.stem} run {i + 1}: {p}"])
+                continue
+            per_run.append(grade_one(job.stem, p))
+        for errs in per_run:
+            for e in errs:
+                if e not in errors:
+                    fail(errors, e)
+        if len({tuple(e) for e in per_run}) > 1:
+            fail(errors, f"{job.stem}: runs disagree — variance is a "
+                         "failure")
     if not errors:
-        print(f"  ok   explain: all {len(jobs)} checks pass")
+        print(f"  ok   explain: all {len(jobs)} cases pass "
+              f"({runs} run(s) each)")
     return errors
 
 
@@ -897,9 +955,10 @@ def main():
                  for pj, _ in draft_fixtures(args.only)
                  for i in range(args.runs)]
     ex_jobs = []
-    if args.skill == "explain":  # explicit only — ~53 live runs
-        ex_jobs = explain_jobs()
-        jobs += [("explain", j, 0) for j in ex_jobs]
+    if args.skill == "explain":  # explicit only — ~50 live runs per pass
+        ex_jobs = explain_jobs(args.only)
+        jobs += [("explain", j, i) for j in ex_jobs
+                 for i in range(args.runs)]
     if jobs:
         print(f"running {len(jobs)} live job(s) on {args.workers} worker(s):")
     results = collect(jobs, args.workers)
@@ -918,7 +977,7 @@ def main():
         errors += grade_draft(args.runs, args.only, results)
     if ex_jobs:
         print("explain:")
-        errors += grade_explain(ex_jobs, results)
+        errors += grade_explain(ex_jobs, args.runs, results)
 
     print(f"\n{'FAIL' if errors else 'PASS'}: {len(errors)} failure(s)")
     return 1 if errors else 0

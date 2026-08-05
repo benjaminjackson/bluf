@@ -56,9 +56,10 @@ Run the SAME procedure lint runs — shared instruction, not a paraphrase:
 2. Confirm or discard candidates; add judgment findings per the rules in
    `${CLAUDE_PLUGIN_ROOT}/docs/FINDINGS.md`. Explain and lint must never
    disagree on one sentence in public.
-3. Report ALL violated rules, deterministic first. Explain the
-   highest-severity one in full (rule verbatim, lineage, examples); list
-   the rest as "also violates: 8.5, 4.1".
+3. Report ALL violated rules, deterministic first. Explain the FIRST
+   in that report order in full (rule verbatim, lineage, examples) —
+   deterministic errors outrank judgment errors, and report order breaks
+   severity ties. List the rest as "also violates: 8.5, 4.1".
 
 **Compliant sentence**: the fixed no-violation output — "This sentence is
 compliant. Nearest applicable rule: X, which it satisfies because …".
@@ -95,7 +96,7 @@ Special cases in the JSON:
 
 - Out-of-range number: `{"version": 1, "rule": null, "rejected": "10.1"}`.
 - STE-only number: `{"version": 1, "rule": null, "ste_only": "3.6",
-  "maps_to": "3.3"}` — `maps_to` found by searching lineage.json `ste`
+  "maps_to": "3.1"}` — `maps_to` found by searching lineage.json `ste`
   values.
 - Compliant sentence: the nearest rule's fields plus `"compliant": true`
   and an empty `also_violates`.

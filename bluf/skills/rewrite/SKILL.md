@@ -46,7 +46,8 @@ SEE-100, without inventing a single fact.
 1. **Rewrite** — the full compliant document, in one fenced block.
 2. **Changes** — each change with its rule number, the list ending with:
    `Any rule number above explains itself: /bluf:explain 3.3` (a rule
-   that actually appears in the list).
+   that actually appears in the list). Rendered prose only — never in
+   the JSON.
 3. **Gaps** — what the rewrite could not fix because only the writer knows
    it: a missing owner, a missing date, a claim with no number. Cite the
    rule each gap violates. If there are none, say "none".
