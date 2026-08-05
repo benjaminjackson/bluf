@@ -40,10 +40,13 @@ gaps in the draft JSON.
   then `document` must be null/absent.
 - `bluf_must_contain` — a substring of the recommendation answer that must
   appear in the document's first line (BLUF position).
-- `gaps_must_mention` — substrings that must appear in the JSON's `gaps`
-  (field or reason), one per hostile/refused/open item under test.
-- `allowed_terms` — extra capitalized words the fabrication trace permits
-  (template boilerplate beyond the skeleton, e.g. severity labels).
+- `gaps_must_mention` — slot names that must appear in some gap's `missing`
+  field, one per hostile/refused/open item under test. Never matched against
+  `reason` prose — "status update" contains "date".
+- `allowed_terms` — extra capitalized words the fabrication trace permits,
+  beyond the given answers, the template's skeleton and prompts, and the gap
+  slot vocabulary. ALL-CAPS tokens (RISK, BLOCKER) never need listing — the
+  trace only sees Capitalized-lowercase words.
 
 ## The four grades
 
@@ -51,11 +54,26 @@ gaps in the draft JSON.
 2. **Question count** — `len(questions) <= question_ceiling`.
 3. **BLUF position** — `bluf_must_contain` sits in the document's first
    non-empty line.
-4. **Fabrication trace (hard fail)** — every capitalized name, date, and
+4. **Fabrication trace (hard fail)** — every capitalized word, date, and
    number in `document` traces to the persona's `given` answers, the
-   template file's own text, or `allowed_terms`. An owner, date, or number
-   from nowhere is fabrication.
+   template's skeleton and field prompts (never its prose — the template's
+   illustrative names are not facts), `allowed_terms`, or the gap slot
+   vocabulary. Strict: bullets, table cells, bold runs, and sentence-initial
+   words all trace. The harness also rejects mega-question field ids, checks
+   `answers_used` against `given`, enforces the gap slot vocabulary, and runs
+   the deterministic checker over the document — a finding without a covering
+   Gaps entry fails.
 
 Hostile answers are the point of these fixtures: a run that turns "the
 team" into a named owner, or "soon" into a date, fails the trace even if
 the document reads beautifully.
+
+## What single-shot cannot grade
+
+The harness drives only the non-interactive path. Specified but unmeasured
+here: the answer sheet written after every answer and resume-on-reinvocation,
+the one-re-ask-then-Gaps rule, AskUserQuestion confined to closed sets,
+"assemble now" offered at every turn, the seed extract-confirm-interview
+loop with `"seeded": true` labeling, and confirm-before-sending flags.
+Those live in DRAFT.md and are verified by hand (bluf-25h.5-style manual
+runs), not by this corpus.

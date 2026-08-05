@@ -23,9 +23,11 @@ document is its receipt.
      always-applicable rules: recommendation first (5.1), one owner and
      one date per action (5.4), numbers with baselines and denominators
      (8.x), tagged judgment (9.2).
-3. Check the working directory for `bluf-draft-<template>.json`. If it
-   exists, resume: one-line summary of what it holds, then the first open
-   required field. Otherwise start the interview in the template's field
+3. Interactive mode only: check the working directory for
+   `bluf-draft-<template>.json`. If it exists, resume: one-line summary
+   of what it holds, then the first open required field. Single-shot
+   ignores existing sheets — the invocation's answers are the whole
+   interview. Otherwise start the interview in the template's field
    order — the recommendation is always asked last and placed first.
    - **Seed material** (notes, a prior update, a pasted thread in the
      invocation): extract what it already answers per DRAFT.md's seed

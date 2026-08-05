@@ -21,7 +21,8 @@ Each `<name>.md` fixture has a `<name>.expected.json` file:
     finding fails; `acknowledged` narrows it the same way, so
     `{"rule": "*", "acknowledged": true}` fails the run on any acknowledged
     finding at all.
-  - `allowed` — extras that neither pass nor fail.
+  - `allowed` — documentation for humans: the harness allows anything
+    `must_not_find` does not match, so this list is never read by code.
 - `rewrite` — for rewrite fixtures: `gaps_must_include` lists rule numbers
   that must appear in the Gaps section. The harness also checks every number,
   date, proper noun, and dollar amount in the rewrite against the input
@@ -29,3 +30,8 @@ Each `<name>.md` fixture has a `<name>.expected.json` file:
 
 The harness runs each fixture through the skill 3 times; disagreement between
 runs on `must_find`/`must_not_find` is a failure.
+
+## Sub-corpora
+
+- `triage/` — extraction fixtures with hand-written gold files; format and matching semantics in `triage/README.md`.
+- `draft/` — interview personas; format and the four grades in `draft/README.md`.

@@ -116,7 +116,9 @@ A seeded answer counts toward the required floor only after confirmation
 invocation itself supplies answers — inline after the command, or as a
 file path — the skill runs single-shot:
 
-1. Parse the supplied answers into the sheet.
+1. Parse the supplied answers into the sheet. Single-shot **ignores
+   any existing sheet file** — the invocation's answers are the whole
+   interview; resume is an interactive-mode feature only.
 2. **Refusals go straight to Gaps.** The one re-ask is an interactive
    courtesy; single-shot has no turns. A hostile answer ("the team",
    "soon") or a declared unknown ("no owner yet", "cost unknown") becomes
@@ -153,10 +155,12 @@ last in the response:
 }
 ```
 
-`questions` lists open fields only. Each gap names its absent slot(s) in
-`missing`, from the same closed vocabulary triage uses — owner, date,
-decider, decision, value, baseline, denominator — so a grader never
-depends on how the `reason` is worded. `answers_used` holds exactly the
-answers that reached the document — the harness traces every name, date,
-and number in `document` back to this object, and anything untraceable is
-fabrication, a hard fail.
+`questions` lists open fields only, one field per entry — a field id
+packing several slots ("severity, trigger") is rejected. Each gap names
+its absent slot(s) in `missing`, from the same closed vocabulary triage
+uses — owner, date, decider, decision, value, baseline, denominator —
+so a grader never depends on how the `reason` is worded. `answers_used`
+holds exactly the answers that reached the document; the harness checks
+every entry against the answers actually given, and traces every name,
+date, and number in `document` back to those given answers. Anything
+untraceable is fabrication, a hard fail.

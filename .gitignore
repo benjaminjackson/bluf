@@ -8,3 +8,6 @@
 
 # Python
 __pycache__/
+
+# Draft interview answer sheets (runtime, per-invocation)
+bluf-draft-*.json

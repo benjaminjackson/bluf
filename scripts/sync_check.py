@@ -9,6 +9,8 @@ Checks, in order:
   4. docs/SEE-100.md and bluf/docs/SEE-100.md are byte-identical.
   5. Every dictionary entry carries a rule number and a non-empty pattern list
      (locks need no patterns; their term is the pattern).
+  6. Every dictionary entry routes to a rule: rule_ref.primary, and each
+     see_also, name a rule in the FINDINGS.md classification table.
 
 Exit 0 on sync, 1 on drift. Stdlib only.
 """
@@ -21,6 +23,7 @@ REPO = Path(__file__).resolve().parent.parent
 STANDARD = REPO / "docs" / "SEE-100.md"
 PLUGIN_STANDARD = REPO / "bluf" / "docs" / "SEE-100.md"
 DICTIONARY = REPO / "bluf" / "data" / "dictionary.json"
+FINDINGS = REPO / "bluf" / "docs" / "FINDINGS.md"
 
 
 # Slash rows that are inflections of one term (one JSON entry with pattern
@@ -46,6 +49,12 @@ def parse_table(text, heading):
         elif in_table:
             break
     return rows[1:]  # drop the header row
+
+
+def classification_rules(text):
+    """Rule numbers in the FINDINGS.md classification table."""
+    return {rule for rule, _ in parse_table(text, "## Rule classification")
+            if re.fullmatch(r"\d+\.\d+", rule)}
 
 
 def parse_version(text):
@@ -77,7 +86,7 @@ def expected_prose_bans(text):
 
 
 def check(standard_path=STANDARD, plugin_standard_path=PLUGIN_STANDARD,
-          dictionary_path=DICTIONARY):
+          dictionary_path=DICTIONARY, findings_path=FINDINGS):
     """Return a list of drift messages. Empty list means in sync."""
     errors = []
     text = standard_path.read_text()
@@ -166,6 +175,24 @@ def check(standard_path=STANDARD, plugin_standard_path=PLUGIN_STANDARD,
     for entry in dictionary.get("locks", []):
         if not entry.get("rule"):
             errors.append(f"locks entry {entry.get('term')!r} has no rule number")
+
+    # 6. Term-to-rule routing: every entry points at a classified rule
+    known = classification_rules(findings_path.read_text())
+    for section in ("banned", "locks", "prose_bans"):
+        for entry in dictionary.get(section, []):
+            name = f"{section} entry {entry.get('term')!r}"
+            ref = entry.get("rule_ref") or {}
+            primary = ref.get("primary")
+            if not primary:
+                errors.append(f"{name} has no rule_ref.primary")
+            elif primary not in known:
+                errors.append(f"{name} routes to rule {primary!r}, which is "
+                              "not in the FINDINGS.md classification table")
+            for other in ref.get("see_also", []):
+                if other not in known:
+                    errors.append(f"{name} cross-refers to rule {other!r}, "
+                                  "which is not in the FINDINGS.md "
+                                  "classification table")
 
     return errors
 

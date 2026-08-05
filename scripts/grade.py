@@ -74,10 +74,11 @@ def grade_script(only=None):
     return errors
 
 
-def run_skill(command, dump_name, timeout=600):
+def run_skill(command, dump_name, timeout=600, cwd=None):
     result = subprocess.run(
         ["claude", "-p", "--plugin-dir", str(PLUGIN), command],
-        capture_output=True, text=True, timeout=timeout, cwd=str(REPO))
+        capture_output=True, text=True, timeout=timeout,
+        cwd=str(cwd or REPO))
     if result.returncode != 0:
         raise RuntimeError(f"claude exited {result.returncode}: "
                            f"{result.stderr[:500]}")
@@ -137,9 +138,14 @@ def draft_command(persona):
 
 def run_one(phase, md, i):
     if phase == "draft":
+        # Fresh cwd per job: two personas of one template share an
+        # answer-sheet filename, and concurrent runs were adopting each
+        # other's sheets via the skill's resume path.
+        cwd = DUMP_DIR / f"cwd-{phase}-{md.stem}-{i}"
+        cwd.mkdir(parents=True, exist_ok=True)
         command = draft_command(json.loads(md.read_text()))
-    else:
-        command = COMMANDS[phase].format(md=md)
+        return run_skill(command, f"{phase}-{md.stem}-{i}", cwd=cwd)
+    command = COMMANDS[phase].format(md=md)
     return run_skill(command, f"{phase}-{md.stem}-{i}")
 
 
@@ -177,10 +183,13 @@ def spans_overlap(doc, quote_a, quote_b):
 def matches(doc, finding, rule_spec):
     if rule_spec["rule"] not in ("*", finding["rule"]):
         return False
-    # Gaps-aware classification. Judgment findings only: deterministic
-    # findings never carry the flag, so "acknowledged": true never matches
-    # one (bluf/tests/README.md, FINDINGS.md "Gaps-aware mode").
+    # Gaps-aware classification. An `acknowledged` pin restricts the match
+    # to judgment findings in BOTH polarities — deterministic findings
+    # never carry the flag, so they may not satisfy a false pin either
+    # (bluf/tests/README.md, FINDINGS.md "Gaps-aware mode").
     if "acknowledged" in rule_spec:
+        if finding.get("layer") == "deterministic":
+            return False
         if bool(finding.get("acknowledged")) != rule_spec["acknowledged"]:
             return False
     if "quote" in rule_spec:
@@ -240,32 +249,41 @@ def grade_lint(runs, only, results):
     return errors
 
 
+# A number keeps its unit suffix (210ms, 40k) so "95ms" cannot hide from
+# the trace behind a bare-digit \b.
 FACT_TOKEN = re.compile(
-    r"\$[\d,.]+[kKmMbB]?|\b\d+(?:[.,]\d+)*%?\b|\b[A-Z][a-z]+\b")
+    r"\$[\d,.]+[kKmMbB]?|\b\d+(?:[.,]\d+)*(?:[a-z%]+)?\b|\b[A-Z][a-z]+\b")
 
 
-def new_facts(input_text, output_text):
+def new_facts(input_text, output_text, strict=False):
     """Facts in the output that the input never stated.
 
     Numbers and dollar amounts must appear in the input as exact tokens.
-    A capitalized word counts as a new proper noun only when its lowercase
-    form is absent from the input AND it appears somewhere mid-sentence in
-    the output. Sentence-initial-only capitalized words are imperatives and
-    labels ("Name the owner", "Ask:"), not fabrications.
-    ponytail: a fabricated name used only sentence-initially slips through;
-    numbers and dates — the facts that matter most — stay strict.
+    A capitalized word is a new proper noun when its lowercase form is
+    absent from the input.
+
+    strict=False (rewrite): the capitalized word must also appear
+    mid-sentence in the output — sentence-initial-only capitalized words
+    are imperatives and labels ("Name the owner", "Ask:").
+    ponytail: a fabricated name used only sentence-initially slips through
+    the rewrite grade; numbers and dates stay strict.
+
+    strict=True (draft): no positional escape. Draft documents are
+    assembled from answers, so bullets ("- Priya: ..."), table cells, and
+    bold runs — the shapes the templates mandate — must trace too.
     """
     input_tokens = set(FACT_TOKEN.findall(input_text))
     input_lower = input_text.lower()
     found = []
     for token in set(FACT_TOKEN.findall(output_text)):
-        if token[0].isalpha():
+        if token[0].isalpha() and token[0].isupper():
             if token.lower() in input_lower:
                 continue
-            mid_sentence = re.search(
-                r"[a-z0-9,] +" + re.escape(token) + r"\b", output_text)
-            if mid_sentence:
+            if strict or re.search(
+                    r"[a-z0-9,] +" + re.escape(token) + r"\b", output_text):
                 found.append(token)
+        elif token[0].isalpha():
+            continue
         elif token not in input_tokens:
             found.append(token)
     return sorted(found)
@@ -607,12 +625,25 @@ def grade_triage(runs, only, results):
 
 
 # Draft grading — the four grades in bluf/tests/draft/README.md.
+def template_corpus(template):
+    """Only the skeleton fences and the field-table prompt cells join the
+    fabrication corpus. Template prose stays out: its illustrative names
+    (Marco, Maria) and numbers must never license a fact in a document."""
+    text = (TEMPLATES_DIR / f"{template}.md").read_text()
+    parts = re.findall(r"```(.*?)```", text, re.DOTALL)
+    for line in text.splitlines():
+        cells = [c.strip() for c in line.split("|")]
+        if len(cells) >= 6 and cells[1] not in ("id", "---", ""):
+            parts.append(cells[4])
+    return "\n".join(parts)
+
+
 def grade_draft_run(pj, persona, payload, errors):
     name = pj.name
     questions = payload.get("questions") or []
     fields = {str(q.get("field", "")) for q in questions}
     document = payload.get("document") or ""
-    gaps_blob = json.dumps(payload.get("gaps", [])).lower()
+    gaps = payload.get("gaps") or []
     verdict = []
 
     def check(kind, spec, ok):
@@ -623,6 +654,11 @@ def grade_draft_run(pj, persona, payload, errors):
 
     # 1. Required-field recall. Substring match: persona ids cannot
     # predict the skill's naming ("severity" matches "risks[0].severity").
+    # A field id holding a comma or space is a mega-question packing many
+    # slots into one entry to duck the ceiling — rejected outright.
+    for f in fields:
+        if ("," in f or " " in f) and not check("field-id", f, False):
+            fail(errors, f"{name}: mega-question field id {f!r}")
     for field in persona.get("must_ask", []):
         if not check("must-ask", field,
                      any(field in f for f in fields)):
@@ -649,22 +685,54 @@ def grade_draft_run(pj, persona, payload, errors):
         if not check("document", "absent", not document.strip()):
             fail(errors, f"{name}: assembled a document below the "
                          "required floor")
-    # Gaps content.
+    # Gaps: closed slot vocabulary, and required mentions match the
+    # `missing` field specifically — never the serialized prose, where
+    # "status update" contains "date".
+    for g in gaps:
+        slot = str(g.get("missing", "")).lower()
+        if not check("gap-slot", slot, any(s in slot for s in GAP_SLOTS)):
+            fail(errors, f"{name}: gap slot {g.get('missing')!r} outside "
+                         "the vocabulary")
     for token in persona.get("gaps_must_mention", []):
-        if not check("gap-mention", token, token.lower() in gaps_blob):
-            fail(errors, f"{name}: gaps never mention {token!r}")
-    # 4. Fabrication trace (hard fail): every name, date, and number in
-    # the document comes from the given answers, the template's own text,
-    # or the persona's allowed terms.
+        hit = any(token.lower() in str(g.get("missing", "")).lower()
+                  for g in gaps)
+        if not check("gap-mention", token, hit):
+            fail(errors, f"{name}: no gap names missing slot {token!r}")
+    # The skill's claimed answers must all come from the given answers.
+    given_blob = json.dumps(persona["given"]).lower()
+    for key, val in (payload.get("answers_used") or {}).items():
+        if str(val).lower() not in given_blob:
+            check("fabrication", f"answers_used.{key}", False)
+            fail(errors, f"{name}: answers_used[{key!r}]={val!r} is not a "
+                         "given answer")
     if document.strip():
+        # 4. Fabrication trace (hard fail): every name, date, and number
+        # in the document comes from the given answers, the template's
+        # skeleton/prompts, or the persona's allowed terms. Strict: no
+        # positional escape — bullets and table cells trace too.
         corpus = "\n".join(str(v) for v in persona["given"].values())
-        template_file = TEMPLATES_DIR / f"{persona['template']}.md"
-        corpus += "\n" + template_file.read_text()
+        corpus += "\n" + template_corpus(persona["template"])
         corpus += "\n" + " ".join(persona.get("allowed_terms", []))
-        for token in new_facts(corpus, document):
+        # Marked-unknown structure words ("Owner for X: not yet assigned")
+        # are vocabulary, not facts.
+        corpus += "\n" + " ".join(GAP_SLOTS)
+        for token in new_facts(corpus, document, strict=True):
             check("fabrication", token, False)
             fail(errors, f"{name}: fabricated {token!r} — traces to no "
                          "answer (closed-world violation)")
+        # Gaps-aware lint, scripted proxy: a deterministic finding on the
+        # document fails unless its quote sits inside the Gaps section.
+        gaps_text = document.split("## Gaps")[-1] if "## Gaps" in document \
+            else ""
+        for f in see100_check.check(document)["findings"]:
+            if f.get("candidate"):
+                continue
+            covered = f.get("quote", "") and f["quote"] in gaps_text
+            if not covered:
+                check("fabrication", f"lint-{f['rule']}", False)
+                fail(errors, f"{name}: document violates {f['rule']} "
+                             f"({f.get('quote', '')!r}) with no covering "
+                             "Gaps entry")
     return verdict
 
 

@@ -49,10 +49,15 @@ class TestAcknowledgedMatching(unittest.TestCase):
         spec["quote"] = "run the load test"
         self.assertFalse(grade.matches(DOC, ACKED, spec))
 
-    def test_deterministic_findings_never_match_a_true_pin(self):
+    def test_deterministic_findings_never_match_any_pin(self):
         det = {"rule": "5.4", "layer": "deterministic", "quote": "OWNER:"}
         self.assertFalse(grade.matches(DOC, det,
                                        {"rule": "5.4", "acknowledged": True}))
+        # A false pin means "an UNACKNOWLEDGED JUDGMENT finding" — a det
+        # finding must not satisfy it either.
+        self.assertFalse(grade.matches(DOC, det,
+                                       {"rule": "5.4",
+                                        "acknowledged": False}))
 
 
 class TestGapsFixturePair(unittest.TestCase):
@@ -63,10 +68,17 @@ class TestGapsFixturePair(unittest.TestCase):
         corpus = REPO / "bluf" / "tests"
         honest = (corpus / "gaps-honest.md").read_text()
         dishonest = (corpus / "gaps-dishonest.md").read_text()
+        mismatched = (corpus / "gaps-mismatched.md").read_text()
         self.assertIn("## Gaps", honest)
         self.assertNotIn("## Gaps", dishonest)
-        self.assertEqual(honest.split("## Gaps")[0].strip(),
-                         dishonest.strip())
+        self.assertIn("## Gaps", mismatched)
+        body = dishonest.strip()
+        self.assertEqual(honest.split("## Gaps")[0].strip(), body)
+        self.assertEqual(mismatched.split("## Gaps")[0].strip(), body)
+        # The mismatched Gaps section covers the date item only — the
+        # owner item stays uncovered, which is the coverage discriminator.
+        self.assertIn("Date for the load test", mismatched)
+        self.assertNotIn("Owner for the rollback plan", mismatched)
 
 
 if __name__ == "__main__":

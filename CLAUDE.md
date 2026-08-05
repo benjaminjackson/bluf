@@ -72,6 +72,9 @@ python3 scripts/sync_check.py
 
 # Run unit tests
 python3 -m unittest discover -s tests
+
+# Live skill grading (runs real claude sessions; minutes, not seconds)
+python3 scripts/grade.py --skill all --runs 3
 ```
 
 ## Dev Loop

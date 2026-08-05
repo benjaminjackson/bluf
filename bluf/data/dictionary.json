@@ -5,6 +5,9 @@
       "term": "leverage",
       "row": "leverage (v)",
       "rule": "1.1",
+      "rule_ref": {
+        "primary": "1.1"
+      },
       "pos": "verb",
       "instead": "use",
       "patterns": [
@@ -23,6 +26,9 @@
       "term": "utilize",
       "row": "utilize",
       "rule": "1.1",
+      "rule_ref": {
+        "primary": "1.1"
+      },
       "instead": "use",
       "patterns": [
         "utilize",
@@ -36,6 +42,9 @@
       "term": "synergy",
       "row": "synergy / synergies",
       "rule": "1.1",
+      "rule_ref": {
+        "primary": "1.1"
+      },
       "instead": "(delete; state the specific combined benefit)",
       "delete": true,
       "note": "state the specific combined benefit",
@@ -49,6 +58,9 @@
       "term": "alignment",
       "row": "alignment / aligned",
       "rule": "1.1",
+      "rule_ref": {
+        "primary": "1.1"
+      },
       "instead": "agreement / agreed — name who agreed to what",
       "note": "name who agreed to what",
       "patterns": [
@@ -63,6 +75,12 @@
       "term": "learnings",
       "row": "learnings",
       "rule": "1.2",
+      "rule_ref": {
+        "primary": "1.2",
+        "see_also": [
+          "1.1"
+        ]
+      },
       "pos": "noun",
       "instead": "lessons",
       "patterns": [
@@ -73,6 +91,12 @@
       "term": "ask",
       "row": "the ask (n)",
       "rule": "1.2",
+      "rule_ref": {
+        "primary": "1.2",
+        "see_also": [
+          "1.1"
+        ]
+      },
       "pos": "noun",
       "instead": "the request",
       "patterns": [
@@ -87,6 +111,12 @@
       "term": "spend",
       "row": "the spend (n)",
       "rule": "1.2",
+      "rule_ref": {
+        "primary": "1.2",
+        "see_also": [
+          "1.1"
+        ]
+      },
       "pos": "noun",
       "instead": "the cost",
       "patterns": [
@@ -100,6 +130,12 @@
       "term": "solve",
       "row": "the solve (n)",
       "rule": "1.2",
+      "rule_ref": {
+        "primary": "1.2",
+        "see_also": [
+          "1.1"
+        ]
+      },
       "pos": "noun",
       "instead": "the solution",
       "patterns": [
@@ -112,6 +148,9 @@
       "term": "bandwidth",
       "row": "bandwidth (of people)",
       "rule": "1.1",
+      "rule_ref": {
+        "primary": "1.1"
+      },
       "scope": "of people",
       "instead": "time",
       "patterns": [
@@ -126,6 +165,9 @@
       "term": "headwinds",
       "row": "headwinds / tailwinds",
       "rule": "1.1",
+      "rule_ref": {
+        "primary": "1.1"
+      },
       "instead": "X fell/rose by N",
       "patterns": [
         "headwind",
@@ -136,6 +178,9 @@
       "term": "tailwinds",
       "row": "headwinds / tailwinds",
       "rule": "1.1",
+      "rule_ref": {
+        "primary": "1.1"
+      },
       "instead": "X fell/rose by N",
       "patterns": [
         "tailwind",
@@ -146,6 +191,12 @@
       "term": "circle back",
       "row": "circle back",
       "rule": "3.5",
+      "rule_ref": {
+        "primary": "3.5",
+        "see_also": [
+          "1.1"
+        ]
+      },
       "instead": "discuss on DATE",
       "patterns": [
         "circle back",
@@ -158,6 +209,12 @@
       "term": "reach out",
       "row": "reach out",
       "rule": "3.5",
+      "rule_ref": {
+        "primary": "3.5",
+        "see_also": [
+          "1.1"
+        ]
+      },
       "instead": "call, email",
       "patterns": [
         "reach out",
@@ -170,6 +227,12 @@
       "term": "touch base",
       "row": "touch base",
       "rule": "3.5",
+      "rule_ref": {
+        "primary": "3.5",
+        "see_also": [
+          "1.1"
+        ]
+      },
       "instead": "meet",
       "patterns": [
         "touch base",
@@ -182,6 +245,9 @@
       "term": "double-click",
       "row": "double-click (on a topic)",
       "rule": "1.1",
+      "rule_ref": {
+        "primary": "1.1"
+      },
       "scope": "on a topic",
       "instead": "examine",
       "patterns": [
@@ -197,6 +263,9 @@
       "term": "socialize",
       "row": "socialize (a document)",
       "rule": "1.1",
+      "rule_ref": {
+        "primary": "1.1"
+      },
       "scope": "a document",
       "instead": "send to, discuss with",
       "patterns": [
@@ -210,6 +279,9 @@
       "term": "operationalize",
       "row": "operationalize",
       "rule": "1.1",
+      "rule_ref": {
+        "primary": "1.1"
+      },
       "instead": "put into use; state the mechanism",
       "patterns": [
         "operationalize",
@@ -222,6 +294,9 @@
       "term": "ideate",
       "row": "ideate",
       "rule": "1.1",
+      "rule_ref": {
+        "primary": "1.1"
+      },
       "instead": "think, propose",
       "patterns": [
         "ideate",
@@ -235,6 +310,12 @@
       "term": "action",
       "row": "action (v)",
       "rule": "1.6",
+      "rule_ref": {
+        "primary": "1.6",
+        "see_also": [
+          "1.1"
+        ]
+      },
       "pos": "verb",
       "instead": "do, complete",
       "patterns": [
@@ -253,6 +334,12 @@
       "term": "dialogue",
       "row": "dialogue (v)",
       "rule": "1.6",
+      "rule_ref": {
+        "primary": "1.6",
+        "see_also": [
+          "1.1"
+        ]
+      },
       "pos": "verb",
       "instead": "talk",
       "patterns": [
@@ -267,6 +354,12 @@
       "term": "whiteboard",
       "row": "whiteboard (v)",
       "rule": "1.6",
+      "rule_ref": {
+        "primary": "1.6",
+        "see_also": [
+          "1.1"
+        ]
+      },
       "pos": "verb",
       "instead": "plan, sketch",
       "patterns": [
@@ -281,6 +374,9 @@
       "term": "going forward",
       "row": "going forward",
       "rule": "1.1",
+      "rule_ref": {
+        "primary": "1.1"
+      },
       "instead": "from now / from DATE",
       "patterns": [
         "going forward"
@@ -290,6 +386,9 @@
       "term": "at the end of the day",
       "row": "at the end of the day",
       "rule": "1.1",
+      "rule_ref": {
+        "primary": "1.1"
+      },
       "instead": "(delete)",
       "delete": true,
       "patterns": [
@@ -300,6 +399,9 @@
       "term": "move the needle",
       "row": "move the needle",
       "rule": "1.1",
+      "rule_ref": {
+        "primary": "1.1"
+      },
       "instead": "change X by N",
       "patterns": [
         "move the needle",
@@ -312,6 +414,9 @@
       "term": "boil the ocean",
       "row": "boil the ocean",
       "rule": "1.1",
+      "rule_ref": {
+        "primary": "1.1"
+      },
       "instead": "(delete; state the smaller scope)",
       "delete": true,
       "note": "state the smaller scope",
@@ -325,6 +430,9 @@
       "term": "low-hanging fruit",
       "row": "low-hanging fruit",
       "rule": "1.1",
+      "rule_ref": {
+        "primary": "1.1"
+      },
       "instead": "the easiest item: NAME IT",
       "patterns": [
         "low-hanging fruit",
@@ -335,6 +443,9 @@
       "term": "best-in-class",
       "row": "best-in-class / world-class",
       "rule": "1.1",
+      "rule_ref": {
+        "primary": "1.1"
+      },
       "instead": "(delete, or cite the comparison)",
       "delete": true,
       "note": "or cite the comparison",
@@ -347,6 +458,9 @@
       "term": "world-class",
       "row": "best-in-class / world-class",
       "rule": "1.1",
+      "rule_ref": {
+        "primary": "1.1"
+      },
       "instead": "(delete, or cite the comparison)",
       "delete": true,
       "note": "or cite the comparison",
@@ -359,6 +473,9 @@
       "term": "robust",
       "row": "robust / seamless / scalable (as praise)",
       "rule": "1.1",
+      "rule_ref": {
+        "primary": "1.1"
+      },
       "condition": "as praise",
       "instead": "(delete, or state the measured property)",
       "delete": true,
@@ -371,6 +488,9 @@
       "term": "seamless",
       "row": "robust / seamless / scalable (as praise)",
       "rule": "1.1",
+      "rule_ref": {
+        "primary": "1.1"
+      },
       "condition": "as praise",
       "instead": "(delete, or state the measured property)",
       "delete": true,
@@ -384,6 +504,9 @@
       "term": "scalable",
       "row": "robust / seamless / scalable (as praise)",
       "rule": "1.1",
+      "rule_ref": {
+        "primary": "1.1"
+      },
       "condition": "as praise",
       "instead": "(delete, or state the measured property)",
       "delete": true,
@@ -397,6 +520,9 @@
       "term": "pressure-test",
       "row": "pressure-test",
       "rule": "1.1",
+      "rule_ref": {
+        "primary": "1.1"
+      },
       "instead": "check, verify",
       "patterns": [
         "pressure-test",
@@ -411,6 +537,9 @@
       "term": "granular",
       "row": "granular",
       "rule": "1.1",
+      "rule_ref": {
+        "primary": "1.1"
+      },
       "instead": "detailed",
       "patterns": [
         "granular",
@@ -421,6 +550,9 @@
       "term": "holistic",
       "row": "holistic",
       "rule": "1.1",
+      "rule_ref": {
+        "primary": "1.1"
+      },
       "instead": "complete",
       "patterns": [
         "holistic",
@@ -431,6 +563,9 @@
       "term": "cadence",
       "row": "cadence",
       "rule": "1.1",
+      "rule_ref": {
+        "primary": "1.1"
+      },
       "instead": "schedule",
       "patterns": [
         "cadence",
@@ -441,6 +576,9 @@
       "term": "north star",
       "row": "north star",
       "rule": "1.1",
+      "rule_ref": {
+        "primary": "1.1"
+      },
       "instead": "goal",
       "patterns": [
         "north star",
@@ -451,6 +589,9 @@
       "term": "tiger team",
       "row": "tiger team",
       "rule": "1.1",
+      "rule_ref": {
+        "primary": "1.1"
+      },
       "instead": "team — name the members",
       "note": "name the members",
       "patterns": [
@@ -462,6 +603,9 @@
       "term": "stakeholders",
       "row": "stakeholders",
       "rule": "1.1",
+      "rule_ref": {
+        "primary": "1.1"
+      },
       "instead": "the people affected: NAME THEM",
       "patterns": [
         "stakeholder",
@@ -472,6 +616,9 @@
       "term": "value-add",
       "row": "value-add",
       "rule": "1.1",
+      "rule_ref": {
+        "primary": "1.1"
+      },
       "instead": "benefit: state it",
       "patterns": [
         "value-add",
@@ -483,6 +630,9 @@
       "term": "core competency",
       "row": "core competency",
       "rule": "1.1",
+      "rule_ref": {
+        "primary": "1.1"
+      },
       "instead": "strength",
       "patterns": [
         "core competency",
@@ -493,6 +643,9 @@
       "term": "paradigm shift",
       "row": "paradigm shift",
       "rule": "1.1",
+      "rule_ref": {
+        "primary": "1.1"
+      },
       "instead": "(delete; state what changed)",
       "delete": true,
       "note": "state what changed",
@@ -506,6 +659,9 @@
       "term": "deep dive",
       "row": "deep dive",
       "rule": "1.1",
+      "rule_ref": {
+        "primary": "1.1"
+      },
       "instead": "detailed review",
       "patterns": [
         "deep dive",
@@ -518,6 +674,9 @@
       "term": "pivot",
       "row": "pivot",
       "rule": "1.1",
+      "rule_ref": {
+        "primary": "1.1"
+      },
       "instead": "change of plan: state old → new",
       "patterns": [
         "pivot",
@@ -534,6 +693,9 @@
       "term": "streamline",
       "row": "streamline",
       "rule": "1.1",
+      "rule_ref": {
+        "primary": "1.1"
+      },
       "instead": "simplify; state what gets removed",
       "patterns": [
         "streamline",
@@ -547,66 +709,130 @@
     {
       "term": "on track",
       "rule": "1.3",
+      "rule_ref": {
+        "primary": "1.3",
+        "see_also": [
+          "6.2"
+        ]
+      },
       "meaning": "The committed date and scope will hold. Nothing else."
     },
     {
       "term": "at risk",
       "rule": "1.3",
+      "rule_ref": {
+        "primary": "1.3",
+        "see_also": [
+          "6.2",
+          "7.2"
+        ]
+      },
       "meaning": "A named trigger could break the date or scope; the risk statement exists (Rule 7.2)."
     },
     {
       "term": "off track",
       "rule": "1.3",
+      "rule_ref": {
+        "primary": "1.3",
+        "see_also": [
+          "6.2"
+        ]
+      },
       "meaning": "The committed date or scope will not hold. A new date or scope is proposed in the same document."
     },
     {
       "term": "blocked",
       "rule": "1.3",
+      "rule_ref": {
+        "primary": "1.3"
+      },
       "meaning": "Work cannot proceed without a named external action. Waiting on yourself is not blocked."
     },
     {
       "term": "decision",
       "rule": "1.3",
+      "rule_ref": {
+        "primary": "1.3",
+        "see_also": [
+          "3.4"
+        ]
+      },
       "meaning": "A choice was made by a named person on a date. \"We need a decision\" names the decider."
     },
     {
       "term": "done",
       "rule": "1.3",
+      "rule_ref": {
+        "primary": "1.3"
+      },
       "meaning": "Shipped, delivered, or signed — verifiable by a third party. Not \"done pending review.\""
     },
     {
       "term": "owner",
       "rule": "1.3",
+      "rule_ref": {
+        "primary": "1.3",
+        "see_also": [
+          "5.4"
+        ]
+      },
       "meaning": "The one person answerable for the outcome. An owner is never a team, a committee, or \"us.\""
     },
     {
       "term": "deadline",
       "rule": "1.3",
+      "rule_ref": {
+        "primary": "1.3"
+      },
       "meaning": "A date with a stated consequence for missing it. A date without a consequence is a target."
     },
     {
       "term": "target",
       "rule": "1.3",
+      "rule_ref": {
+        "primary": "1.3"
+      },
       "meaning": "A date or number we aim at, with no external consequence if missed."
     },
     {
       "term": "estimate",
       "rule": "1.3",
+      "rule_ref": {
+        "primary": "1.3",
+        "see_also": [
+          "9.2"
+        ]
+      },
       "meaning": "A number the writer derived and stands behind, with stated confidence."
     },
     {
       "term": "opinion",
       "rule": "1.3",
+      "rule_ref": {
+        "primary": "1.3",
+        "see_also": [
+          "9.2"
+        ]
+      },
       "meaning": "A judgment the writer holds; no number claimed."
     },
     {
       "term": "critical path",
       "rule": "1.3",
+      "rule_ref": {
+        "primary": "1.3"
+      },
       "meaning": "The sequence of dependent tasks that sets minimum completion time. Not \"important things.\""
     },
     {
       "term": "material",
       "rule": "1.3",
+      "rule_ref": {
+        "primary": "1.3",
+        "see_also": [
+          "8.5"
+        ]
+      },
       "meaning": "Accounting sense only: large enough to change a decision.",
       "exceptions": [
         "material weakness"
@@ -615,6 +841,9 @@
     {
       "term": "priority",
       "rule": "1.3",
+      "rule_ref": {
+        "primary": "1.3"
+      },
       "meaning": "An item that displaces other items. More than three concurrent priorities means none exist."
     }
   ],
@@ -622,6 +851,9 @@
     {
       "term": "significant",
       "rule": "8.5",
+      "rule_ref": {
+        "primary": "8.5"
+      },
       "condition": "on a quantity",
       "instead": "state the number, or label the claim an estimate or opinion",
       "patterns": [
@@ -632,6 +864,9 @@
     {
       "term": "substantial",
       "rule": "8.5",
+      "rule_ref": {
+        "primary": "8.5"
+      },
       "condition": "on a quantity",
       "instead": "state the number, or label the claim an estimate or opinion",
       "patterns": [
@@ -642,6 +877,9 @@
     {
       "term": "massive",
       "rule": "8.5",
+      "rule_ref": {
+        "primary": "8.5"
+      },
       "condition": "on a quantity",
       "instead": "state the number, or label the claim an estimate or opinion",
       "patterns": [
@@ -652,6 +890,9 @@
     {
       "term": "meaningful",
       "rule": "8.5",
+      "rule_ref": {
+        "primary": "8.5"
+      },
       "condition": "on a quantity",
       "instead": "state the number, or label the claim an estimate or opinion",
       "patterns": [
@@ -662,6 +903,12 @@
     {
       "term": "material",
       "rule": "8.5",
+      "rule_ref": {
+        "primary": "8.5",
+        "see_also": [
+          "1.3"
+        ]
+      },
       "condition": "on a quantity; the accounting sense is meaning-locked",
       "instead": "state the number, or label the claim an estimate or opinion",
       "patterns": [
@@ -675,6 +922,9 @@
     {
       "term": "soon",
       "rule": "8.2",
+      "rule_ref": {
+        "primary": "8.2"
+      },
       "condition": "as a date",
       "instead": "a calendar date",
       "patterns": [
@@ -684,6 +934,9 @@
     {
       "term": "shortly",
       "rule": "8.2",
+      "rule_ref": {
+        "primary": "8.2"
+      },
       "condition": "as a date",
       "instead": "a calendar date",
       "patterns": [
@@ -693,6 +946,9 @@
     {
       "term": "in the coming weeks",
       "rule": "8.2",
+      "rule_ref": {
+        "primary": "8.2"
+      },
       "condition": "as a date",
       "instead": "a calendar date",
       "patterns": [
@@ -704,6 +960,9 @@
     {
       "term": "next sprint",
       "rule": "8.2",
+      "rule_ref": {
+        "primary": "8.2"
+      },
       "condition": "as a date",
       "instead": "a calendar date",
       "patterns": [
@@ -713,6 +972,9 @@
     {
       "term": "by EOQ",
       "rule": "8.2",
+      "rule_ref": {
+        "primary": "8.2"
+      },
       "condition": "without a day",
       "instead": "a calendar date",
       "patterns": [
@@ -724,6 +986,9 @@
     {
       "term": "make a decision",
       "rule": "3.4",
+      "rule_ref": {
+        "primary": "3.4"
+      },
       "instead": "decide",
       "patterns": [
         "make a decision",
@@ -735,6 +1000,9 @@
     {
       "term": "conduct an analysis",
       "rule": "3.4",
+      "rule_ref": {
+        "primary": "3.4"
+      },
       "instead": "analyze",
       "patterns": [
         "conduct an analysis",
@@ -746,6 +1014,9 @@
     {
       "term": "provide a recommendation",
       "rule": "3.4",
+      "rule_ref": {
+        "primary": "3.4"
+      },
       "instead": "recommend",
       "patterns": [
         "provide a recommendation",
@@ -757,6 +1028,12 @@
     {
       "term": "achieve alignment",
       "rule": "3.4",
+      "rule_ref": {
+        "primary": "3.4",
+        "see_also": [
+          "1.1"
+        ]
+      },
       "instead": "agree",
       "patterns": [
         "achieve alignment",
@@ -768,6 +1045,12 @@
     {
       "term": "we should",
       "rule": "5.4",
+      "rule_ref": {
+        "primary": "5.4",
+        "see_also": [
+          "3.3"
+        ]
+      },
       "instead": "name an owner and a date",
       "patterns": [
         "we should"

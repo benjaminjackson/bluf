@@ -1,0 +1,668 @@
+{
+  "1.1": {
+    "shape": "guidance",
+    "guidance": "Rule 1.1 is a permission, not a prohibition. Any plain English word is allowed unless Part 2, Section A bans it. STE ships a whitelist of approved words, which works only in a closed domain. Business language is open, so SEE inverts the test: check the banned list, and if the word is absent, write it."
+  },
+  "1.2": {
+    "shape": "rewrite",
+    "pairs": [
+      {
+        "before": "the ask",
+        "after": "the request"
+      },
+      {
+        "before": "Send me the learnings from the pilot.",
+        "after": "Send me the lessons from the pilot."
+      },
+      {
+        "before": "Dana owns the solve for the billing bug.",
+        "after": "Dana owns the solution to the billing bug."
+      }
+    ]
+  },
+  "1.3": {
+    "shape": "rewrite",
+    "pairs": [
+      {
+        "before": "The migration is on track, but the date will slip two weeks.",
+        "after": "The migration is off track. The new date is Sept 12."
+      },
+      {
+        "before": "We are blocked on our own code review.",
+        "after": "We wait on our own code review. Ravi finishes it by Aug 8."
+      },
+      {
+        "before": "The report is done pending Maria's review.",
+        "after": "The report is drafted. Maria signs it by Aug 14."
+      }
+    ]
+  },
+  "1.4": {
+    "shape": "guidance",
+    "guidance": "Jargon has no fixed list, because the reader decides. Test a term this way: would your board, your newest hire, and your customer all define it the same way? If not, write the plain word. A term that passes the test can stay, even when it sounds technical.",
+    "pairs": [
+      {
+        "before": "We need to derisk the funnel before the raise.",
+        "after": "We must cut trial dropouts before the funding round in October."
+      }
+    ]
+  },
+  "1.5": {
+    "shape": "rewrite",
+    "pairs": [
+      {
+        "before": "Phoenix slipped two weeks. The replatform still needs a security review, and the Q3 initiative now lands in October.",
+        "after": "Phoenix slipped two weeks. Phoenix still needs a security review, so Phoenix now lands in October."
+      },
+      {
+        "before": "Ravi owns the API work, and R. Patel reports the numbers each Monday.",
+        "after": "Ravi owns the API work, and Ravi reports the numbers each Monday."
+      },
+      {
+        "before": "Churn is 4.1%, down from 4.6%. Monthly attrition is the number we watch, and logo loss is our headline metric.",
+        "after": "Churn is 4.1%, down from 4.6%. Churn is the number we watch, and churn is our headline metric."
+      }
+    ]
+  },
+  "1.6": {
+    "shape": "rewrite",
+    "pairs": [
+      {
+        "before": "Can you action this by Friday?",
+        "after": "Can you complete this by Friday?"
+      },
+      {
+        "before": "We should dialogue about the pricing change.",
+        "after": "Maria and Dana talk about the pricing change on Aug 6."
+      },
+      {
+        "before": "Let us whiteboard the rollout next week.",
+        "after": "Priya sketches the rollout plan on Aug 11."
+      }
+    ]
+  },
+  "1.7": {
+    "shape": "guidance",
+    "guidance": "A term of art is allowed once you pay for it. Define the term in one sentence at first use, then keep that same term everywhere after. Two words for one idea cost the reader more than the term saves.",
+    "pairs": [
+      {
+        "before": "The cohort retention curve flattens after month three.",
+        "after": "The cohort retention curve — the share of a signup month still paying — flattens after month three."
+      }
+    ]
+  },
+  "2.1": {
+    "shape": "rewrite",
+    "pairs": [
+      {
+        "before": "enterprise customer churn mitigation workstream kickoff",
+        "after": "the project to reduce churn in enterprise accounts"
+      },
+      {
+        "before": "partner onboarding process improvement plan",
+        "after": "the plan to improve how we onboard partners"
+      },
+      {
+        "before": "customer success renewal risk review meeting",
+        "after": "the meeting to review renewal risk"
+      }
+    ]
+  },
+  "2.2": {
+    "shape": "rewrite",
+    "pairs": [
+      {
+        "before": "The Q3 Enterprise Retention Program reported first results. The Q3 Enterprise Retention Program needs two more engineers.",
+        "after": "The Q3 Enterprise Retention Program (the retention program) reported first results. The retention program needs two more engineers."
+      },
+      {
+        "before": "The 2026 Cost Reduction Plan starts on Aug 10. The 2026 Cost Reduction Plan removes two vendors.",
+        "after": "The 2026 Cost Reduction Plan (the cost plan) starts on Aug 10. The cost plan removes two vendors."
+      },
+      {
+        "before": "The Acme Board of Directors Audit Committee met on Aug 3. The Acme Board of Directors Audit Committee asked for a new forecast.",
+        "after": "The Acme Board of Directors Audit Committee (the audit committee) met on Aug 3. The audit committee asked for a new forecast."
+      }
+    ]
+  },
+  "2.3": {
+    "shape": "rewrite",
+    "pairs": [
+      {
+        "before": "Team shipped fix Tuesday. Customer confirmed.",
+        "after": "The team shipped the fix on Tuesday. The customer confirmed it."
+      },
+      {
+        "before": "Renewal at risk. Vendor contract pending signature.",
+        "after": "The renewal is at risk. The vendor has not signed the contract."
+      },
+      {
+        "before": "Migration complete. Rollback plan ready.",
+        "after": "The migration is complete. The rollback plan is ready."
+      }
+    ]
+  },
+  "3.1": {
+    "shape": "rewrite",
+    "pairs": [
+      {
+        "before": "The decision was made to sunset the program.",
+        "after": "Maria decided to sunset the program."
+      },
+      {
+        "before": "Mistakes were made.",
+        "after": "I shipped the wrong config."
+      },
+      {
+        "before": "The forecast was revised down after the vendor delay.",
+        "after": "Dana revised the forecast down after the vendor delay."
+      }
+    ]
+  },
+  "3.2": {
+    "shape": "rewrite",
+    "pairs": [
+      {
+        "before": "We have been working on the migration since June.",
+        "after": "We started the migration in June."
+      },
+      {
+        "before": "By Aug 20 we will have completed the audit.",
+        "after": "We complete the audit by Aug 20."
+      },
+      {
+        "before": "The team had been planning to ship before the vendor pulled out.",
+        "after": "The team planned to ship. Then the vendor pulled out."
+      }
+    ]
+  },
+  "3.3": {
+    "shape": "rewrite",
+    "pairs": [
+      {
+        "before": "We could potentially explore a price increase.",
+        "after": "We will decide on a price increase by Aug 22."
+      },
+      {
+        "before": "The team may want to consider a second vendor.",
+        "after": "Ravi picks a second vendor by Sept 4."
+      },
+      {
+        "before": "It might be possible to ship in August.",
+        "after": "We will ship on Aug 28."
+      }
+    ]
+  },
+  "3.4": {
+    "shape": "rewrite",
+    "pairs": [
+      {
+        "before": "make a decision",
+        "after": "decide"
+      },
+      {
+        "before": "The board will conduct an analysis of the churn data.",
+        "after": "The board analyzes the churn data on Aug 19."
+      },
+      {
+        "before": "Priya will provide a recommendation on Friday.",
+        "after": "Priya recommends a vendor on Friday."
+      }
+    ]
+  },
+  "3.5": {
+    "shape": "rewrite",
+    "pairs": [
+      {
+        "before": "circle back",
+        "after": "discuss on DATE"
+      },
+      {
+        "before": "I will reach out to the vendor tomorrow.",
+        "after": "I will email the vendor on Aug 7."
+      },
+      {
+        "before": "Let us touch base after the board meeting.",
+        "after": "Let us meet after the board meeting on Aug 19."
+      }
+    ]
+  },
+  "4.1": {
+    "shape": "rewrite",
+    "pairs": [
+      {
+        "before": "The migration slipped because the vendor missed the API date, and the team also found two bugs in the billing path, so we now expect the launch to land in October.",
+        "after": "The migration slipped because the vendor missed the API date. The team also found two bugs in the billing path. The launch now lands in October."
+      },
+      {
+        "before": "Churn fell to 4.1% from 4.6% after we changed the onboarding email, and the sales team believes the change also improved trial conversion, though we have no number yet.",
+        "after": "Churn fell to 4.1% from 4.6% after we changed the onboarding email. The sales team believes that trial conversion improved. Opinion: we have no number yet."
+      },
+      {
+        "before": "We hired two engineers in July and both are now on the billing team, which means the rollback work can start next week if the vendor confirms the API date.",
+        "after": "We hired two engineers in July. Both work on the billing team. The rollback work starts on Aug 11 if the vendor confirms the API date."
+      }
+    ]
+  },
+  "4.2": {
+    "shape": "rewrite",
+    "pairs": [
+      {
+        "before": "Please review the forecast and also tell Dana whether we can move the launch.",
+        "after": "Review the forecast by Aug 8. Then tell Dana if we can move the launch."
+      },
+      {
+        "before": "The vendor missed the date and our costs rose 12% and the team is tired.",
+        "after": "The vendor missed the date. Our costs rose 12% from the June baseline. The team is tired."
+      },
+      {
+        "before": "Approve the budget and confirm the headcount in the same reply.",
+        "after": "Approve the budget. Confirm the headcount in a second reply."
+      }
+    ]
+  },
+  "4.3": {
+    "shape": "rewrite",
+    "pairs": [
+      {
+        "before": "Aligning stakeholders pre-launch.",
+        "after": "Maria agrees the launch plan with the two affected teams by Aug 12."
+      },
+      {
+        "before": "Migration on hold pending vendor.",
+        "after": "We stopped the migration until the vendor confirms the API date."
+      },
+      {
+        "before": "Hiring up, costs down.",
+        "after": "We hired three engineers in July. Costs fell 4% from the June total."
+      }
+    ]
+  },
+  "4.4": {
+    "shape": "rewrite",
+    "pairs": [
+      {
+        "before": "The plan covers billing, onboarding, the rollback path, and the vendor contract.",
+        "after": "The plan covers four items:\n\n- billing\n- onboarding\n- the rollback path\n- the vendor contract"
+      },
+      {
+        "before": "Dana, Ravi, Priya, and Maria approved the change.",
+        "after": "These people approved the change:\n\n- Dana\n- Ravi\n- Priya\n- Maria"
+      },
+      {
+        "before": "We cut the vendor list, moved the date, added two engineers, and dropped the second region.",
+        "after": "We made four changes:\n\n- cut the vendor list\n- moved the date to Sept 12\n- added two engineers\n- dropped the second region"
+      }
+    ]
+  },
+  "4.5": {
+    "shape": "rewrite",
+    "pairs": [
+      {
+        "before": "The vendor missed the API date. The launch moves to October.",
+        "after": "The vendor missed the API date, so the launch moves to October."
+      },
+      {
+        "before": "Churn fell 0.5 points. We changed the onboarding email.",
+        "after": "Churn fell 0.5 points from June, because we changed the onboarding email."
+      },
+      {
+        "before": "We hired two engineers. The rollback work is still late.",
+        "after": "We hired two engineers, but the rollback work is still late."
+      }
+    ]
+  },
+  "5.1": {
+    "shape": "structure",
+    "examples": [
+      {
+        "wrong_order": "Churn rose to 4.6% from 4.1% in June. We ran the onboarding email test for three weeks. Trial conversion did not change. Recommendation: cut the second onboarding email by Aug 15.",
+        "right_order": "Recommendation: cut the second onboarding email by Aug 15.\n\nChurn rose to 4.6% from 4.1% in June. We ran the onboarding email test for three weeks. Trial conversion did not change."
+      }
+    ]
+  },
+  "5.2": {
+    "shape": "rewrite",
+    "pairs": [
+      {
+        "before": "## Asks\n\n- Please review the revenue forecast and, if the numbers look wrong to you, tell Dana what to change before the board meeting on Thursday.",
+        "after": "## Asks\n\n- Dana: review the revenue forecast by Thursday.\n- Dana: reply with the numbers you would change."
+      },
+      {
+        "before": "## Asks\n\n- Could you take a look at the pipeline numbers and let me know if anything looks off before we send the board deck?",
+        "after": "## Asks\n\n- Ravi: check the pipeline numbers by Aug 8.\n- Ravi: tell me which numbers look wrong."
+      },
+      {
+        "before": "## Asks\n\n- Maria, when you have time, please confirm whether the vendor contract covers the second region and tell Priya what the extra cost would be.",
+        "after": "## Asks\n\n- Maria: confirm the vendor contract covers the second region.\n- Maria: tell Priya the extra cost by Aug 9."
+      }
+    ]
+  },
+  "5.3": {
+    "shape": "rewrite",
+    "pairs": [
+      {
+        "before": "It would be great if someone could look at the pipeline numbers.",
+        "after": "Dana: review the pipeline numbers and reply by Thursday."
+      },
+      {
+        "before": "Someone should probably confirm the vendor contract.",
+        "after": "Priya: confirm the vendor contract by Aug 9."
+      },
+      {
+        "before": "It would help to get a second opinion on the forecast.",
+        "after": "Ravi: review the forecast and reply by Aug 12."
+      }
+    ]
+  },
+  "5.4": {
+    "shape": "rewrite",
+    "pairs": [
+      {
+        "before": "We should update the rollback plan.",
+        "after": "Priya updates the rollback plan by Aug 11."
+      },
+      {
+        "before": "The team will confirm the vendor date.",
+        "after": "Ravi confirms the vendor date by Aug 15."
+      },
+      {
+        "before": "Someone needs to own the audit follow-up.",
+        "after": "Dana owns the audit follow-up and reports on Sept 2."
+      }
+    ]
+  },
+  "5.5": {
+    "shape": "structure",
+    "examples": [
+      {
+        "wrong_order": "The call with the vendor ran long on Tuesday. Their API team wants a new schema, and Priya thinks the change costs us a week. Can you approve the extra week before Friday? The rest of the plan is unchanged.",
+        "right_order": "## Notes\n\nThe call with the vendor ran long on Tuesday. Their API team wants a new schema. Priya estimates the change costs one week.\n\n## Asks\n\n- Maria: approve the extra week by Friday."
+      }
+    ]
+  },
+  "6.1": {
+    "shape": "structure",
+    "examples": [
+      {
+        "wrong_order": "We ran the load test on Monday. Memory use hit 90%. We added two read replicas. The service is at risk for the Sept 12 launch.",
+        "right_order": "The service is at risk for the Sept 12 launch.\n\nThe load test on Monday drove memory use to 90%, compared with 60% in June. We added two read replicas. The next test runs on Aug 14."
+      }
+    ]
+  },
+  "6.2": {
+    "shape": "structure",
+    "examples": [
+      {
+        "before": "Status: yellow-ish, trending green. The team feels good about the date.",
+        "after": "Status: at risk.\n\nRISK: If the vendor misses the API date (Aug 15), the launch slips three weeks and about $40k. Mitigation: Priya, fallback scope by Aug 8."
+      }
+    ]
+  },
+  "6.3": {
+    "shape": "rewrite",
+    "pairs": [
+      {
+        "before": "The billing service is on track for the Sept 12 launch, though we still owe the security team a review of the new token flow before the release.",
+        "after": "The billing service is on track for the Sept 12 launch. The security team still owes us a review of the new token flow."
+      },
+      {
+        "before": "Churn is 4.1%, down from 4.6% in June, and the drop came mostly from the enterprise segment, where we changed the renewal call script in May.",
+        "after": "Churn is 4.1%, down from 4.6% in June. The drop came from enterprise accounts. We changed the renewal call script in May."
+      },
+      {
+        "before": "The migration is off track because the vendor pulled two engineers in July, and we now propose Oct 3 as the new date, which the board approved on Aug 1.",
+        "after": "The migration is off track, because the vendor pulled two engineers in July. The new date is Oct 3. The board approved it on Aug 1."
+      }
+    ]
+  },
+  "6.4": {
+    "shape": "rewrite",
+    "pairs": [
+      {
+        "before": "We shipped the billing fix on Monday. The queue drained by Tuesday. Churn is 4.1%, down from 4.6%. We changed the renewal call script in May. Hiring is behind by two engineers. The vendor still owes us the API date. The office move happens in September.",
+        "after": "We shipped the billing fix on Monday. The queue drained by Tuesday. The vendor still owes us the API date.\n\nChurn is 4.1%, down from 4.6%. We changed the renewal call script in May.\n\nHiring is behind by two engineers. The office move happens in September."
+      },
+      {
+        "before": "Churn is 4.1%, down from 4.6%. Hiring is behind by two engineers. The renewal call script is shorter now. The office lease ends in November.",
+        "after": "Churn is 4.1%, down from 4.6%. The renewal call script is shorter now.\n\nHiring is behind by two engineers. The office lease ends in November."
+      },
+      {
+        "before": "The call with the vendor ran long. Their API team wants a new schema. Priya estimates one week of work. Sales asked for a new pricing page. Two customers asked about SSO. The office move is on Sept 14. Hiring is behind by two engineers.",
+        "after": "The call with the vendor ran long. Their API team wants a new schema. Priya estimates one week of work.\n\nSales asked for a new pricing page. Two customers asked about SSO.\n\nThe office move is on Sept 14. Hiring is behind by two engineers."
+      }
+    ]
+  },
+  "6.5": {
+    "shape": "rewrite",
+    "pairs": [
+      {
+        "before": "Held three meetings about churn.",
+        "after": "Churn is 4.1%, down from 4.6%."
+      },
+      {
+        "before": "We spent the week reviewing the vendor contract.",
+        "after": "We cut two clauses from the vendor contract on Aug 4."
+      },
+      {
+        "before": "The team ran a workshop on onboarding.",
+        "after": "Onboarding takes 6 minutes, down from 11 minutes."
+      }
+    ]
+  },
+  "7.1": {
+    "shape": "rewrite",
+    "pairs": [
+      {
+        "before": "One concern: the vendor may miss the API date.",
+        "after": "RISK: If the vendor misses the API date (Aug 15), the launch slips three weeks."
+      },
+      {
+        "before": "Open question: will the security review land before launch?",
+        "after": "BLOCKER: The security review is not scheduled, so the Sept 12 launch cannot proceed."
+      },
+      {
+        "before": "Watch item: hiring is behind.",
+        "after": "RISK: If we do not hire two engineers by Sept 1, the rollback work slips one month."
+      }
+    ]
+  },
+  "7.2": {
+    "shape": "rewrite",
+    "pairs": [
+      {
+        "before": "There is some risk around the vendor timeline.",
+        "after": "RISK: If the vendor misses the API date (Aug 15), launch slips 3 weeks and ~$40k. Mitigation: Priya, fallback scope by Aug 8."
+      },
+      {
+        "before": "RISK: the security review might be late.",
+        "after": "RISK: If the security review starts after Aug 20, the launch slips two weeks and $15k. Mitigation: Dana, book the review by Aug 12."
+      },
+      {
+        "before": "BLOCKER: hiring.",
+        "after": "BLOCKER: If we do not hire two engineers by Sept 1, the rollback work stops. Mitigation: Maria, approve the offers by Aug 18."
+      }
+    ]
+  },
+  "7.3": {
+    "shape": "structure",
+    "examples": [
+      {
+        "wrong_order": "## Plan\n\nWe ship the billing service on Sept 12. Priya runs the migration on Sept 10.\n\n## Appendix\n\nRISK: the vendor may miss the API date.",
+        "right_order": "## Risks\n\nRISK: If the vendor misses the API date (Aug 15), the launch slips three weeks. Mitigation: Priya, fallback scope by Aug 8.\n\n## Plan\n\nWe ship the billing service on Sept 12. Priya runs the migration on Sept 10."
+      }
+    ]
+  },
+  "8.1": {
+    "shape": "rewrite",
+    "pairs": [
+      {
+        "before": "Revenue showed significant growth.",
+        "after": "Revenue grew 12% from the June baseline."
+      },
+      {
+        "before": "The pipeline is massive this quarter.",
+        "after": "The pipeline holds $2.4M, compared with $1.9M in June."
+      },
+      {
+        "before": "Onboarding got much faster.",
+        "after": "Onboarding takes 6 minutes, down from 11 minutes in May."
+      }
+    ]
+  },
+  "8.2": {
+    "shape": "rewrite",
+    "pairs": [
+      {
+        "before": "We will ship soon.",
+        "after": "We will ship on Aug 28."
+      },
+      {
+        "before": "The audit finishes by EOQ.",
+        "after": "The audit finishes by Sept 30."
+      },
+      {
+        "before": "Hiring picks up in the coming weeks.",
+        "after": "We sign two offers by Aug 22."
+      }
+    ]
+  },
+  "8.3": {
+    "shape": "rewrite",
+    "pairs": [
+      {
+        "before": "The project costs $97,250.",
+        "after": "Between $80k and $120k, most likely near $95k."
+      },
+      {
+        "before": "The migration takes exactly 47 days.",
+        "after": "The migration takes 6 to 9 weeks, most likely 7 weeks."
+      },
+      {
+        "before": "We will save $412,880 next year.",
+        "after": "We will save between $300k and $500k next year, most likely near $380k."
+      }
+    ]
+  },
+  "8.4": {
+    "shape": "rewrite",
+    "pairs": [
+      {
+        "before": "Three customers complained.",
+        "after": "Three of the 12 customers we called complained."
+      },
+      {
+        "before": "Two engineers left this quarter.",
+        "after": "Two of the 14 engineers on the billing team left in July."
+      },
+      {
+        "before": "Most of the trials converted.",
+        "after": "41 of the 96 trials in June converted."
+      }
+    ]
+  },
+  "8.5": {
+    "shape": "rewrite",
+    "pairs": [
+      {
+        "before": "We saw a significant drop in churn.",
+        "after": "Churn fell 0.5 points, from 4.6% to 4.1%."
+      },
+      {
+        "before": "The cost increase is material.",
+        "after": "The cost rose $180k, from $1.2M to $1.38M."
+      },
+      {
+        "before": "We made substantial progress on hiring.",
+        "after": "We signed 3 of the 5 open offers in July."
+      }
+    ]
+  },
+  "8.6": {
+    "shape": "rewrite",
+    "pairs": [
+      {
+        "before": "Revenue is up 30%.",
+        "after": "Revenue is up 30% from June, at $2.4M."
+      },
+      {
+        "before": "Churn improved 12%.",
+        "after": "Churn fell to 4.1% in July, from 4.6% in June."
+      },
+      {
+        "before": "The queue is 3x faster.",
+        "after": "The queue drains 3x faster than the previous release, at 90 seconds."
+      }
+    ]
+  },
+  "8.7": {
+    "shape": "rewrite",
+    "pairs": [
+      {
+        "before": "The vendor missed the date; the launch slips.",
+        "after": "The vendor missed the date. The launch slips three weeks."
+      },
+      {
+        "before": "Churn fell; hiring is behind.",
+        "after": "Churn fell 0.5 points from June. Hiring is behind by two engineers."
+      },
+      {
+        "before": "Priya owns the migration; Dana owns the rollback.",
+        "after": "Priya owns the migration. Dana owns the rollback."
+      }
+    ]
+  },
+  "9.1": {
+    "shape": "rewrite",
+    "pairs": [
+      {
+        "before": "We will harness the vendor's platform.",
+        "after": "We will run our billing jobs on Acme's platform."
+      },
+      {
+        "before": "The teams reached concordance on the roadmap.",
+        "after": "Maria and Ravi agreed to ship SSO before billing."
+      },
+      {
+        "before": "Let us have a conversation about the numbers.",
+        "after": "Maria and Dana talk about the churn numbers on Aug 6."
+      }
+    ]
+  },
+  "9.2": {
+    "shape": "rewrite",
+    "pairs": [
+      {
+        "before": "Churn falls to 3% by December.",
+        "after": "Estimate: churn falls to 3% by December, from 4.1% in July."
+      },
+      {
+        "before": "The vendor will miss the API date.",
+        "after": "Opinion: the vendor misses the API date."
+      },
+      {
+        "before": "Enterprise customers care most about SSO.",
+        "after": "Fact: 9 of the 12 enterprise customers we called asked for SSO."
+      }
+    ]
+  },
+  "9.3": {
+    "shape": "structure",
+    "examples": [
+      {
+        "before": "## Status\n\nBilling: on track. Payments: GREEN. Search: yellow.\n\nRISK: vendor date. Concern: hiring is behind. We ship 9/12 and the audit lands on Sept 30.",
+        "after": "## Status\n\nBilling: on track. Payments: on track. Search: at risk.\n\nRISK: If the vendor misses the API date (Aug 15), the launch slips three weeks. Mitigation: Priya, fallback scope by Aug 8.\n\nRISK: If we do not hire two engineers by Sept 1, the rollback work slips one month. Mitigation: Maria, approve the offers by Aug 18.\n\nWe ship on Sept 12 and the audit lands on Sept 30."
+      }
+    ]
+  },
+  "9.4": {
+    "shape": "guidance",
+    "guidance": "Read the sentence back. Ask one question: if this line is quoted to me in six months, will I want to explain what I meant? If yes, the sentence is not finished. Name the thing, the number, and the person now, so the sentence survives without you in the room.",
+    "pairs": [
+      {
+        "before": "We are comfortable with the number.",
+        "after": "Opinion: the $2.4M forecast holds. Ravi owns the forecast."
+      }
+    ]
+  }
+}

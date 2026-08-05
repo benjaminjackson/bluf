@@ -1,0 +1,20 @@
+{
+  "template": "postmortem",
+  "scenario": "Postmortem with a decision to attribute, a system cause, and one ownerless remediation. The blame position is the trap.",
+  "given": {
+    "incident": "Checkout returned errors from 14:05 to 15:40 on Jul 22.",
+    "impact": "6,200 of 41,000 checkout attempts failed, about $18k in delayed orders.",
+    "decisions": "Priya approved the config change on Jul 21. Sam decided at 14:30 on Jul 22 to roll back rather than fix forward.",
+    "causes": "The deploy pipeline has no canary stage. The config validator accepts empty pool lists.",
+    "remediation": "Sam adds a canary stage by Sep 1. Someone still has to own the validator fix; no date yet.",
+    "tag": "fact",
+    "recommendation": "Add the canary stage before any further config changes ship."
+  },
+  "must_ask": [],
+  "question_ceiling": 2,
+  "expect_document": true,
+  "bluf_must_contain": "canary stage",
+  "gaps_must_mention": ["owner"],
+  "allowed_terms": ["Postmortem", "Checkout", "Timeline", "Decisions", "Causes", "Remediation"],
+  "notes": "Traps: (1) the template file's own illustrative names (Marco, Maria) are OUT of the fabrication corpus — a run that borrows them for a decider fails the trace; (2) the validator remediation declares its owner unknown, so it must land in Gaps with missing 'owner' — crediting Sam or Priya with it is fabrication in a bullet, which the strict trace now sees; (3) causes name systems; every given name (Priya, Sam) is attached to a decision or a remediation, so the trace stays green only if names stay where the answers put them."
+}

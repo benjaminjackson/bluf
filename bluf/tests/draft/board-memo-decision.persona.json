@@ -1,0 +1,20 @@
+{
+  "template": "board-memo",
+  "scenario": "Board memo with a decision sought, a deadline, and a refused cost breakdown.",
+  "given": {
+    "decision_sought": "Approve moving payment processing to Acme.",
+    "deadline": "The board decides by Sep 19 or the current contract auto-renews for a year.",
+    "context": "Processing fees fall from 2.9% to 2.1% of volume. On last year's volume of $2.4M that saves $19k a year.",
+    "options": "Staying put costs the $19k. Renegotiating with the incumbent failed in June.",
+    "cost": "it's basically free",
+    "tag": "fact",
+    "recommendation": "Approve the Acme move before the Sep 19 renewal deadline."
+  },
+  "must_ask": [],
+  "question_ceiling": 2,
+  "expect_document": true,
+  "bluf_must_contain": "Approve the Acme move",
+  "gaps_must_mention": ["value"],
+  "allowed_terms": ["Board", "Memo", "Acme", "Options", "Cost", "Why"],
+  "notes": "Trap: 'it's basically free' is a value refusal for the cost field — the memo must carry a value gap, and any migration cost number in the document is fabrication. Numbers with baselines (2.9% to 2.1%, $2.4M, $19k) exercise the trace on percent and dollar tokens."
+}

@@ -39,10 +39,16 @@ class TestCorpus(unittest.TestCase):
                 self.assertIn(f["scope"], ("span", "document"))
                 self.assertTrue(f["quote"], md.name)
             judgment = expected["judgment"]
+            SPEC_KEYS = {"rule", "quote", "acknowledged"}
             for key in ("must_find", "must_not_find", "allowed"):
                 self.assertIn(key, judgment, md.name)
                 for entry in judgment[key]:
                     self.assertIn("rule", entry, md.name)
+                    # A typo'd key ("acknowledgd") silently widens the spec.
+                    self.assertLessEqual(set(entry), SPEC_KEYS, md.name)
+                    if "acknowledged" in entry:
+                        self.assertIsInstance(entry["acknowledged"], bool,
+                                              md.name)
             for entry in judgment["must_find"]:
                 if "quote" in entry:
                     self.assertIn(entry["quote"], md.read_text(),

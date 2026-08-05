@@ -1,0 +1,178 @@
+{
+  "1.1": {
+    "ste": null,
+    "note": "no direct STE ancestor; inverts Section 1's whitelist of approved words into a banned list"
+  },
+  "1.2": {
+    "ste": null,
+    "note": "no direct STE ancestor; carries over Section 1's one-part-of-speech-per-word principle"
+  },
+  "1.3": {
+    "ste": null,
+    "note": "no direct STE ancestor; carries over Section 1's one-meaning-per-word principle as meaning locks"
+  },
+  "1.4": {
+    "ste": null,
+    "note": "no direct STE ancestor; adapts Section 1's plain-word discipline, with the reader as the test"
+  },
+  "1.5": {
+    "ste": "1.11",
+    "note": "do not use different technical names for the same item"
+  },
+  "1.6": {
+    "ste": "1.7",
+    "note": "do not use technical names as verbs"
+  },
+  "1.7": {
+    "ste": "1.6",
+    "note": "unapproved words allowed only as technical names"
+  },
+  "2.1": {
+    "ste": null,
+    "note": "no rule number cited; Section 2 carries over almost unchanged — noun clusters of no more than three words"
+  },
+  "2.2": {
+    "ste": null,
+    "note": "no rule number cited; adapts Section 2's short-form practice for names longer than three words"
+  },
+  "2.3": {
+    "ste": null,
+    "note": "no rule number cited; adapts Section 2's requirement to keep articles and demonstrative adjectives"
+  },
+  "3.1": {
+    "ste": "3.6",
+    "note": "use the active voice"
+  },
+  "3.2": {
+    "ste": "3.2",
+    "note": "cited without a gloss; SEE keeps the restriction to simple tenses"
+  },
+  "3.3": {
+    "ste": "3.4",
+    "note": "no complex verb structures"
+  },
+  "3.4": {
+    "ste": "3.7",
+    "note": "cited without a gloss; SEE keeps the rule that a verb, not a nominalization, describes an action"
+  },
+  "3.5": {
+    "ste": "9.3",
+    "note": "no phrasal verbs"
+  },
+  "4.1": {
+    "ste": "5.1, 6.3",
+    "note": "same limits — 20 words in procedural writing, 25 in descriptive writing"
+  },
+  "4.2": {
+    "ste": null,
+    "note": "no direct STE ancestor; adapts Section 4's sentence-construction limits to one idea and one ask"
+  },
+  "4.3": {
+    "ste": "4.2",
+    "note": "cited without a gloss; SEE keeps the ban on omitted words"
+  },
+  "4.4": {
+    "ste": "4.3",
+    "note": "cited without a gloss; SEE keeps the vertical list for parallel items"
+  },
+  "4.5": {
+    "ste": "4.4",
+    "note": "cited without a gloss; SEE keeps connecting words between related sentences and restores \"because\""
+  },
+  "5.1": {
+    "ste": null,
+    "note": "no direct STE ancestor; inverts Section 5's sequential procedure order into bottom line up front"
+  },
+  "5.2": {
+    "ste": "5.1, 5.2",
+    "note": "one instruction per sentence, at the 20-word limit for procedural writing"
+  },
+  "5.3": {
+    "ste": null,
+    "note": "no direct STE ancestor; adapts Section 5's imperative instruction form to the ask, and adds a named recipient"
+  },
+  "5.4": {
+    "ste": null,
+    "note": "no direct STE ancestor; adds one owner and one date to Section 5's procedure mechanism"
+  },
+  "5.5": {
+    "ste": "5.5",
+    "note": "notes give information, not instructions"
+  },
+  "6.1": {
+    "ste": "6.1",
+    "note": "gradual information, inverted for BLUF — the conclusion comes first"
+  },
+  "6.2": {
+    "ste": null,
+    "note": "no direct STE ancestor; applies Section 1 meaning locks inside Section 6's descriptive writing"
+  },
+  "6.3": {
+    "ste": "6.3",
+    "note": "cited without a gloss; the 25-word sentence limit for descriptive writing"
+  },
+  "6.4": {
+    "ste": "6.5, 6.6",
+    "note": "cited without a gloss; one topic per paragraph, and a six-sentence paragraph limit"
+  },
+  "6.5": {
+    "ste": null,
+    "note": "no direct STE ancestor; points Section 6's descriptive writing at results instead of activity"
+  },
+  "7.1": {
+    "ste": "7.1",
+    "note": "warning/caution"
+  },
+  "7.2": {
+    "ste": "7.2, 7.3",
+    "note": "cited without a gloss; SEE replaces the safety-instruction fields with trigger, consequence, cost, and mitigation owner"
+  },
+  "7.3": {
+    "ste": null,
+    "note": "no STE ancestor; S1000D and ATA iSpec 2200 place warnings before the step, and STE Section 7 governs only their wording"
+  },
+  "8.1": {
+    "ste": null,
+    "note": "no direct STE ancestor; replaces Section 8's punctuation and word-count bookkeeping with numerical bookkeeping"
+  },
+  "8.2": {
+    "ste": null,
+    "note": "no direct STE ancestor; Section 8's bookkeeping mechanism applied to dates"
+  },
+  "8.3": {
+    "ste": null,
+    "note": "no direct STE ancestor; Section 8's bookkeeping mechanism applied to ranges and confidence"
+  },
+  "8.4": {
+    "ste": null,
+    "note": "no direct STE ancestor; Section 8's bookkeeping mechanism applied to denominators"
+  },
+  "8.5": {
+    "ste": null,
+    "note": "no direct STE ancestor; Section 8's bookkeeping mechanism applied to intensifier adjectives on quantities"
+  },
+  "8.6": {
+    "ste": null,
+    "note": "no direct STE ancestor; Section 8's bookkeeping mechanism applied to baselines and periods"
+  },
+  "8.7": {
+    "ste": "8.1",
+    "note": "unchanged — a rare rule that needs no adaptation"
+  },
+  "9.1": {
+    "ste": "9.1",
+    "note": "use a different construction when word-for-word replacement fails"
+  },
+  "9.2": {
+    "ste": null,
+    "note": "no direct STE ancestor; inverts Section 9's interpretation ban — judgment is tagged instead of forbidden"
+  },
+  "9.3": {
+    "ste": "9.4",
+    "note": "cited without a gloss; SEE keeps the requirement to write the same construction the same way everywhere"
+  },
+  "9.4": {
+    "ste": null,
+    "note": "no direct STE ancestor; a SEE writing practice with no Section 9 counterpart"
+  }
+}

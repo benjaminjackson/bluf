@@ -125,6 +125,27 @@ class TestSync(TempTree):
              "patterns": ["bogus"]}))
         self.assertTrue(any("does not name it" in e for e in self.run_check()))
 
+    def test_missing_rule_ref_fails(self):
+        def strip_ref(d):
+            del d["locks"][0]["rule_ref"]
+        self.mutate_dictionary(strip_ref)
+        self.assertTrue(any("no rule_ref.primary" in e
+                            for e in self.run_check()))
+
+    def test_unknown_primary_rule_fails(self):
+        def bogus(d):
+            d["banned"][0]["rule_ref"]["primary"] = "12.9"
+        self.mutate_dictionary(bogus)
+        self.assertTrue(any("routes to rule '12.9'" in e
+                            for e in self.run_check()))
+
+    def test_unknown_see_also_rule_fails(self):
+        def bogus(d):
+            d["locks"][0]["rule_ref"]["see_also"] = ["12.9"]
+        self.mutate_dictionary(bogus)
+        self.assertTrue(any("cross-refers to rule '12.9'" in e
+                            for e in self.run_check()))
+
     def test_missing_rule_number_fails(self):
         def strip_rule(d):
             del d["prose_bans"][0]["rule"]
