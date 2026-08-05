@@ -163,26 +163,16 @@ def explain_jobs(only=None):
                    "— emit explain JSON"),
     ]
     # Compliant sentences: the standard's own Write: examples that are
-    # full sentences (one Write: line is a noun-cluster rewrite fragment
-    # — a model correctly flags 4.3 on it, so it cannot serve here),
-    # topped up to five with curated full-sentence afters.
+    # full sentences. The ticket asked for five, but the standard holds
+    # only four Write: lines and one is a noun-cluster rewrite fragment
+    # (a model correctly flags 4.3 on it). Topping up with other curated
+    # sentences was tried twice and failed twice: context-free single
+    # sentences keep drawing DEFENSIBLE judgment calls (6.5, 4.5, 5.4),
+    # and the case then argues with judgment instead of testing the
+    # compliant-output contract. Three canonical cases it is.
     writes = [s for s in re.findall(r'Write: "([^"]+)"', standard)
               if len(s) > 25 and s[0].isupper() and s.endswith(".")]
-    for rule in sorted(examples):
-        if len(writes) >= 5:
-            break
-        spec = examples[rule]
-        if spec.get("shape") != "rewrite":
-            continue
-        after = spec["pairs"][0].get("after", "")
-        # Single full sentences only — a two-sentence after invites a
-        # defensible 4.5 (missing connector) call and the case is then
-        # arguing with the model's judgment, not testing it.
-        if (after and after[0].isupper() and after.endswith(".")
-                and ". " not in after and len(after) > 30
-                and after not in writes):
-            writes.append(after)
-    for n, s in enumerate(writes[:5]):
+    for n, s in enumerate(writes):
         jobs.append(ExplainJob(
             f"compliant-{n}",
             f'/bluf:explain this sentence: "{s}" — emit explain JSON'))
