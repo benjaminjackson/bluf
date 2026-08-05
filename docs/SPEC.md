@@ -178,9 +178,13 @@ graded by gaps-aware lint plus a fabrication trace back to the answer sheet.
 
 ### 5. `/bluf:explain`
 
-Given a flagged sentence or a rule number: the rule, its STE lineage, and three
-example rewrites. The retention layer. The goal is writers who internalize the
-standard and stop needing the tool.
+Given a flagged sentence, a term, or a rule number: the rule verbatim, its
+verified STE lineage (`bluf/data/lineage.json` — the only permitted source of
+STE citations), and curated examples shaped per rule (`bluf/data/examples.json`:
+rewrite pairs for prohibitions, document-order examples for structural rules,
+guidance for practices). Terms route via `rule_ref` in the dictionary. The
+retention layer. The goal is writers who internalize the standard and stop
+needing the tool.
 
 ## Test Corpus
 
@@ -213,7 +217,8 @@ In order:
 - README meets the requirements above.
 - LICENSE file present.
 
-Everything else — explain, CI hooks for team enforcement — ships after
-public launch. (Triage and draft shipped ahead of that plan; their
-contracts and corpora live under `bluf/docs/TRIAGE.md`,
-`bluf/docs/DRAFT.md`, `bluf/tests/triage/`, and `bluf/tests/draft/`.)
+Everything else — CI hooks for team enforcement — ships after public
+launch. (Triage, draft, and explain all shipped ahead of that plan; their
+contracts, data, and corpora live under `bluf/docs/TRIAGE.md`,
+`bluf/docs/DRAFT.md`, `bluf/data/lineage.json`, `bluf/data/examples.json`,
+`bluf/tests/triage/`, and `bluf/tests/draft/`.)
