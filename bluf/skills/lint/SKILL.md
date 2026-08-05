@@ -59,6 +59,9 @@ report findings. Lint never edits — it reports.
    message, suggested fix.
 3. **Judgment findings**, labeled `[judgment]` — for each: rule number,
    quote (or "whole document"), message, suggested fix.
+4. **Closing line**: `Any rule number above explains itself: /bluf:explain
+   8.6` (use a rule that actually appears). Rendered prose only — never in
+   the JSON.
 
 An acknowledged finding — of either layer — carries `[acknowledged]` in its
 line, and names the Gaps item that covers it.

@@ -136,7 +136,44 @@ def draft_command(persona):
             f"shot; my answers:\n{lines}\n— emit draft JSON")
 
 
+class ExplainJob:
+    """Synthesized job (no fixture file) for the explain phase."""
+
+    def __init__(self, jid, command):
+        self.stem = jid
+        self.name = jid
+        self.command = command
+
+
+def explain_jobs():
+    lineage = json.loads((PLUGIN / "data" / "lineage.json").read_text())
+    standard = (REPO / "docs" / "SEE-100.md").read_text()
+    jobs = [ExplainJob(f"rule-{r}",
+                       f"/bluf:explain {r} — emit explain JSON")
+            for r in sorted(lineage)]
+    jobs += [
+        ExplainJob("reject-10.1", "/bluf:explain 10.1 — emit explain JSON"),
+        ExplainJob("steonly-3.6", "/bluf:explain 3.6 — emit explain JSON"),
+        ExplainJob("term-material",
+                   "/bluf:explain material — emit explain JSON"),
+        ExplainJob("multi",
+                   '/bluf:explain this sentence: "We should leverage the '
+                   'new tooling to drive significant improvement soon." '
+                   "— emit explain JSON"),
+    ]
+    # Five compliant sentences from the standard's own Write: examples.
+    writes = [s for s in re.findall(r'Write: "([^"]+)"', standard)
+              if len(s) > 25][:5]
+    for n, s in enumerate(writes):
+        jobs.append(ExplainJob(
+            f"compliant-{n}",
+            f'/bluf:explain this sentence: "{s}" — emit explain JSON'))
+    return jobs
+
+
 def run_one(phase, md, i):
+    if phase == "explain":
+        return run_skill(md.command, f"explain-{md.stem}-{i}")
     if phase == "draft":
         # Fresh cwd per job: two personas of one template share an
         # answer-sheet filename, and concurrent runs were adopting each
@@ -769,11 +806,71 @@ def grade_draft(runs, only, results):
     return errors
 
 
+def grade_explain(jobs, results):
+    """Checks (a) and (b) of bluf-3oz.5: rule text verbatim from the
+    standard, STE citation string-matched to lineage.json, plus the
+    unknown-number, term, compliant, and multi-violation cases."""
+    errors = []
+    lineage = json.loads((PLUGIN / "data" / "lineage.json").read_text())
+    examples = json.loads((PLUGIN / "data" / "examples.json").read_text())
+    standard = (REPO / "docs" / "SEE-100.md").read_text()
+    d = json.loads((PLUGIN / "data" / "dictionary.json").read_text())
+    material = next(e["rule_ref"]["primary"] for e in d["prose_bans"]
+                    if e["term"] == "material")
+    maps_36 = next(r for r, e in lineage.items()
+                   if "3.6" in (e.get("ste") or ""))
+    for job in jobs:
+        p = results[("explain", job.stem, 0)]
+        if isinstance(p, Exception):
+            fail(errors, f"{job.stem}: {p}")
+            continue
+        jid = job.stem
+        if jid.startswith("rule-"):
+            r = jid[5:]
+            if p.get("rule") != r:
+                fail(errors, f"{jid}: answered rule {p.get('rule')!r}")
+            if not (p.get("rule_text") or "").strip() \
+                    or p["rule_text"].strip() not in standard:
+                fail(errors, f"{jid}: rule_text not verbatim from the "
+                             "standard")
+            if p.get("ste") != lineage[r]["ste"]:
+                fail(errors, f"{jid}: ste {p.get('ste')!r} != lineage "
+                             f"{lineage[r]['ste']!r}")
+            if p.get("shape") != examples[r]["shape"]:
+                fail(errors, f"{jid}: shape {p.get('shape')!r} != "
+                             f"{examples[r]['shape']!r}")
+        elif jid == "reject-10.1":
+            if p.get("rule") is not None or "rejected" not in p:
+                fail(errors, f"{jid}: out-of-range number not rejected: "
+                             f"{p}")
+        elif jid == "steonly-3.6":
+            if p.get("rule") is not None or p.get("maps_to") != maps_36:
+                fail(errors, f"{jid}: expected maps_to={maps_36!r}, got "
+                             f"{p}")
+        elif jid == "term-material":
+            if p.get("rule") != material:
+                fail(errors, f"{jid}: expected primary {material!r}, got "
+                             f"{p.get('rule')!r}")
+        elif jid.startswith("compliant-"):
+            if p.get("compliant") is not True or p.get("also_violates"):
+                fail(errors, f"{jid}: clean sentence not called "
+                             f"compliant: {p}")
+        elif jid == "multi":
+            if p.get("rule") != "5.4" or len(p.get("also_violates",
+                                                   [])) < 2:
+                fail(errors, f"{jid}: expected 5.4 + >=2 also_violates, "
+                             f"got {p.get('rule')!r} / "
+                             f"{p.get('also_violates')!r}")
+    if not errors:
+        print(f"  ok   explain: all {len(jobs)} checks pass")
+    return errors
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--skill",
                         choices=["lint", "rewrite", "triage", "draft",
-                                 "all"])
+                                 "explain", "all"])
     parser.add_argument("--runs", type=int, default=3)
     parser.add_argument("--only", nargs="*", help="fixture stems to grade")
     parser.add_argument("--workers", type=int, default=4,
@@ -799,6 +896,10 @@ def main():
         jobs += [("draft", pj, i)
                  for pj, _ in draft_fixtures(args.only)
                  for i in range(args.runs)]
+    ex_jobs = []
+    if args.skill == "explain":  # explicit only — ~53 live runs
+        ex_jobs = explain_jobs()
+        jobs += [("explain", j, 0) for j in ex_jobs]
     if jobs:
         print(f"running {len(jobs)} live job(s) on {args.workers} worker(s):")
     results = collect(jobs, args.workers)
@@ -815,6 +916,9 @@ def main():
     if args.skill in ("draft", "all"):
         print("draft:")
         errors += grade_draft(args.runs, args.only, results)
+    if ex_jobs:
+        print("explain:")
+        errors += grade_explain(ex_jobs, results)
 
     print(f"\n{'FAIL' if errors else 'PASS'}: {len(errors)} failure(s)")
     return 1 if errors else 0

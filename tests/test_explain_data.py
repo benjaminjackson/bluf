@@ -84,6 +84,37 @@ class TestExamples(unittest.TestCase):
                 self.assertLessEqual(len(entry.get("pairs", [])), 1,
                                      f"rule {rule}")
 
+    def test_every_number_is_answerable_or_rejectable_consistently(self):
+        # A number 1.1-9.9 is explained iff it is in BOTH data files;
+        # a number in one file only would answer and reject at once.
+        for major in range(1, 10):
+            for minor in range(1, 10):
+                n = f"{major}.{minor}"
+                self.assertEqual(n in LINEAGE, n in EXAMPLES, n)
+
+    def test_check_d_deterministic_befores_trip_their_rule(self):
+        # Check (d) of bluf-3oz.5, static half: where the checker can see
+        # the rule (det/hyb rows), every rewrite 'before' must trip it.
+        findings_doc = (REPO / "bluf" / "docs" / "FINDINGS.md").read_text()
+        det_rules = set(re.findall(
+            r"^\| (\d\.\d+) \|[^|]*\| (?:det|hyb)", findings_doc, re.M))
+        # 6.3 shares one check with 4.1; the checker always emits 4.1
+        # (FINDINGS.md notes). Dual-layer rules whose curated befores
+        # exercise the judgment half are out of the checker's sight.
+        ALIAS = {"6.3": "4.1"}
+        JUDGMENT_HALF = {"5.4", "6.4"}
+        for rule, entry in EXAMPLES.items():
+            if (entry["shape"] != "rewrite" or rule not in det_rules
+                    or rule in JUDGMENT_HALF):
+                continue
+            want = ALIAS.get(rule, rule)
+            for pair in entry["pairs"]:
+                hit = {f["rule"] for f in
+                       see100_check.check(pair["before"])["findings"]}
+                self.assertIn(want, hit,
+                              f"rule {rule}: before {pair['before']!r} "
+                              "does not trip its own rule")
+
     def test_every_clean_text_passes_the_checker(self):
         """No 'after', 'right_order', or guidance text may trip any rule."""
         for rule, entry in EXAMPLES.items():

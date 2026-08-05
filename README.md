@@ -36,10 +36,8 @@ Technical English for executive prose.
   document. Status update, board memo, postmortem, risk register.
 - `/bluf:selftest` — diagnostic. Verifies an installed copy can read its own
   data files.
-
-### Planned
-- `/bluf:explain` — for any rule or flagged sentence: the rule, its STE
-  lineage, and example rewrites.
+- `/bluf:explain` — for any rule, banned term, or flagged sentence: the rule
+  verbatim, its verified STE lineage, and curated example rewrites.
 
 ## Why STE?
 

@@ -34,6 +34,8 @@ class TestReadme(unittest.TestCase):
     def test_planned_skills_are_not_shipped(self):
         shipped = {p.name for p in (REPO / "bluf" / "skills").iterdir()
                    if (p / "SKILL.md").exists()}
+        if "### Planned" not in README:  # everything shipped
+            return
         planned = set(re.findall(r"`/bluf:(\w+)`",
                                  README.split("### Planned")[1]
                                  .split("## Why STE?")[0]))
