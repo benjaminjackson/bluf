@@ -19,7 +19,9 @@ The interview is the product; the document is its receipt.
   the template's field table. Skeleton slots that are not fields — the
   title, a scope heading, the author line — are derived from answers
   already given, or filled with a neutral generic ("Status Update").
-  Never asked.
+  Never asked. Derived means **reusing words the answers contain**: a
+  title may not introduce a noun no answer used — that is fabrication in
+  a heading.
 - **AskUserQuestion only for genuinely closed sets**: template choice,
   document state (on track / at risk / off track), RISK vs BLOCKER, and the
   fact / estimate / opinion tag. Nothing else.

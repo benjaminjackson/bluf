@@ -31,8 +31,10 @@ gaps in the draft JSON.
 - `given` — the answers the invocation supplies, verbatim. Hostile answers
   ("the team", "soon", "skip") are given like any other; the run must send
   them to gaps, never launder them into compliance.
-- `must_ask` — field ids that must appear in the JSON's `questions`. These
-  are the fields `given` deliberately leaves open.
+- `must_ask` — field ids that must appear in the JSON's `questions`,
+  matched as substrings — a persona cannot predict the skill's naming, so
+  `"severity"` matches `"risks[0].severity"`. These are the fields `given`
+  deliberately leaves open.
 - `question_ceiling` — `questions` may not exceed this length.
 - `expect_document` — false when `given` leaves the required floor unmet;
   then `document` must be null/absent.

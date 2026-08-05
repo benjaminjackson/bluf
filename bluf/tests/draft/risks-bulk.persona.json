@@ -7,7 +7,7 @@
   "must_ask": [
     "severity"
   ],
-  "question_ceiling": 6,
+  "question_ceiling": 7,
   "expect_document": false,
   "gaps_must_mention": [
     "owner"
@@ -22,5 +22,5 @@
     "Register",
     "October"
   ],
-  "notes": "Risks 1 and 2 arrive with trigger, consequence, cost, owner, and date in the paste. Risk 3 declares its owner and cost unknown — declared unknowns are refusals and go to Gaps, not questions. Open fields: severity per risk (3, or fewer if batched), risk 3's trigger, scope, next review — ceiling 6. Traps: (1) re-asking slots the paste already answered blows the ceiling — the 36-question failure mode; (2) severity is never stated and a register cannot assemble without it, so expect_document is false; (3) crediting Marco or Dana with risk 3's owner fails the trace."
+  "notes": "Risks 1 and 2 arrive with trigger, consequence, cost, owner, and date in the paste. Risk 3 declares its owner and cost unknown — declared unknowns are refusals and go to Gaps, not questions. Open fields: severity per risk (3, or fewer if batched), risk 3's trigger, risk 3's date, scope, next review — ceiling 7. Traps: (1) re-asking slots the paste already answered blows the ceiling — the 36-question failure mode; (2) severity is never stated and a register cannot assemble without it, so expect_document is false; (3) crediting Marco or Dana with risk 3's owner fails the trace."
 }

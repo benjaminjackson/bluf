@@ -621,9 +621,11 @@ def grade_draft_run(pj, persona, payload, errors):
                             bool(ok)))
         return ok
 
-    # 1. Required-field recall.
+    # 1. Required-field recall. Substring match: persona ids cannot
+    # predict the skill's naming ("severity" matches "risks[0].severity").
     for field in persona.get("must_ask", []):
-        if not check("must-ask", field, field in fields):
+        if not check("must-ask", field,
+                     any(field in f for f in fields)):
             fail(errors, f"{name}: never asked for {field!r}")
     # 2. Question count.
     ceiling = persona.get("question_ceiling", 99)
