@@ -646,6 +646,9 @@ def template_corpus(template):
     return "\n".join(parts)
 
 
+DRAFT_GAP_SLOTS = GAP_SLOTS + ("tag",)
+
+
 def grade_draft_run(pj, persona, payload, errors):
     name = pj.name
     questions = payload.get("questions") or []
@@ -655,7 +658,9 @@ def grade_draft_run(pj, persona, payload, errors):
     verdict = []
 
     def check(kind, spec, ok):
-        if kind != "fabrication":  # payload-derived; kept out of variance
+        # Payload-derived kinds stay out of the cross-run variance
+        # verdict — slot strings and field ids legitimately differ.
+        if kind not in ("fabrication", "gap-slot", "field-id"):
             verdict.append((kind, json.dumps(spec, sort_keys=True),
                             bool(ok)))
         return ok
@@ -698,7 +703,8 @@ def grade_draft_run(pj, persona, payload, errors):
     # "status update" contains "date".
     for g in gaps:
         slot = str(g.get("missing", "")).lower()
-        if not check("gap-slot", slot, any(s in slot for s in GAP_SLOTS)):
+        if not check("gap-slot", slot,
+                     any(s in slot for s in DRAFT_GAP_SLOTS)):
             fail(errors, f"{name}: gap slot {g.get('missing')!r} outside "
                          "the vocabulary")
     for token in persona.get("gaps_must_mention", []):

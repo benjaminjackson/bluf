@@ -157,9 +157,10 @@ last in the response:
 
 `questions` lists open fields only, one field per entry — a field id
 packing several slots ("severity, trigger") is rejected. Each gap names
-its absent slot(s) in `missing`, from the same closed vocabulary triage
-uses — owner, date, decider, decision, value, baseline, denominator —
-so a grader never depends on how the `reason` is worded. `answers_used`
+its absent slot(s) in `missing`, from the closed vocabulary — owner, date,
+decider, decision, value, baseline, denominator, plus draft's own `tag`
+(a refused fact/estimate/opinion tag is a real hole) — so a grader never
+depends on how the `reason` is worded. `answers_used`
 holds exactly the answers that reached the document; the harness checks
 every entry against the answers actually given, and traces every name,
 date, and number in `document` back to those given answers. Anything

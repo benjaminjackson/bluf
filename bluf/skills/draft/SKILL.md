@@ -68,8 +68,10 @@ numbered questions for every open field, assemble if the floor is met,
 Gaps as always. Never invent an answer to fill a hole.
 
 If the request contains "emit draft JSON", append one fenced `json` block
-in the DRAFT.md schema. No prose inside the block, and nothing after it —
-the block is always the last thing in the response.
+in the DRAFT.md schema — in every case, including below the floor, where
+`document` is null and `questions` carries the open fields. No prose inside
+the block, and nothing after it — the block is always the last thing in
+the response.
 
 ## Failure behavior
 
