@@ -146,13 +146,17 @@ last in the response:
   "answers_used": {"state": "at risk", "owner_main": "Priya"},
   "document": "…the assembled markdown, or null below the floor…",
   "gaps": [
-    {"field": "owner_rollback", "reason": "refused: 'the team'"}
+    {"field": "asks", "missing": "owner, date",
+     "reason": "refused: 'the team should pick this up soon'"}
   ],
   "confirm_flags": ["Priya"]
 }
 ```
 
-`questions` lists open fields only. `answers_used` holds exactly the
+`questions` lists open fields only. Each gap names its absent slot(s) in
+`missing`, from the same closed vocabulary triage uses — owner, date,
+decider, decision, value, baseline, denominator — so a grader never
+depends on how the `reason` is worded. `answers_used` holds exactly the
 answers that reached the document — the harness traces every name, date,
 and number in `document` back to this object, and anything untraceable is
 fabrication, a hard fail.

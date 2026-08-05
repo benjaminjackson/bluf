@@ -37,8 +37,8 @@ GOOD_PAYLOAD = {
                  "lands.\n\n**State: at risk.** Latency fell from 210ms to "
                  "130ms after the Aug 5 change.\n\n## Gaps\n\n- Owner for "
                  "the rollback plan: not yet assigned.\n"),
-    "gaps": [{"field": "asks", "reason": "refused: 'the team' names no "
-                                         "owner"}],
+    "gaps": [{"field": "asks", "missing": "owner",
+              "reason": "refused: 'the team'"}],
 }
 
 
