@@ -1,0 +1,34 @@
+{
+  "script": [],
+  "judgment": {
+    "must_find": [
+      {
+        "rule": "5.4",
+        "quote": "OWNER: write the rollback plan by Aug 11.",
+        "acknowledged": false
+      },
+      {
+        "rule": "5.4",
+        "quote": "Priya: run the load test. The date is still open.",
+        "acknowledged": false
+      }
+    ],
+    "must_not_find": [
+      {
+        "rule": "*",
+        "acknowledged": true
+      },
+      {
+        "rule": "6.1"
+      },
+      {
+        "rule": "6.2"
+      }
+    ],
+    "allowed": [
+      {
+        "rule": "*"
+      }
+    ]
+  }
+}

@@ -56,6 +56,9 @@ Field rules:
 - `candidate` — `true` on hybrid-rule findings the script emits for the model
   to confirm (see Hybrid rules). Candidates are not findings; unconfirmed
   candidates are dropped, confirmed ones become judgment-layer findings.
+- `acknowledged` — `true` on a judgment finding the document's Gaps section
+  covers (see Gaps-aware mode). Absent otherwise. Deterministic findings
+  never carry it.
 - `suggestion` — the fix, when one exists. From the dictionary's `instead`
   column for word findings.
 
@@ -85,6 +88,60 @@ Hybrid by this mechanism:
   explicitly marked action-item or asks list (a heading containing "action
   item", "asks", or "requests"), every list item is an ask and the 20-word
   limit fires deterministically.
+
+## Gaps-aware mode
+
+"Passes lint clean" is an incentive to invent an owner. The honest document
+— the one that says the owner is not yet assigned — breaks rule 5.4, so the
+compliant-looking document and the truthful one are different documents.
+Gaps-aware mode is how the truthful one wins.
+
+**The marked-unknown convention**, shared by every skill: a document
+acknowledges an unknown in a `## Gaps` section, or in a `Gaps:` list when it
+is too short for headings. Each item names the missing slot in plain words,
+and the thing the slot belongs to:
+
+- Owner for the rollback plan: not yet assigned.
+- Date for the migration: to be set by Fri.
+
+ALL-CAPS placeholders (OWNER, DATE, N) may stand in the body only when the
+same unknown is listed in Gaps. A placeholder with no Gaps item is an
+unmarked hole, and lint reads it as one.
+
+**Acknowledgment.** Lint reports every finding, always — a declared gap is
+still a gap. A finding whose subject a Gaps item names is *acknowledged*: it
+counts separately in the verdict and it does not fail the document. Coverage
+is a judgment call, never a string match. The Gaps item must name the same
+missing thing as the finding, not merely sit in the same document.
+
+**PASS.** A document passes when every error-severity finding is
+acknowledged. A pass carrying acknowledged findings is a legal verdict, and
+says so: `PASS, 3 acknowledged (read as: status update)`. Warnings never
+fail a document, acknowledged or not.
+
+**Where the flag lives.** In the findings JSON, an acknowledged judgment
+finding carries `"acknowledged": true`. Deterministic findings never carry
+it. The JSON block stays judgment-only, so a deterministic finding
+round-trips nowhere and has nowhere to put the flag: its acknowledgment
+appears in the rendered prose and in the verdict arithmetic, and nowhere
+else. A consumer that wants to know which deterministic findings the Gaps
+section covers reads the prose. The checker itself does not change —
+acknowledgment is a judgment-layer classification laid over the checker's
+output, never an output of the checker.
+
+Two worked examples, both against this action item:
+
+    - OWNER: write the rollback plan by Aug 11.
+
+Rule 5.4 fires: the item names no owner.
+
+- Gaps says "Owner for the rollback plan: not yet assigned." — **covered**.
+  The item names the same slot (owner) on the same thing (the rollback
+  plan). Lint reports the finding and marks it acknowledged.
+- Gaps says "Date for the load test: not yet set." — **not covered**. That
+  item is honest about a different unknown, and the owner is still missing
+  with nothing said about it. Lint reports the 5.4 finding unacknowledged,
+  and the document fails.
 
 ## Sentence segmentation and word counting
 

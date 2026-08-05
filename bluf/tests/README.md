@@ -12,9 +12,15 @@ Each `<name>.md` fixture has a `<name>.expected.json` file:
   finding inside the skill's JSON fails the run):
   - `must_find` — each entry names a `rule` and optionally a `quote`; a skill
     finding matches by rule plus span overlap with the quote, never by
-    wording. All must be present in every run.
+    wording. All must be present in every run. An entry may also pin
+    `acknowledged` (`true` or `false`) — the gaps-aware classification the
+    matching finding must carry. This narrows the match: judgment findings
+    only, because deterministic findings never carry the flag (FINDINGS.md,
+    "Gaps-aware mode").
   - `must_not_find` — matches here fail the run. `"rule": "*"` means any
-    finding fails.
+    finding fails; `acknowledged` narrows it the same way, so
+    `{"rule": "*", "acknowledged": true}` fails the run on any acknowledged
+    finding at all.
   - `allowed` — extras that neither pass nor fail.
 - `rewrite` — for rewrite fixtures: `gaps_must_include` lists rule numbers
   that must appear in the Gaps section. The harness also checks every number,

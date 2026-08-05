@@ -39,22 +39,38 @@ report findings. Lint never edits — it reports.
    failure.
 6. Assemble severities from FINDINGS.md. Severity is fixed per rule — never
    choose it yourself.
+7. Look for a `## Gaps` section, or a `Gaps:` list in a short document. For
+   each finding, decide whether a Gaps item names the same missing thing —
+   same slot, same subject. Those findings are **acknowledged**: still
+   reported, counted apart, and they do not fail the document. Coverage is
+   your judgment, not a string match; a Gaps item about a different unknown
+   covers nothing. With no Gaps section, nothing is acknowledged. See
+   "Gaps-aware mode" in FINDINGS.md.
 
 ## Output, in order
 
-1. **Verdict line**: `PASS` or `N errors, M warnings`, plus the document type
-   you assumed (e.g. "read as: status update"). Nothing goes above it.
+1. **Verdict line**: `PASS` or `N errors, M warnings`, then the acknowledged
+   count when any finding is acknowledged, then the document type you
+   assumed as the one trailing parenthetical —
+   `2 errors, 1 warning, 3 acknowledged (read as: status update)`. A document
+   whose every error is acknowledged passes:
+   `PASS, 3 acknowledged (read as: status update)`. Nothing goes above it.
 2. **Deterministic findings** — for each: rule number, quote, line:col,
    message, suggested fix.
 3. **Judgment findings**, labeled `[judgment]` — for each: rule number,
    quote (or "whole document"), message, suggested fix.
 
+An acknowledged finding — of either layer — carries `[acknowledged]` in its
+line, and names the Gaps item that covers it.
+
 If the request contains "emit findings JSON", append one fenced `json` block
 containing **only your judgment-layer findings** (confirmed candidates plus
-model-added findings) in the FINDINGS.md schema. Do not include the checker's
-deterministic findings — machine data never round-trips through you; whoever
-asked for the JSON runs the checker directly and combines the two layers. No
-prose inside the block.
+model-added findings) in the FINDINGS.md schema. Acknowledged findings there
+carry `"acknowledged": true`. Do not include the checker's deterministic
+findings — machine data never round-trips through you; whoever asked for the
+JSON runs the checker directly and combines the two layers. An acknowledged
+deterministic finding therefore shows its acknowledgment in the prose above,
+never in the JSON. No prose inside the block.
 
 ## Failure behavior
 

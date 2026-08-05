@@ -155,6 +155,12 @@ def spans_overlap(doc, quote_a, quote_b):
 def matches(doc, finding, rule_spec):
     if rule_spec["rule"] not in ("*", finding["rule"]):
         return False
+    # Gaps-aware classification. Judgment findings only: deterministic
+    # findings never carry the flag, so "acknowledged": true never matches
+    # one (bluf/tests/README.md, FINDINGS.md "Gaps-aware mode").
+    if "acknowledged" in rule_spec:
+        if bool(finding.get("acknowledged")) != rule_spec["acknowledged"]:
+            return False
     if "quote" in rule_spec:
         if not finding.get("quote"):
             return False
